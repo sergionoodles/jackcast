@@ -35,16 +35,16 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 bg-mist-900/40 backdrop-blur-sm flex justify-start"
+      className="fixed inset-0 z-50 bg-mist-900/40 backdrop-blur-sm flex justify-end"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="bg-mist-900/60 backdrop-blur-2xl w-full max-w-md h-full shadow-2xl flex flex-col border-r border-white/10"
-        initial={{ x: "-100%" }}
+        className="bg-mist-900/60 backdrop-blur-2xl w-full max-w-md h-full shadow-2xl flex flex-col border-l border-white/10"
+        initial={{ x: "100%" }}
         animate={{ x: 0 }}
-        exit={{ x: "-100%" }}
+        exit={{ x: "100%" }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
       >
         <div className="p-6 flex items-center border-b border-white/10 shrink-0">

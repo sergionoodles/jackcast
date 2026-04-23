@@ -162,31 +162,8 @@ export default function App() {
     >
       <InstallPrompt />
       {/* Header */}
-      <header className="flex justify-between items-center p-4 text-white z-20 bg-linear-to-b from-mist-900 via-60 via-mist-900/70 to-mist-900/30 backdrop-blur-md shadow-lg ring ring-white/10">
-        <button
-          onClick={() => setIsSearching(true)}
-          type="button"
-          aria-label="Search for a city"
-          className="p-2 rounded-full hover:bg-white/20 transition-colors backdrop-blur-sm"
-        >
-          <Search className="w-6 h-6" />
-        </button>
-
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={toggleFavorite}
-            type="button"
-            aria-label={
-              isFavorite
-                ? "Remove current location from favorites"
-                : "Save current location to favorites"
-            }
-            className="p-2 rounded-full hover:bg-white/20 transition-colors backdrop-blur-sm"
-          >
-            <Heart
-              className={`w-6 h-6 ${isFavorite ? "fill-red-500 text-red-500" : "text-white"}`}
-            />
-          </button>
+      <header className="flex justify-between items-center gap-3 p-4 text-white z-20 bg-linear-to-b from-mist-900 via-60 via-mist-900/70 to-mist-900/30 backdrop-blur-md shadow-lg ring ring-white/10">
+        <div className="flex items-center min-w-0 flex-1">
           <button
             onClick={() => setIsDrawerOpen(true)}
             type="button"
@@ -194,6 +171,43 @@ export default function App() {
             className="p-2 rounded-full hover:bg-white/20 transition-colors backdrop-blur-sm"
           >
             <Menu className="w-6 h-6" />
+          </button>
+
+          <div className="ml-2 min-w-0 flex items-center gap-2">
+            {isGpsLocation && <MapPin className="w-5 h-5 shrink-0" />}
+            <h1
+              className="truncate text-xl font-medium tracking-wide weather-hero-text"
+              title={currentLocation.name}
+            >
+              {currentLocation.name}
+            </h1>
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-2 shrink-0">
+          {!isGpsLocation && (
+            <button
+              onClick={toggleFavorite}
+              type="button"
+              aria-label={
+                isFavorite
+                  ? "Remove current location from favorites"
+                  : "Save current location to favorites"
+              }
+              className="p-2 rounded-full hover:bg-white/20 transition-colors backdrop-blur-sm"
+            >
+              <Heart
+                className={`w-6 h-6 ${isFavorite ? "fill-red-500 text-red-500" : "text-white"}`}
+              />
+            </button>
+          )}
+          <button
+            onClick={() => setIsSearching(true)}
+            type="button"
+            aria-label="Search for a city"
+            className="p-2 rounded-full hover:bg-white/20 transition-colors backdrop-blur-sm"
+          >
+            <Search className="w-6 h-6" />
           </button>
         </div>
       </header>
@@ -203,10 +217,8 @@ export default function App() {
         <div className="flex flex-col h-full shrink-0">
           <CurrentWeather
             weather={weatherData.current}
-            locationName={currentLocation.name}
             high={weatherData.daily.temperatureMax[0]}
             low={weatherData.daily.temperatureMin[0]}
-            isCurrentLocation={isGpsLocation}
           />
 
           <div className="flex-1" />
@@ -224,14 +236,15 @@ export default function App() {
           <DailyForecast daily={weatherData.daily} />
 
           {/* Footer */}
-          <footer className="w-full py-4 text-center text-white/90 drop-shadow-md text-xs mt-6">
-            <p>
+          <footer className="relative w-full pt-8 pb-4 text-center text-white/90 drop-shadow-md text-xs mt-2 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/0 pointer-events-none" />
+            <p className="relative z-10 font-medium">
               Weather data provided by{" "}
               <a
                 href="https://open-meteo.com/"
                 target="_blank"
                 rel="noreferrer"
-                className="underline hover:text-white font-medium transition-colors"
+                className="underline hover:text-white font-semibold transition-colors"
               >
                 Open-Meteo
               </a>
