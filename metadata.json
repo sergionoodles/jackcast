@@ -1,0 +1,7 @@
+{
+  "name": "Hedgy Weather",
+  "description": "A playful, relaxing weather PWA inspired by Google Weather.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

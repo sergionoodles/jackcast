@@ -1,0 +1,24 @@
+{
+  "name": "JackCast",
+  "short_name": "JackCast",
+  "description": "A playful, relaxing weather PWA inspired by Google Weather.",
+  "start_url": "https://jackcast.codingnoodles.com",
+  "display": "standalone",
+  "background_color": "#161b1d",
+  "theme_color": "#161b1d",
+  "icons": [
+    {
+      "src": "/logo_192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "dir": "ltr",
+  "lang": "en",
+  "orientation": "portrait"
+}

@@ -1,0 +1,188 @@
+{
+  "promptTemplates": [
+    "[STYLE], spirited Jack Russell Terrier, alert triangular ears, compact muscular body, distinctive white and tan markings, intense intelligent eyes, clear 45° top-down view in a wide cinematic shot. Small dog modest in frame (20-30% of composition), vast abstract environment filling the entire scene. Bold sweeping brushstrokes, dramatic ink lines, luminous aetherial glow radiating from the landscape, painterly anime background art, rich atmospheric depth, no photorealism.\n\nThe Jack Russell stands on a sweeping abstract hill with flowing grass rendered in bold brush strokes, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. The background dissolves into swirling ethereal clouds and luminous sky gradients, dramatic environmental backdrop, transcendent mood.\n\nClean spacious composition, immersive abstract scenery, strong artistic vision with fine detail on the dog",
+
+    "[STYLE], energetic Jack Russell Terrier, keen bright eyes, athletic agile build, classic broken coat pattern, clear 45° top-down perspective in medium-wide cinematic view. Dog small and centered, expansive abstract landscape filling the full background with bold brushwork.\n\nThe Jack Russell stands in an open abstract meadow with flowing grass painted in sweeping strokes, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Dramatic sky gradients, luminous aetherial light rays piercing through, bold ink outlines, vibrant saturated tones, atmospheric depth, rich abstract background environment.\n\nBalanced composition with small character in vast scenic backdrop, transcendent feeling, strong brushwork with intricate detail on the dog",
+
+    "[STYLE], lively Jack Russell Terrier, bright inquisitive eyes, sturdy compact frame, smooth or broken white coat with tan patches, 45° top-down view in wide environmental shot. Small dog modest in frame, surrounded by expansive abstract forest details forming the complete background.\n\nThe Jack Russell sits on soft abstract forest floor with moss rendered in thick textured strokes, scattered fallen leaves painted with bold brushwork, tree roots extending outward in sweeping lines, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Luminous aetherial glow between trees, dramatic light beams, vibrant saturated tones, immersive abstract scenery.\n\nSpacious clean layout, environment creates the full backdrop, transcendent anime-inspired aesthetic with fine detail on the dog",
+
+    "[STYLE], alert Jack Russell Terrier with bright focused eyes, muscular agile body, distinctive markings, clear 45-degree top-down angle in broad cinematic scene view. Small dog within frame, abstract ground textures, shimmering puddle reflections and surrounding terrain forming the entire background.\n\nThe Jack Russell stands beside a small luminous puddle on soft damp ground, wet earth painted with bold expressive strokes, small ripples spreading out into the abstract scene, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Strong brushwork, reflective aetherial sparkles, vibrant saturated colors, glowing feeling, detailed abstract surrounding terrain as full backdrop.\n\nClean balanced composition showing immersive abstract environment, dramatic artistic design with intricate detail on the dog",
+
+    "[STYLE], spirited Jack Russell Terrier, intense bright eyes, compact powerful build, classic white and tan coat, 45° top-down perspective in wide snowy landscape shot. Small dog cozy in large open abstract snowy area, snowdrifts and distant scenery filling the complete background.\n\nThe Jack Russell stands in an open snowy clearing with gentle snowdrifts painted in bold white strokes, soft powder covering wide ground into the distance, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Luminous aetherial sparkles, dramatic lighting, vibrant winter palette with saturated blues and whites, magical transcendent atmosphere, rich detailed abstract snowy scenery as backdrop.\n\nClean spacious layout, snowy environment forms the full background, dramatic artistic style with fine detail on the dog",
+
+    "[STYLE], playful Jack Russell Terrier, keen intelligent expression, athletic proportions, smooth white coat with tan markings, 45° top-down angle in medium-wide autumn scene. Small dog nestled modestly, colorful fallen leaves painted with bold sweeping strokes scattering widely to form the entire background.\n\nSmall Jack Russell nestled among colorful fallen autumn leaves on open ground extending outward, leaves rendered in thick painterly strokes of orange red and gold, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Warm vibrant autumn tones, dramatic shadows, glowing aetherial rim light, transcendent mood, detailed leafy surroundings as full scene backdrop.\n\nBalanced composition with environment emphasis, dramatic aesthetic with intricate detail on the dog",
+
+    "[STYLE], alert Jack Russell Terrier dog, bright watchful eyes, sturdy compact body, distinctive coat pattern, clear 45° top-down view in wide field shot. Small dog charming amid simple open grass painted in bold flowing strokes and gentle abstract natural accents forming the full background.\n\nThe Jack Russell stands in an open field with soft waving grass patches painted in sweeping brush strokes spreading across the scene, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Dramatic lighting, vibrant saturated palette, cheerful transcendent atmosphere, clean lush abstract field environment as backdrop.\n\nMinimalist yet spacious layout, grassy scenery fills the complete background, strong artistic vision with fine detail on the dog",
+
+    "[STYLE], energetic Jack Russell Terrier with bright eager eyes, muscular agile frame, classic markings, 45-degree top-down perspective in broad natural area view. Small dog stands on a smooth rock, open abstract landscape, terrain and distant scenery painted in bold strokes spreading out to form the entire background.\n\nSmall Jack Russell standing confidently on a smooth rounded rock in an open natural area, surrounding terrain painted with expressive thick brushwork, abstract scenery extending widely, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Strong textural forms, dramatic shading, vibrant saturated tones, uplifting transcendent mood, detailed abstract environmental backdrop as full background.\n\nClean balanced composition, natural scenery serves as the complete backdrop, dramatic artistic design with intricate detail on the dog"
+  ],
+  "style": "Abstract anime-inspired painterly illustration, bold sweeping brushstrokes, strong ink line work, luminous aetherial glow, ethereal atmospheric light, dramatic sky gradients, vibrant saturated colors, painterly background art with visible stroke texture, transcendent mood, no photorealism, high detail on subject",
+  "aspectRatio": "9:16",
+  "width": 720,
+  "height": 1280,
+  "variations": 4,
+  "times": [
+    {
+      "id": "morning",
+      "name": "Morning",
+      "lighting": "soft golden sunrise glow, warm gentle light, fresh warm highlights, subtle long shadows"
+    },
+    {
+      "id": "afternoon",
+      "name": "Afternoon",
+      "lighting": "bright neutral daylight, crisp overhead light, vibrant natural colors, shorter shadows"
+    },
+    {
+      "id": "evening",
+      "name": "Evening",
+      "lighting": "warm golden hour sunset glow, rich orange and pink tones, long soft shadows, cinematic warmth"
+    },
+    {
+      "id": "night",
+      "name": "Night",
+      "lighting": "cool deep blue tones, gentle moonlight illumination, subtle starry sparkle, low contrast mystery"
+    }
+  ],
+  "weathers": [
+    {
+      "id": "clear-sky",
+      "name": "Clear Sky",
+      "actionExpressionAccessory": "happily basking with ears perked up, eyes squinting in bliss, sunbeams around, tail wagging gently"
+    },
+    {
+      "id": "mainly-clear",
+      "name": "Mainly Clear",
+      "actionExpressionAccessory": "smiling while looking up at the sun, relaxed sitting pose, tongue slightly out"
+    },
+    {
+      "id": "partly-cloudy",
+      "name": "Partly Cloudy",
+      "actionExpressionAccessory": "curiously tilting head at fluffy clouds, gentle alert expression, ears forward"
+    },
+    {
+      "id": "overcast",
+      "name": "Overcast",
+      "actionExpressionAccessory": "slightly squinting happily at the gray sky, calm content expression, tail gently wagging"
+    },
+    {
+      "id": "fog",
+      "name": "Fog",
+      "actionExpressionAccessory": "mysteriously alert in soft fog, bright eyes shining through mist, nose twitching curiously"
+    },
+    {
+      "id": "depositing-rime-fog",
+      "name": "Depositing Rime Fog",
+      "actionExpressionAccessory": "cozy in frosty mist with tiny ice crystals on fur, breath visible in cold air"
+    },
+    {
+      "id": "light-drizzle",
+      "name": "Light Drizzle",
+      "actionExpressionAccessory": "shaking off tiny raindrops playfully, delighted grin, water droplets flying from coat"
+    },
+    {
+      "id": "moderate-drizzle",
+      "name": "Moderate Drizzle",
+      "actionExpressionAccessory": "happily trotting through rain with tail up, wet but joyful, splashing in tiny puddles"
+    },
+    {
+      "id": "dense-drizzle",
+      "name": "Dense Drizzle",
+      "actionExpressionAccessory": "tucked under a wide leaf while thick drizzles fall, cheerful alert eyes, nose peeking out"
+    },
+    {
+      "id": "light-freezing-drizzle",
+      "name": "Light Freezing Drizzle",
+      "actionExpressionAccessory": "carefully stepping on lightly glazed ground, bundled with a tiny scarf, determined expression"
+    },
+    {
+      "id": "dense-freezing-drizzle",
+      "name": "Dense Freezing Drizzle",
+      "actionExpressionAccessory": "snuggled under a mushroom cap as icy droplets sparkle, brave alert smile, ears perked"
+    },
+    {
+      "id": "slight-rain",
+      "name": "Slight Rain",
+      "actionExpressionAccessory": "shaking off tiny raindrops playfully, delighted grin, water droplets flying from coat"
+    },
+    {
+      "id": "moderate-rain",
+      "name": "Moderate Rain",
+      "actionExpressionAccessory": "happily trotting through rain with tail up, wet but joyful, splashing in tiny puddles"
+    },
+    {
+      "id": "heavy-rain",
+      "name": "Heavy Rain",
+      "actionExpressionAccessory": "tucked under a large mushroom or leaf, peeking out with big excited eyes, tail wagging"
+    },
+    {
+      "id": "light-freezing-rain",
+      "name": "Light Freezing Rain",
+      "actionExpressionAccessory": "walking carefully over glossy ice patches, rosy cheeks and determined grin, paws careful"
+    },
+    {
+      "id": "heavy-freezing-rain",
+      "name": "Heavy Freezing Rain",
+      "actionExpressionAccessory": "huddled warmly beneath a sturdy umbrella, icy raindrops sparkling around, brave expression"
+    },
+    {
+      "id": "slight-rain-showers",
+      "name": "Slight Rain Showers",
+      "actionExpressionAccessory": "jumping between sun patches and raindrops, playful hop, ears flopping joyfully"
+    },
+    {
+      "id": "moderate-rain-showers",
+      "name": "Moderate Rain Showers",
+      "actionExpressionAccessory": "spinning happily in passing showers, paws stretched wide, shaking water from coat"
+    },
+    {
+      "id": "violent-rain-showers",
+      "name": "Violent Rain Showers",
+      "actionExpressionAccessory": "bracing playfully against sudden downpours, eyes bright with excitement, tail high"
+    },
+    {
+      "id": "slight-snow-fall",
+      "name": "Slight Snow Fall",
+      "actionExpressionAccessory": "catching snowflakes on nose, wearing tiny scarf, joyful wonder, tail wagging"
+    },
+    {
+      "id": "moderate-snow-fall",
+      "name": "Moderate Snow Fall",
+      "actionExpressionAccessory": "rolling happily in snow, building mini snow pile or just frolicking, ears perked up"
+    },
+    {
+      "id": "heavy-snow-fall",
+      "name": "Heavy Snow Fall",
+      "actionExpressionAccessory": "bundled cozy (tiny scarf and hat), snow piling on fur, bright happy eyes"
+    },
+    {
+      "id": "snow-grains",
+      "name": "Snow Grains",
+      "actionExpressionAccessory": "peering curiously at tiny icy pellets, playful and fascinated, head tilted"
+    },
+    {
+      "id": "slight-snow-showers",
+      "name": "Slight Snow Showers",
+      "actionExpressionAccessory": "hopping through short snowy bursts, scarf fluttering, joyful energetic bounce"
+    },
+    {
+      "id": "heavy-snow-showers",
+      "name": "Heavy Snow Showers",
+      "actionExpressionAccessory": "ducking into fluffy drifts between intense snowy bursts, still smiling, tail wagging"
+    },
+    {
+      "id": "thunderstorm",
+      "name": "Thunderstorm",
+      "actionExpressionAccessory": "slightly alert but still smiling bravely, ears perked forward, tiny lightning in background"
+    },
+    {
+      "id": "thunderstorm-with-slight-hail",
+      "name": "Thunderstorm with Slight Hail",
+      "actionExpressionAccessory": "wearing tiny goggles while little hail taps around, bold grin, standing firm"
+    },
+    {
+      "id": "thunderstorm-with-heavy-hail",
+      "name": "Thunderstorm with Heavy Hail",
+      "actionExpressionAccessory": "sheltering under a sturdy leaf as bigger hail bounces nearby, courageous alert smile"
+    }
+  ]
+}
