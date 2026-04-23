@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { AnimatePresence } from "motion/react";
 import { Search, MapPin, Heart, Loader2 } from "lucide-react";
 import { Location, WeatherData } from "./types";
@@ -10,6 +10,14 @@ import DailyForecast from "./components/DailyForecast";
 import LocationSearch from "./components/LocationSearch";
 import InstallPrompt from "./components/InstallPrompt";
 
+const REFRESH_INTERVAL_MS = 15 * 60 * 1000;
+
+type RefreshSource =
+  | "initial-load"
+  | "location-select"
+  | "interval"
+  | "activate";
+
 export default function App() {
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
@@ -17,6 +25,8 @@ export default function App() {
   const [isSearching, setIsSearching] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isGpsLocation, setIsGpsLocation] = useState(true);
+  const lastSuccessfulRefreshAtRef = useRef<number | null>(null);
+  const refreshInFlightRef = useRef(false);
 
   // Load favorites from local storage
   useEffect(() => {
@@ -31,7 +41,60 @@ export default function App() {
     localStorage.setItem("froggyFavorites", JSON.stringify(favorites));
   }, [favorites]);
 
-  const fetchInitialWeather = async () => {
+  const fetchWeatherForCoords = useCallback(
+    async (
+      lat: number,
+      lon: number,
+      source: RefreshSource,
+      options?: { guardInFlight?: boolean },
+    ) => {
+      const shouldGuard = options?.guardInFlight ?? false;
+      if (shouldGuard && refreshInFlightRef.current) {
+        return null;
+      }
+
+      if (shouldGuard) {
+        refreshInFlightRef.current = true;
+      }
+
+      try {
+        const weather = await getWeatherData(lat, lon);
+        if (weather) {
+          setWeatherData(weather);
+          lastSuccessfulRefreshAtRef.current = Date.now();
+          return weather;
+        }
+
+        if (import.meta.env.DEV) {
+          console.warn(`Weather refresh returned no data (${source}).`);
+        }
+        return null;
+      } finally {
+        if (shouldGuard) {
+          refreshInFlightRef.current = false;
+        }
+      }
+    },
+    [],
+  );
+
+  const refreshCurrentLocationWeather = useCallback(
+    async (source: Extract<RefreshSource, "interval" | "activate">) => {
+      if (!currentLocation) {
+        return null;
+      }
+
+      return fetchWeatherForCoords(
+        currentLocation.latitude,
+        currentLocation.longitude,
+        source,
+        { guardInFlight: true },
+      );
+    },
+    [currentLocation, fetchWeatherForCoords],
+  );
+
+  const fetchInitialWeather = useCallback(async () => {
     setIsLoading(true);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -53,8 +116,7 @@ export default function App() {
             };
             setCurrentLocation(loc);
             setIsGpsLocation(true);
-            const weather = await getWeatherData(lat, lon);
-            setWeatherData(weather);
+            await fetchWeatherForCoords(lat, lon, "initial-load");
           } catch (e) {
             // Fallback if reverse geocoding fails
             const loc: Location = {
@@ -65,8 +127,7 @@ export default function App() {
             };
             setCurrentLocation(loc);
             setIsGpsLocation(true);
-            const weather = await getWeatherData(lat, lon);
-            setWeatherData(weather);
+            await fetchWeatherForCoords(lat, lon, "initial-load");
           }
           setIsLoading(false);
         },
@@ -81,8 +142,11 @@ export default function App() {
           };
           setCurrentLocation(loc);
           setIsGpsLocation(false);
-          const weather = await getWeatherData(loc.latitude, loc.longitude);
-          setWeatherData(weather);
+          await fetchWeatherForCoords(
+            loc.latitude,
+            loc.longitude,
+            "initial-load",
+          );
           setIsLoading(false);
         },
       );
@@ -97,16 +161,62 @@ export default function App() {
       };
       setCurrentLocation(loc);
       setIsGpsLocation(false);
-      const weather = await getWeatherData(loc.latitude, loc.longitude);
-      setWeatherData(weather);
+      await fetchWeatherForCoords(loc.latitude, loc.longitude, "initial-load");
       setIsLoading(false);
     }
-  };
+  }, [fetchWeatherForCoords]);
 
   // Initial load - try geolocation, fallback to default (London)
   useEffect(() => {
     fetchInitialWeather();
-  }, []);
+  }, [fetchInitialWeather]);
+
+  useEffect(() => {
+    if (!currentLocation) {
+      return;
+    }
+
+    const intervalId = window.setInterval(() => {
+      void refreshCurrentLocationWeather("interval");
+    }, REFRESH_INTERVAL_MS);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [currentLocation, refreshCurrentLocationWeather]);
+
+  useEffect(() => {
+    const maybeRefreshIfStale = () => {
+      if (document.visibilityState !== "visible") {
+        return;
+      }
+      if (!currentLocation) {
+        return;
+      }
+      if (lastSuccessfulRefreshAtRef.current === null) {
+        return;
+      }
+      if (Date.now() - lastSuccessfulRefreshAtRef.current < REFRESH_INTERVAL_MS) {
+        return;
+      }
+
+      void refreshCurrentLocationWeather("activate");
+    };
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        maybeRefreshIfStale();
+      }
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("focus", maybeRefreshIfStale);
+
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("focus", maybeRefreshIfStale);
+    };
+  }, [currentLocation, refreshCurrentLocationWeather]);
 
   const handleSelectCurrentLocation = () => {
     setIsSearching(false);
@@ -116,10 +226,15 @@ export default function App() {
   const handleSelectLocation = async (location: Location) => {
     setIsSearching(false);
     setIsLoading(true);
-    setCurrentLocation(location);
-    setIsGpsLocation(false);
-    const weather = await getWeatherData(location.latitude, location.longitude);
-    setWeatherData(weather);
+    const weather = await fetchWeatherForCoords(
+      location.latitude,
+      location.longitude,
+      "location-select",
+    );
+    if (weather) {
+      setCurrentLocation(location);
+      setIsGpsLocation(false);
+    }
     setIsLoading(false);
   };
 
