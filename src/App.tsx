@@ -9,7 +9,6 @@ import HourlyForecast from "./components/HourlyForecast";
 import DailyForecast from "./components/DailyForecast";
 import LocationSearch from "./components/LocationSearch";
 import FavoritesDrawer from "./components/FavoritesDrawer";
-import AqiDisplay from "./components/AqiDisplay";
 import InstallPrompt from "./components/InstallPrompt";
 
 export default function App() {
@@ -173,7 +172,7 @@ export default function App() {
             <Menu className="w-6 h-6" />
           </button>
 
-          <div className="ml-2 min-w-0 flex items-center gap-2">
+          <div className="ml-3 min-w-0 flex items-center gap-2">
             {isGpsLocation && <MapPin className="w-5 h-5 shrink-0" />}
             <h1
               className="truncate text-xl font-medium tracking-wide weather-hero-text"
@@ -213,27 +212,24 @@ export default function App() {
       </header>
 
       {/* Main Content Scrollable Area */}
-      <main className="flex-1 overflow-y-auto scrollbar-hide z-10 flex flex-col">
+      <main className="relative flex-1 overflow-y-auto scrollbar-hide z-10 flex flex-col">
         <div className="flex flex-col h-full shrink-0">
-          <CurrentWeather
-            weather={weatherData.current}
-            high={weatherData.daily.temperatureMax[0]}
-            low={weatherData.daily.temperatureMin[0]}
-          />
+          <div className="sticky top-0 z-20">
+            <CurrentWeather weather={weatherData.current} />
+          </div>
 
           <div className="flex-1" />
+        </div>
 
-          <div className="shrink-0">
-            <HourlyForecast
-              hourly={weatherData.hourly}
-              currentTime={currentTime}
-            />
-          </div>
+        <div className="sticky bottom-0 z-20 shrink-0">
+          <HourlyForecast
+            hourly={weatherData.hourly}
+            currentTime={currentTime}
+          />
         </div>
 
         <div className="flex flex-col shrink-0">
-          <AqiDisplay aqi={weatherData.current.aqi} />
-          <DailyForecast daily={weatherData.daily} />
+          <DailyForecast daily={weatherData.daily} hourly={weatherData.hourly} />
 
           {/* Footer */}
           <footer className="relative w-full pt-8 pb-4 text-center text-white/90 drop-shadow-md text-xs mt-2 overflow-hidden">

@@ -2,14 +2,16 @@ import React from "react";
 import { motion } from "motion/react";
 import { HourlyForecast as HourlyForecastType } from "../types";
 import {
+  CloudRain,
   Cloud,
   CloudDrizzle,
   CloudFog,
   CloudLightning,
-  CloudRain,
   CloudSnow,
+  Droplets,
   Moon,
   Sun,
+  Wind,
 } from "lucide-react";
 
 interface HourlyForecastProps {
@@ -53,6 +55,19 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
   const next24Hours = hourly.time.slice(startIndex, startIndex + 24);
   const next24Temps = hourly.temperature.slice(startIndex, startIndex + 24);
   const next24Codes = hourly.weatherCode.slice(startIndex, startIndex + 24);
+  const next24Wind = hourly.windSpeed.slice(startIndex, startIndex + 24);
+  const next24Humidity = hourly.humidity.slice(startIndex, startIndex + 24);
+  const next24Rain = hourly.precipitationProbability.slice(
+    startIndex,
+    startIndex + 24,
+  );
+  const avg = (values: number[]) =>
+    values.length === 0
+      ? 0
+      : Math.round(values.reduce((sum, value) => sum + value, 0) / values.length);
+  const averageWind = avg(next24Wind);
+  const averageHumidity = avg(next24Humidity);
+  const averageRain = avg(next24Rain);
 
   return (
     <motion.div
@@ -62,11 +77,35 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
       transition={{ delay: 0.3 }}
     >
       <div className="bg-mist-900/40 backdrop-blur-md rounded-3xl p-4 shadow-lg border border-white/10">
-        <h3 className="text-white/90 text-sm font-medium mb-4 uppercase tracking-wider">
-          Today
-        </h3>
+        <div className="mb-4 flex items-start justify-between gap-3">
+          <h3 className="text-white/90 text-sm font-medium uppercase tracking-wider">
+            Today
+          </h3>
+          <div className="flex flex-wrap justify-end gap-1.5 text-[11px] font-medium text-white/85">
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5">
+              <Wind className="h-3.5 w-3.5" />
+              {averageWind} km/h
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5">
+              <Droplets className="h-3.5 w-3.5" />
+              {averageHumidity}%
+            </span>
+            {averageRain > 0 && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5">
+                <CloudRain className="h-3.5 w-3.5 text-blue-300" />
+                {averageRain}%
+              </span>
+            )}
+          </div>
+        </div>
         <div className="flex overflow-x-auto pb-2 scrollbar-hide space-x-6">
           {next24Hours.map((time, index) => {
+            const code = next24Codes[index];
+            const temperature = next24Temps[index];
+            if (code === undefined || temperature === undefined) {
+              return null;
+            }
+
             const date = new Date(time);
             const isDay = date.getHours() >= 6 && date.getHours() < 18; // Simple approximation
             return (
@@ -77,9 +116,9 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
                 <span className="text-white font-medium text-sm">
                   {index === 0 ? "Now" : formatTime(time)}
                 </span>
-                {getWeatherIcon(next24Codes[index], isDay)}
+                {getWeatherIcon(code, isDay)}
                 <span className="text-white font-semibold text-lg">
-                  {Math.round(next24Temps[index])}°
+                  {Math.round(temperature)}°
                 </span>
               </div>
             );

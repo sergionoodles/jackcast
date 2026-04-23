@@ -6,7 +6,7 @@ interface AqiDisplayProps {
   aqi?: number;
 }
 
-const getAqiColor = (aqi: number) => {
+export const getAqiColor = (aqi: number) => {
   if (aqi <= 50) return "bg-green-500";
   if (aqi <= 100) return "bg-yellow-500";
   if (aqi <= 150) return "bg-orange-500";
@@ -15,7 +15,7 @@ const getAqiColor = (aqi: number) => {
   return "bg-rose-900";
 };
 
-const getAqiLabel = (aqi: number) => {
+export const getAqiLabel = (aqi: number) => {
   if (aqi <= 50) return "Good";
   if (aqi <= 100) return "Moderate";
   if (aqi <= 150) return "Unhealthy for Sensitive Groups";

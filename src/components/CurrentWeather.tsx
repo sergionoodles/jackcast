@@ -2,18 +2,14 @@ import React from "react";
 import { motion } from "motion/react";
 import { CurrentWeather as CurrentWeatherType } from "../types";
 import { getWeatherDescription } from "../services/weather";
+import { Droplets, Wind } from "lucide-react";
+import { getAqiColor } from "./AqiDisplay";
 
 interface CurrentWeatherProps {
   weather: CurrentWeatherType;
-  high: number;
-  low: number;
 }
 
-const CurrentWeather: React.FC<CurrentWeatherProps> = ({
-  weather,
-  high,
-  low,
-}) => {
+const CurrentWeather: React.FC<CurrentWeatherProps> = ({ weather }) => {
   return (
     <motion.div
       className="flex flex-col items-center text-white mt-8 mb-4 px-4"
@@ -29,12 +25,26 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({
           °
         </span>
       </div>
-      <p className="text-xl font-bold mt-1 weather-hero-text capitalize">
+      <p className="text-2xl font-bold mt-1 weather-hero-text capitalize">
         {getWeatherDescription(weather.weatherCode)}
       </p>
-      <div className="flex space-x-4 mt-2 text-md font-semibold opacity-90 weather-hero-text">
-        <span>L:{Math.round(low)}°</span>
-        <span>H:{Math.round(high)}°</span>
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-sm font-semibold text-white/90 weather-hero-text">
+        {typeof weather.aqi === "number" && (
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1">
+            <span
+              className={`h-2.5 w-2.5 rounded-full ${getAqiColor(weather.aqi)} shadow-sm`}
+            />
+            AQI {Math.round(weather.aqi)}
+          </span>
+        )}
+        <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-1">
+          <Wind className="h-4 w-4 text-white/90" />
+          {Math.round(weather.windSpeed)} km/h
+        </span>
+        <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-1">
+          <Droplets className="h-4 w-4 text-white/90" />
+          {Math.round(weather.humidity)}%
+        </span>
       </div>
     </motion.div>
   );

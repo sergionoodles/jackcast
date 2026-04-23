@@ -14,36 +14,92 @@ export const searchLocations = async (query: string): Promise<Location[]> => {
 
 export const getWeatherData = async (lat: number, lon: number): Promise<WeatherData | null> => {
   try {
+    const currentFields = [
+      'temperature_2m',
+      'weather_code',
+      'is_day',
+      'relative_humidity_2m',
+      'wind_speed_10m',
+      'wind_direction_10m',
+    ].join(',');
+    const hourlyFields = [
+      'temperature_2m',
+      'weather_code',
+      'relative_humidity_2m',
+      'wind_speed_10m',
+      'wind_direction_10m',
+      'precipitation_probability',
+    ].join(',');
+    const dailyFields = [
+      'weather_code',
+      'temperature_2m_max',
+      'temperature_2m_min',
+      'wind_speed_10m_max',
+      'wind_direction_10m_dominant',
+      'relative_humidity_2m_mean',
+      'precipitation_probability_max',
+    ].join(',');
+
     const [weatherRes, aqiRes] = await Promise.all([
-      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,is_day&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`),
-      fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi&timezone=auto`).catch(() => null)
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=${currentFields}&hourly=${hourlyFields}&daily=${dailyFields}&timezone=auto`),
+      fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi&hourly=us_aqi&timezone=auto`).catch(() => null)
     ]);
-    
+
     const data = await weatherRes.json();
     let aqi = undefined;
-    
+    let hourlyAqi: Array<number | undefined> | undefined = undefined;
+
     if (aqiRes && aqiRes.ok) {
       const aqiData = await aqiRes.json();
       aqi = aqiData.current?.us_aqi;
+
+      const aqiByTime = new Map<string, number>();
+      const aqiTimes = aqiData.hourly?.time ?? [];
+      const aqiValues = aqiData.hourly?.us_aqi ?? [];
+
+      for (let i = 0; i < aqiTimes.length; i += 1) {
+        const value = aqiValues[i];
+        if (typeof value === 'number') {
+          aqiByTime.set(aqiTimes[i], value);
+        }
+      }
+
+      const weatherHourlyTimes = data.hourly?.time ?? [];
+      hourlyAqi = weatherHourlyTimes.map((time: string) => aqiByTime.get(time));
+      if (hourlyAqi.every((value) => value === undefined)) {
+        hourlyAqi = undefined;
+      }
     }
-    
+
     return {
       current: {
         temperature: data.current.temperature_2m,
         weatherCode: data.current.weather_code,
         isDay: data.current.is_day === 1,
+        humidity: data.current.relative_humidity_2m ?? 0,
+        windSpeed: data.current.wind_speed_10m ?? 0,
+        windDirection: data.current.wind_direction_10m ?? 0,
         aqi,
       },
       hourly: {
-        time: data.hourly.time,
-        temperature: data.hourly.temperature_2m,
-        weatherCode: data.hourly.weather_code,
+        time: data.hourly.time ?? [],
+        temperature: data.hourly.temperature_2m ?? [],
+        weatherCode: data.hourly.weather_code ?? [],
+        humidity: data.hourly.relative_humidity_2m ?? [],
+        windSpeed: data.hourly.wind_speed_10m ?? [],
+        windDirection: data.hourly.wind_direction_10m ?? [],
+        precipitationProbability: data.hourly.precipitation_probability ?? [],
+        aqi: hourlyAqi,
       },
       daily: {
-        time: data.daily.time,
-        weatherCode: data.daily.weather_code,
-        temperatureMax: data.daily.temperature_2m_max,
-        temperatureMin: data.daily.temperature_2m_min,
+        time: data.daily.time ?? [],
+        weatherCode: data.daily.weather_code ?? [],
+        temperatureMax: data.daily.temperature_2m_max ?? [],
+        temperatureMin: data.daily.temperature_2m_min ?? [],
+        windSpeedMax: data.daily.wind_speed_10m_max ?? [],
+        windDirectionDominant: data.daily.wind_direction_10m_dominant ?? [],
+        humidityMean: data.daily.relative_humidity_2m_mean ?? [],
+        precipitationProbabilityMax: data.daily.precipitation_probability_max ?? [],
       },
       timezone: data.timezone,
     };
