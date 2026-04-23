@@ -12,7 +12,7 @@
   body {
     margin: 0;
     padding: 0;
-    background-image: url("/backgrounds/default.png");
+    background-image: url("/backgrounds/clear-afternoon-1.jpeg");
     background-size: cover;
     background-position: center;
     /* Ensure the body covers the full height */
@@ -44,5 +44,11 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  .scroll-touch {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
   }
 }

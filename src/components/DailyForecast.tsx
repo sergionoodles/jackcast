@@ -4,7 +4,7 @@ import {
   DailyForecast as DailyForecastType,
   HourlyForecast as HourlyForecastType,
 } from "../types";
-import { getAqiColor } from "./AqiDisplay";
+import { getAqiColor } from "../utils/aqi";
 import {
   ChevronDown,
   Cloud,
@@ -68,25 +68,65 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ daily, hourly }) => {
           }
         }
 
-        let dailyAqiMax: number | undefined = undefined;
-        if (hourly.aqi) {
-          const dayAqiValues = hourlyIndexes
-            .map((hourIndex) => hourly.aqi?.[hourIndex])
-            .filter((value): value is number => typeof value === "number");
+        const dayWindValues = hourlyIndexes
+          .map((hourIndex) => hourly.windSpeed[hourIndex])
+          .filter((value): value is number => typeof value === "number");
+        const dayHumidityValues = hourlyIndexes
+          .map((hourIndex) => hourly.humidity[hourIndex])
+          .filter((value): value is number => typeof value === "number");
+        const dayRainChanceValues = hourlyIndexes
+          .map((hourIndex) => hourly.precipitationProbability[hourIndex])
+          .filter((value): value is number => typeof value === "number");
+        const dayAqiValues = hourlyIndexes
+          .map((hourIndex) => hourly.aqi?.[hourIndex])
+          .filter((value): value is number => typeof value === "number");
 
-          if (dayAqiValues.length > 0) {
-            dailyAqiMax = Math.max(...dayAqiValues);
-          }
-        }
+        const dailyWindMax =
+          dayWindValues.length > 0
+            ? Math.max(...dayWindValues)
+            : (daily.windSpeedMax[index] ?? 0);
+        const dailyHumidityAvg =
+          dayHumidityValues.length > 0
+            ? dayHumidityValues.reduce((sum, value) => sum + value, 0) /
+              dayHumidityValues.length
+            : (daily.humidityMean[index] ?? 0);
+        const dailyRainChanceAvg =
+          dayRainChanceValues.length > 0
+            ? dayRainChanceValues.reduce((sum, value) => sum + value, 0) /
+              dayRainChanceValues.length
+            : (daily.precipitationProbabilityMax[index] ?? 0);
+        const dailyAqiAvg =
+          dayAqiValues.length > 0
+            ? dayAqiValues.reduce((sum, value) => sum + value, 0) /
+              dayAqiValues.length
+            : undefined;
 
-        return { day, index, hourlyIndexes, dailyAqiMax };
+        return {
+          day,
+          index,
+          hourlyIndexes,
+          dailyWindMax,
+          dailyHumidityAvg,
+          dailyRainChanceAvg,
+          dailyAqiAvg,
+        };
       }),
-    [daily.time, hourly.time, hourly.aqi],
+    [
+      daily.time,
+      daily.windSpeedMax,
+      daily.humidityMean,
+      daily.precipitationProbabilityMax,
+      hourly.time,
+      hourly.windSpeed,
+      hourly.humidity,
+      hourly.precipitationProbability,
+      hourly.aqi,
+    ],
   );
 
   return (
     <motion.div
-      className="w-full px-4 mb-8"
+      className="w-full px-3 mb-8"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4 }}
@@ -96,147 +136,167 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ daily, hourly }) => {
           7-Day Forecast
         </h3>
         <div className="flex flex-col divide-y divide-white/10">
-          {dailyRows.map(({ day, index, hourlyIndexes, dailyAqiMax }) => {
-            const isExpanded = expandedDayIndex === index;
-            return (
-              <div key={day} className="py-3">
-                <button
-                  type="button"
-                  aria-expanded={isExpanded}
-                  aria-controls={`daily-forecast-panel-${index}`}
-                  onClick={() =>
-                    setExpandedDayIndex((prevIndex) =>
-                      prevIndex === index ? null : index,
-                    )
-                  }
-                  className="w-full text-left"
-                >
-                  <div className="flex items-center justify-between gap-2 text-white">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="w-24 font-medium text-base">
-                        {index === 0 ? "Today" : formatDay(day)}
-                      </span>
-                      {getWeatherIcon(daily.weatherCode[index] ?? 0)}
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center space-x-3 w-24 justify-end font-semibold text-lg">
-                        <span className="opacity-70">
-                          {Math.round(daily.temperatureMin[index] ?? 0)}°
+          {dailyRows.map(
+            ({
+              day,
+              index,
+              hourlyIndexes,
+              dailyWindMax,
+              dailyHumidityAvg,
+              dailyRainChanceAvg,
+              dailyAqiAvg,
+            }) => {
+              const isExpanded = expandedDayIndex === index;
+              return (
+                <div key={day} className="py-3">
+                  <button
+                    type="button"
+                    aria-expanded={isExpanded}
+                    aria-controls={`daily-forecast-panel-${index}`}
+                    onClick={() =>
+                      setExpandedDayIndex((prevIndex) =>
+                        prevIndex === index ? null : index,
+                      )
+                    }
+                    className="w-full text-left"
+                  >
+                    <div className="flex items-center justify-between gap-2 text-white">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="w-24 font-medium text-base">
+                          {index === 0 ? "Today" : formatDay(day)}
                         </span>
-                        <span>{Math.round(daily.temperatureMax[index] ?? 0)}°</span>
+                        {getWeatherIcon(daily.weatherCode[index] ?? 0)}
                       </div>
-                      <ChevronDown
-                        className={`w-4 h-4 text-white/70 transition-transform ${isExpanded ? "rotate-180" : ""}`}
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-2 flex flex-wrap gap-2 text-[11px] text-white/85 font-medium">
-                    <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5">
-                      <Wind className="h-3.5 w-3.5" />
-                      {Math.round(daily.windSpeedMax[index] ?? 0)} km/h
-                    </span>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5">
-                      <Droplets className="h-3.5 w-3.5" />
-                      {Math.round(daily.humidityMean[index] ?? 0)}%
-                    </span>
-                    {(daily.precipitationProbabilityMax[index] ?? 0) > 0 && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5">
-                        <CloudRain className="h-3.5 w-3.5 text-blue-300" />
-                        {Math.round(daily.precipitationProbabilityMax[index] ?? 0)}%
-                      </span>
-                    )}
-                    {typeof dailyAqiMax === "number" && (
-                      <span
-                        className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5"
-                        title={`Max AQI ${Math.round(dailyAqiMax)}`}
-                      >
-                        <span
-                          className={`h-2.5 w-2.5 rounded-full ${getAqiColor(dailyAqiMax)} shadow-sm`}
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center space-x-3 w-24 justify-end font-semibold text-lg">
+                          <span className="opacity-70">
+                            {Math.round(daily.temperatureMin[index] ?? 0)}°
+                          </span>
+                          <span>
+                            {Math.round(daily.temperatureMax[index] ?? 0)}°
+                          </span>
+                        </div>
+                        <ChevronDown
+                          className={`w-4 h-4 text-white/70 transition-transform ${isExpanded ? "rotate-180" : ""}`}
                         />
-                        AQI {Math.round(dailyAqiMax)}
-                      </span>
-                    )}
-                  </div>
-                </button>
-
-                <AnimatePresence initial={false}>
-                  {isExpanded && (
-                    <motion.div
-                      id={`daily-forecast-panel-${index}`}
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="pt-3">
-                        {hourlyIndexes.length === 0 ? (
-                          <div className="text-white/70 text-sm">
-                            No hourly data available.
-                          </div>
-                        ) : (
-                          <div className="flex overflow-x-auto pb-2 scrollbar-hide space-x-4">
-                            {hourlyIndexes.map((hourIndex) => {
-                              const time = hourly.time[hourIndex];
-                              const code = hourly.weatherCode[hourIndex];
-                              const temperature = hourly.temperature[hourIndex];
-
-                              if (
-                                time === undefined ||
-                                code === undefined ||
-                                temperature === undefined
-                              ) {
-                                return null;
-                              }
-
-                              const date = new Date(time);
-                              const isDay = date.getHours() >= 6 && date.getHours() < 18;
-                              const hourAqi = hourly.aqi?.[hourIndex];
-
-                              return (
-                                <div
-                                  key={time}
-                                  className="flex min-w-[92px] flex-col items-center gap-1.5 rounded-2xl border border-white/10 bg-white/5 px-2 py-2 text-white"
-                                >
-                                  <span className="text-xs font-medium text-white/90">
-                                    {formatTime(time)}
-                                  </span>
-                                  {getWeatherIcon(code, isDay)}
-                                  {(hourly.precipitationProbability[hourIndex] ?? 0) >
-                                    0 && (
-                                    <span className="flex items-center gap-1 text-[11px] whitespace-nowrap text-white/80">
-                                      <CloudRain className="h-3.5 w-3.5 text-blue-300" />
-                                      {Math.round(
-                                        hourly.precipitationProbability[
-                                          hourIndex
-                                        ] ?? 0,
-                                      )}
-                                      %
-                                    </span>
-                                  )}
-                                  <span className="text-sm font-semibold">
-                                    {Math.round(temperature)}°
-                                  </span>
-                                  {typeof hourAqi === "number" && (
-                                    <span className="flex items-center gap-1 text-[11px] text-white/80">
-                                      <span
-                                        className={`w-2 h-2 rounded-full ${getAqiColor(hourAqi)}`}
-                                      />
-                                      AQI {Math.round(hourAqi)}
-                                    </span>
-                                  )}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
+                    </div>
+                    <div className="mt-1 flex flex-wrap gap-2 text-[11px] text-white/85 font-medium">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5">
+                        <Wind className="h-3.5 w-3.5" />
+                        {Math.round(dailyWindMax)} km/h
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5">
+                        <Droplets className="h-3.5 w-3.5" />
+                        {Math.round(dailyHumidityAvg)}%
+                      </span>
+                      {dailyRainChanceAvg > 0 && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5">
+                          <CloudRain className="h-3.5 w-3.5 text-blue-300" />
+                          {Math.round(dailyRainChanceAvg)}%
+                        </span>
+                      )}
+                      {typeof dailyAqiAvg === "number" && (
+                        <span
+                          className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5"
+                          title={`Avg AQI ${Math.round(dailyAqiAvg)}`}
+                        >
+                          <span
+                            className={`h-2.5 w-2.5 rounded-full ${getAqiColor(dailyAqiAvg)} shadow-sm`}
+                          />
+                          AQI {Math.round(dailyAqiAvg)}
+                        </span>
+                      )}
+                    </div>
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isExpanded && (
+                      <motion.div
+                        id={`daily-forecast-panel-${index}`}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="pt-3">
+                          {hourlyIndexes.length === 0 ? (
+                            <div className="text-white/70 text-sm">
+                              No hourly data available.
+                            </div>
+                          ) : (
+                            <div className="flex overflow-x-auto pb-2 scrollbar-hide space-x-2.5">
+                              {hourlyIndexes.map((hourIndex) => {
+                                const time = hourly.time[hourIndex];
+                                const code = hourly.weatherCode[hourIndex];
+                                const temperature =
+                                  hourly.temperature[hourIndex];
+
+                                if (
+                                  time === undefined ||
+                                  code === undefined ||
+                                  temperature === undefined
+                                ) {
+                                  return null;
+                                }
+
+                                const date = new Date(time);
+                                const isDay =
+                                  date.getHours() >= 6 && date.getHours() < 18;
+                                const hourAqi = hourly.aqi?.[hourIndex];
+                                const hasRainIndicator =
+                                  (hourly.precipitationProbability[hourIndex] ??
+                                    0) > 0;
+
+                                return (
+                                  <div
+                                    key={time}
+                                    className="flex min-w-[94px] flex-col items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-2 py-2 text-white"
+                                  >
+                                    <span className="text-xs font-medium text-white/90">
+                                      {formatTime(time)}
+                                    </span>
+                                    {getWeatherIcon(code, isDay)}
+                                    <span className="text-sm font-semibold">
+                                      {Math.round(temperature)}°
+                                    </span>
+                                    <span className="flex min-h-4 items-center gap-1.5 text-[11px] text-white/80">
+                                      {hasRainIndicator && (
+                                        <span className="flex items-center gap-1 whitespace-nowrap">
+                                          <CloudRain className="h-3.5 w-3.5 text-blue-300" />
+                                          {Math.round(
+                                            hourly.precipitationProbability[
+                                              hourIndex
+                                            ] ?? 0,
+                                          )}
+                                          %
+                                        </span>
+                                      )}
+                                      {typeof hourAqi === "number" && (
+                                        <span className="flex items-center gap-1 whitespace-nowrap">
+                                          <span
+                                            className={`w-2 h-2 rounded-full ${getAqiColor(hourAqi)}`}
+                                          />
+                                          {hasRainIndicator
+                                            ? Math.round(hourAqi)
+                                            : `AQI ${Math.round(hourAqi)}`}
+                                        </span>
+                                      )}
+                                    </span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            },
+          )}
         </div>
       </div>
     </motion.div>

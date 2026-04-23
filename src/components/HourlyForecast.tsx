@@ -64,14 +64,16 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
   const avg = (values: number[]) =>
     values.length === 0
       ? 0
-      : Math.round(values.reduce((sum, value) => sum + value, 0) / values.length);
+      : Math.round(
+          values.reduce((sum, value) => sum + value, 0) / values.length,
+        );
   const averageWind = avg(next24Wind);
   const averageHumidity = avg(next24Humidity);
   const averageRain = avg(next24Rain);
 
   return (
     <motion.div
-      className="w-full px-4 mb-6 mt-8"
+      className="w-full px-3 mb-6 mt-8"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}

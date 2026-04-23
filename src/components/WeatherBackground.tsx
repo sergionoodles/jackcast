@@ -31,7 +31,7 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({
         <div
           className="absolute inset-0 z-0 opacity-100 mix-blend-overlay bg-cover bg-center transition-all duration-1000"
           style={{
-            backgroundImage: `url(${asset.imageUrl}), url('/backgrounds/default.png')`,
+            backgroundImage: `url(${asset.imageUrl}), url('/backgrounds/clear-afternoon-1.jpeg')`,
           }}
         />
 

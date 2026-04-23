@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { Search, MapPin, Heart, Menu, Loader2 } from "lucide-react";
+import { AnimatePresence } from "motion/react";
+import { Search, MapPin, Heart, Loader2 } from "lucide-react";
 import { Location, WeatherData } from "./types";
 import { getWeatherData } from "./services/weather";
 import WeatherBackground from "./components/WeatherBackground";
@@ -8,7 +8,6 @@ import CurrentWeather from "./components/CurrentWeather";
 import HourlyForecast from "./components/HourlyForecast";
 import DailyForecast from "./components/DailyForecast";
 import LocationSearch from "./components/LocationSearch";
-import FavoritesDrawer from "./components/FavoritesDrawer";
 import InstallPrompt from "./components/InstallPrompt";
 
 export default function App() {
@@ -16,7 +15,6 @@ export default function App() {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [favorites, setFavorites] = useState<Location[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isGpsLocation, setIsGpsLocation] = useState(true);
 
@@ -111,13 +109,12 @@ export default function App() {
   }, []);
 
   const handleSelectCurrentLocation = () => {
-    setIsDrawerOpen(false);
+    setIsSearching(false);
     fetchInitialWeather();
   };
 
   const handleSelectLocation = async (location: Location) => {
     setIsSearching(false);
-    setIsDrawerOpen(false);
     setIsLoading(true);
     setCurrentLocation(location);
     setIsGpsLocation(false);
@@ -163,16 +160,7 @@ export default function App() {
       {/* Header */}
       <header className="flex justify-between items-center gap-3 p-4 text-white z-20 bg-linear-to-b from-mist-900 via-60 via-mist-900/70 to-mist-900/30 backdrop-blur-md shadow-lg ring ring-white/10">
         <div className="flex items-center min-w-0 flex-1">
-          <button
-            onClick={() => setIsDrawerOpen(true)}
-            type="button"
-            aria-label="Open saved locations"
-            className="p-2 rounded-full hover:bg-white/20 transition-colors backdrop-blur-sm"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-
-          <div className="ml-3 min-w-0 flex items-center gap-2">
+          <div className="min-w-0 flex items-center gap-2">
             {isGpsLocation && <MapPin className="w-5 h-5 shrink-0" />}
             <h1
               className="truncate text-xl font-medium tracking-wide weather-hero-text"
@@ -212,7 +200,7 @@ export default function App() {
       </header>
 
       {/* Main Content Scrollable Area */}
-      <main className="relative flex-1 overflow-y-auto scrollbar-hide z-10 flex flex-col">
+      <main className="relative flex-1 min-h-0 overflow-y-auto scrollbar-hide scroll-touch z-10 flex flex-col">
         <div className="flex flex-col h-full shrink-0">
           <div className="sticky top-0 z-20">
             <CurrentWeather weather={weatherData.current} />
@@ -229,7 +217,10 @@ export default function App() {
         </div>
 
         <div className="flex flex-col shrink-0">
-          <DailyForecast daily={weatherData.daily} hourly={weatherData.hourly} />
+          <DailyForecast
+            daily={weatherData.daily}
+            hourly={weatherData.hourly}
+          />
 
           {/* Footer */}
           <footer className="relative w-full pt-8 pb-4 text-center text-white/90 drop-shadow-md text-xs mt-2 overflow-hidden">
@@ -253,20 +244,11 @@ export default function App() {
       <AnimatePresence>
         {isSearching && (
           <LocationSearch
-            onSelect={handleSelectLocation}
-            onClose={() => setIsSearching(false)}
-          />
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {isDrawerOpen && (
-          <FavoritesDrawer
             favorites={favorites}
             onSelect={handleSelectLocation}
             onSelectCurrentLocation={handleSelectCurrentLocation}
             onRemove={removeFavorite}
-            onClose={() => setIsDrawerOpen(false)}
+            onClose={() => setIsSearching(false)}
           />
         )}
       </AnimatePresence>
