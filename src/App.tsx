@@ -277,11 +277,16 @@ export default function App() {
         <div className="flex items-center min-w-0 flex-1">
           <div className="min-w-0 flex items-center gap-2">
             {isGpsLocation && <MapPin className="w-5 h-5 shrink-0" />}
-            <h1
-              className="truncate text-xl font-medium tracking-wide weather-hero-text"
-              title={currentLocation.name}
-            >
-              {currentLocation.name}
+            <h1 className="min-w-0">
+              <button
+                type="button"
+                onClick={() => setIsSearching(true)}
+                className="block truncate text-left text-xl font-medium tracking-wide weather-hero-text cursor-pointer"
+                title={currentLocation.name}
+                aria-label="Open location search panel"
+              >
+                {currentLocation.name}
+              </button>
             </h1>
           </div>
         </div>

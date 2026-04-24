@@ -70,7 +70,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
       >
         <div className="p-6 flex items-center border-b border-white/10 shrink-0">
-          <Search className="w-6 h-6 text-white/50 mr-3" />
+          <Search className="w-7 h-7 text-white/50 mr-3 shrink-0" />
           <input
             autoFocus
             type="text"
