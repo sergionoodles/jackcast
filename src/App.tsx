@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { AnimatePresence } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { Search, MapPin, Heart, Loader2 } from "lucide-react";
 import { Location, WeatherData } from "./types";
 import { getWeatherData } from "./services/weather";
@@ -25,6 +25,7 @@ export default function App() {
   const [isSearching, setIsSearching] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isGpsLocation, setIsGpsLocation] = useState(true);
+  const [isMinimal, setIsMinimal] = useState(false);
   const lastSuccessfulRefreshAtRef = useRef<number | null>(null);
   const refreshInFlightRef = useRef(false);
 
@@ -249,6 +250,10 @@ export default function App() {
     }
   };
 
+  const toggleMinimal = useCallback(() => {
+    setIsMinimal((prev) => !prev);
+  }, []);
+
   const removeFavorite = (id: number) => {
     setFavorites(favorites.filter((f) => f.id !== id));
   };
@@ -271,9 +276,13 @@ export default function App() {
       weatherCode={weatherData.current.weatherCode}
       isDay={weatherData.current.isDay}
     >
-      <InstallPrompt />
+      {!isMinimal && <InstallPrompt />}
       {/* Header */}
-      <header className="flex justify-between items-center gap-3 p-4 text-white z-20 bg-linear-to-b from-mist-900 via-60 via-mist-900/70 to-mist-900/30 backdrop-blur-md shadow-lg ring ring-white/10">
+      <motion.header
+        className="flex justify-between items-center gap-3 p-4 text-white z-20 bg-linear-to-b from-mist-900 via-60 via-mist-900/70 to-mist-900/30 backdrop-blur-md shadow-lg ring ring-white/10"
+        animate={{ y: isMinimal ? -80 : 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.8 }}
+      >
         <div className="flex items-center min-w-0 flex-1">
           <div className="min-w-0 flex items-center gap-2">
             {isGpsLocation && <MapPin className="w-5 h-5 shrink-0" />}
@@ -281,7 +290,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setIsSearching(true)}
-                className="block truncate text-left text-xl font-medium tracking-wide weather-hero-text cursor-pointer"
+                className="block truncate text-left text-2xl font-medium tracking-wide weather-hero-text cursor-pointer"
                 title={currentLocation.name}
                 aria-label="Open location search panel"
               >
@@ -317,26 +326,71 @@ export default function App() {
             <Search className="w-6 h-6" />
           </button>
         </div>
-      </header>
+      </motion.header>
 
       {/* Main Content Scrollable Area */}
-      <main className="relative flex-1 min-h-0 overflow-y-auto scrollbar-hide scroll-touch z-10 flex flex-col">
+      <main
+        className={`relative flex-1 min-h-0 z-10 flex flex-col scroll-touch${isMinimal ? " overflow-hidden" : " overflow-y-auto scrollbar-hide"}`}
+      >
         <div className="flex flex-col h-full shrink-0">
           <div className="sticky top-0 z-20">
-            <CurrentWeather weather={weatherData.current} />
+            <motion.div
+              animate={{
+                opacity: isMinimal ? 0 : 1,
+                scale: isMinimal ? 0.3 : 1,
+                y: isMinimal ? -20 : 0,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+                mass: 0.8,
+              }}
+            >
+              <CurrentWeather weather={weatherData.current} />
+            </motion.div>
           </div>
 
-          <div className="flex-1" />
+          <div
+            className="flex-1 cursor-pointer"
+            onClick={toggleMinimal}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") toggleMinimal();
+            }}
+            aria-label={
+              isMinimal ? "Show full interface" : "Hide interface to view image"
+            }
+          />
         </div>
 
-        <div className="sticky bottom-0 z-20 shrink-0">
+        <motion.div
+          className="sticky bottom-0 z-20 shrink-0"
+          animate={{ y: isMinimal ? "85%" : 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 30,
+            mass: 0.8,
+          }}
+        >
           <HourlyForecast
             hourly={weatherData.hourly}
             currentTime={currentTime}
           />
-        </div>
+        </motion.div>
 
-        <div className="flex flex-col shrink-0">
+        <motion.div
+          className="flex flex-col shrink-0"
+          animate={{ y: isMinimal ? "85%" : 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 30,
+            mass: 0.8,
+          }}
+        >
           <DailyForecast
             daily={weatherData.daily}
             hourly={weatherData.hourly}
@@ -357,7 +411,7 @@ export default function App() {
               </a>
             </p>
           </footer>
-        </div>
+        </motion.div>
       </main>
 
       {/* Modals / Drawers */}
