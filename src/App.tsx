@@ -26,6 +26,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isGpsLocation, setIsGpsLocation] = useState(true);
   const [isMinimal, setIsMinimal] = useState(false);
+  const mainRef = useRef<HTMLDivElement | null>(null);
   const lastSuccessfulRefreshAtRef = useRef<number | null>(null);
   const refreshInFlightRef = useRef(false);
 
@@ -197,7 +198,10 @@ export default function App() {
       if (lastSuccessfulRefreshAtRef.current === null) {
         return;
       }
-      if (Date.now() - lastSuccessfulRefreshAtRef.current < REFRESH_INTERVAL_MS) {
+      if (
+        Date.now() - lastSuccessfulRefreshAtRef.current <
+        REFRESH_INTERVAL_MS
+      ) {
         return;
       }
 
@@ -251,6 +255,7 @@ export default function App() {
   };
 
   const toggleMinimal = useCallback(() => {
+    mainRef.current?.scrollTo(0, 0);
     setIsMinimal((prev) => !prev);
   }, []);
 
@@ -274,7 +279,7 @@ export default function App() {
   return (
     <WeatherBackground
       weatherCode={weatherData.current.weatherCode}
-      isDay={weatherData.current.isDay}
+      location={currentLocation}
     >
       {!isMinimal && <InstallPrompt />}
       {/* Header */}
@@ -330,6 +335,7 @@ export default function App() {
 
       {/* Main Content Scrollable Area */}
       <main
+        ref={mainRef}
         className={`relative flex-1 min-h-0 z-10 flex flex-col scroll-touch${isMinimal ? " overflow-hidden" : " overflow-y-auto scrollbar-hide"}`}
       >
         <div className="flex flex-col h-full shrink-0">
@@ -397,19 +403,40 @@ export default function App() {
           />
 
           {/* Footer */}
-          <footer className="relative w-full pt-8 pb-4 text-center text-white/90 drop-shadow-md text-xs mt-2 overflow-hidden">
+          <footer className="relative w-full px-3 pt-8 pb-4 text-white/90 drop-shadow-md text-xs mt-2 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/0 pointer-events-none" />
-            <p className="relative z-10 font-medium">
-              Weather data provided by{" "}
-              <a
-                href="https://open-meteo.com/"
-                target="_blank"
-                rel="noreferrer"
-                className="underline hover:text-white font-semibold transition-colors"
-              >
-                Open-Meteo
-              </a>
-            </p>
+            <p className="relative z-10 font-medium text-center"></p>
+            <div className="relative z-10 mt-2 flex items-center justify-between gap-4 px-1">
+              <div className="flex items-center gap-1">
+                <p>&copy; {new Date().getFullYear()} Coding Noodles</p>
+                <span className="text-white/35">//</span>
+                <a
+                  href="/privacy/"
+                  className="underline hover:text-white font-semibold transition-colors"
+                >
+                  Privacy
+                </a>
+                <span className="text-white/35">//</span>
+                <a
+                  href="/terms/"
+                  className="underline hover:text-white font-semibold transition-colors"
+                >
+                  Terms
+                </a>
+              </div>
+
+              <span>
+                Weather data provided by{" "}
+                <a
+                  href="https://open-meteo.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline hover:text-white font-semibold transition-colors"
+                >
+                  Open-Meteo
+                </a>
+              </span>
+            </div>
           </footer>
         </motion.div>
       </main>

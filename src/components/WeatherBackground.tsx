@@ -1,23 +1,26 @@
 import React from "react";
 import { motion } from "motion/react";
 import {
-  backgroundAssets,
+  getBackgroundImageUrl,
   getWeatherCategory,
   getTimeOfDay,
 } from "../config/backgrounds";
+import type { Location } from "../types";
 
 interface WeatherBackgroundProps {
   weatherCode: number;
+  location: Location;
   children: React.ReactNode;
 }
 
 const WeatherBackground: React.FC<WeatherBackgroundProps> = ({
   weatherCode,
+  location,
   children,
 }) => {
   const category = getWeatherCategory(weatherCode);
   const timeOfDay = getTimeOfDay();
-  const asset = backgroundAssets[category][timeOfDay];
+  const imageUrl = getBackgroundImageUrl(category, timeOfDay, location);
 
   return (
     <div className="min-h-[100dvh] w-full bg-gradient-to-br from-mist-900 via-mist-800 to-mist-900 flex items-center justify-center p-0 m-0">
@@ -31,7 +34,7 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({
         <div
           className="absolute inset-0 z-0 opacity-100 mix-blend-overlay bg-cover bg-center transition-all duration-1000"
           style={{
-            backgroundImage: `url(${asset.imageUrl}), url('/backgrounds/clear-afternoon-1.jpeg')`,
+            backgroundImage: `url(${imageUrl}), url('/backgrounds/clear-afternoon-1.jpeg')`,
           }}
         />
 

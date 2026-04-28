@@ -35,12 +35,16 @@ The soul of JackCast lives in `scripts/cover-generator/`. This is a fully automa
 
 1. **Maps 28 weather codes** (from Open-Meteo WMO codes) into 5 visual categories: `clear`, `cloudy`, `rain`, `snow`, and `storm`.
 2. **Combines 4 times of day** (morning, afternoon, evening, night) with category-specific lighting prompts.
-3. **Generates 4 artistic variations per combination** across 4 distinct styles:
-   - Abstract anime-inspired painterly illustration
-   - Bold vibrant watercolor
-   - Rich oil painting on canvas
-   - Vibrant gouache matte painting
-4. **Produces over 80 unique scenes** featuring a small Jack Russell Terrier reacting charmingly to each condition — basking in sun, trotting through drizzle, catching snowflakes, or bravely weathering a thunderstorm.
+3. **Generates 8 artistic variations per combination** across 8 distinct styles:
+   - Surreal anime-inspired painterly illustration
+   - Washed watercolor storybook illustration
+   - Dreamlike oil-pastel painting
+   - Matte gouache folk illustration
+   - Expressive ink-and-wash fantasy illustration
+   - Layered storybook poster art
+   - Soft pastel and chalk animation background art
+   - Decorative painterly art print
+4. **Produces 160 unique category/time scenes** featuring a small Jack Russell Terrier reacting charmingly to each condition — basking in sun, trotting through drizzle, catching snowflakes, or bravely weathering a thunderstorm.
 
 Run the generator with:
 

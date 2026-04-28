@@ -44,11 +44,18 @@ const WEATHER_TO_CATEGORY = {
 const MODEL = process.env.VENICE_MODEL || "qwen-image";
 const API_KEY = process.env.VENICE_API_KEY;
 
+const AESTHETIC_DIRECTION =
+  "Overall art direction: pure surreal nostalgic illustration, abstract weather shapes, soft-focus edges, hazy analog color, imperfect hand-drawn forms, visible brush texture, dreamlike storybook mood. Keep the dog charming, loosely rendered, and non-literal with simplified anatomy.";
+
 const STYLES = [
-  "Abstract anime-inspired painterly illustration, bold sweeping brushstrokes, strong ink line work, luminous aetherial glow, ethereal atmospheric light, dramatic sky gradients, vibrant saturated colors, painterly background art with visible stroke texture, transcendent mood, no photorealism, high detail on subject",
-  "Bold vibrant watercolor painting with saturated pigment washes, expressive wet-on-wet bleeding, visible paper texture, loose yet detailed brushwork, colors bleeding into one another, intricate fine details in subject and environment, dreamy artistic atmosphere, high detail",
-  "Rich oil painting on canvas, deep luminous color glazes, thick impasto texture, dramatic chiaroscuro lighting, elegant visible brushstrokes, warm and cool tonal harmony, finely detailed subject and environment, classical fine art atmosphere, museum quality",
-  "Vibrant gouache matte painting, thick opaque brushstrokes, rich saturated colors, slightly abstract simplified forms, visible painterly texture, bold color contrasts, intricate fine details, whimsical storybook illustration",
+  "Surreal anime-inspired painterly illustration, loose sweeping brushstrokes, softened ink lines, luminous hazy glow, abstract sky gradients, nostalgic color, visible handmade texture, dreamlike weather-cover mood",
+  "Washed watercolor storybook illustration, saturated pigment blooms, wet-on-wet bleeding, visible paper grain, soft unresolved edges, colors drifting into one another, abstract environment, nostalgic rainy-day sketchbook feeling",
+  "Dreamlike oil-pastel painting, smeared color glazes, soft impasto-like texture, blurred light and shadow, imperfect handmade shapes, warm-cool haze, old illustrated book atmosphere",
+  "Matte gouache folk illustration, thick opaque brush shapes, simplified abstract forms, softened color contrasts, charming imperfect mascot design, whimsical nostalgic cover art",
+  "Expressive ink-and-wash fantasy illustration, loose black linework, translucent color washes, atmospheric fog, textured paper grain, elegant negative space, symbolic weather effects, softly rendered character",
+  "Layered storybook poster art, bold gouache shapes, hand-painted texture, softened silhouette design, rich but slightly faded color blocking, charming editorial illustration mood, abstract scenery",
+  "Soft pastel and chalk animation background art, velvety grain, luminous color fields, smudged edges, hazy environmental lighting, expressive hand-drawn marks, warm whimsical memory-like atmosphere",
+  "Decorative painterly art print, woodblock-inspired composition, strong graphic shapes, softened carved-line texture, saturated limited palette, symbolic weather patterning, nostalgic handmade illustration",
 ];
 
 const args = process.argv.slice(2);
@@ -74,15 +81,27 @@ function getRandomTemplate(templates) {
   return templates[Math.floor(Math.random() * templates.length)];
 }
 
+function getPromptTemplate(config, weatherCategory) {
+  const categoryTemplates = config.categoryPromptTemplates?.[weatherCategory];
+
+  if (Array.isArray(categoryTemplates) && categoryTemplates.length > 0) {
+    return getRandomTemplate(categoryTemplates);
+  }
+
+  return getRandomTemplate(config.promptTemplates);
+}
+
 function buildPrompt(template, style, time, weather) {
   const weatherDescription = `${weather.name} weather, ${time.lighting}`;
-  return template
+  const prompt = template
     .replace("[STYLE]", style)
     .replace("[WEATHER DESCRIPTION]", weatherDescription)
     .replace(
       /\[(JACKRUSSEL|DOG) ACTION \+ EXPRESSION \+ ACCESSORY\]/g,
       weather.actionExpressionAccessory,
     );
+
+  return `${prompt}\n\n${AESTHETIC_DIRECTION}`;
 }
 
 function ensureDir(dirPath) {
@@ -210,8 +229,7 @@ async function main() {
   console.log("Loading config...");
 
   const config = loadConfig();
-  const { promptTemplates, width, height, variations, times, weathers } =
-    config;
+  const { width, height, variations, times, weathers } = config;
 
   ensureDir(OUTPUT_DIR);
 
@@ -306,7 +324,7 @@ async function main() {
             break;
           }
 
-          const styleIndex = totalGenerated % STYLES.length;
+          const styleIndex = (variationNumber - 1) % STYLES.length;
           const selectedStyle = STYLES[styleIndex];
 
           console.log(
@@ -314,7 +332,7 @@ async function main() {
           );
 
           const prompt = buildPrompt(
-            getRandomTemplate(promptTemplates),
+            getPromptTemplate(config, weatherCategory),
             selectedStyle,
             time,
             representativeWeather,

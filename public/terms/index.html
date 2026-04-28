@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Terms of Use | JackCast</title>
+    <meta
+      name="description"
+      content="Terms of use for JackCast, an installable weather app."
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        background: #161b1d;
+        color: white;
+        font-family:
+          ui-rounded, "SF Pro Rounded", "Avenir Next", system-ui, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+        margin: 0;
+      }
+
+      body {
+        background: linear-gradient(135deg, #111719, #273235 50%, #111719);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .shell {
+        min-height: 100dvh;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .app-frame {
+        position: relative;
+        width: 100%;
+        height: 100dvh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(to bottom, rgb(55 65 81), rgb(55 65 81 / 0.7) 25%, transparent 40%);
+      }
+
+      .app-frame::before {
+        position: absolute;
+        inset: 0;
+        content: "";
+        background-image: url("/backgrounds/cloudy-afternoon-1.jpeg");
+        background-size: cover;
+        background-position: center;
+        mix-blend-mode: overlay;
+        opacity: 1;
+      }
+
+      .app-frame::after {
+        position: absolute;
+        inset: 0;
+        content: "";
+        background: linear-gradient(to bottom, rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.36));
+        pointer-events: none;
+      }
+
+      .topbar {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: calc(16px + env(safe-area-inset-top)) 16px 16px;
+        background: linear-gradient(to bottom, #161b1d, rgb(22 27 29 / 0.7) 60%, rgb(22 27 29 / 0.3));
+        border-bottom: 1px solid rgb(255 255 255 / 0.1);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 0.28);
+        backdrop-filter: blur(16px);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        text-decoration: none;
+      }
+
+      .brand img {
+        width: 36px;
+        height: 36px;
+        border-radius: 999px;
+        box-shadow: 0 8px 18px rgb(0 0 0 / 0.35);
+      }
+
+      .brand-text {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .brand-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.02em;
+        text-shadow: 0 1px 2px rgb(0 0 0 / 0.65), 0 6px 20px rgb(0 0 0 / 0.5);
+      }
+
+      .brand-subtitle {
+        margin-top: 4px;
+        color: rgb(255 255 255 / 0.7);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .header-link {
+        flex: 0 0 auto;
+        border: 1px solid rgb(255 255 255 / 0.12);
+        border-radius: 999px;
+        padding: 9px 12px;
+        background: rgb(17 24 39 / 0.42);
+        color: rgb(255 255 255 / 0.9);
+        font-size: 0.82rem;
+        font-weight: 800;
+        text-decoration: none;
+        backdrop-filter: blur(14px);
+      }
+
+      .content {
+        position: relative;
+        z-index: 2;
+        min-height: 0;
+        flex: 1;
+        overflow-y: auto;
+        padding: 26px 12px calc(28px + env(safe-area-inset-bottom));
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .hero {
+        margin: 0 0 18px;
+        padding: 0 8px;
+        text-align: center;
+        text-shadow: 0 1px 2px rgb(0 0 0 / 0.65), 0 6px 20px rgb(0 0 0 / 0.5);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        margin: 0 0 10px;
+        border: 1px solid rgb(255 255 255 / 0.12);
+        border-radius: 999px;
+        padding: 6px 10px;
+        background: rgb(17 24 39 / 0.4);
+        color: rgb(255 255 255 / 0.86);
+        font-size: 0.72rem;
+        font-weight: 850;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        backdrop-filter: blur(14px);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2.6rem, 13vw, 4.6rem);
+        line-height: 0.92;
+        letter-spacing: -0.06em;
+      }
+
+      .lede {
+        max-width: 34rem;
+        margin: 14px auto 0;
+        color: rgb(255 255 255 / 0.84);
+        font-size: 1rem;
+        font-weight: 650;
+        line-height: 1.55;
+      }
+
+      .tabs,
+      .card {
+        border: 1px solid rgb(255 255 255 / 0.1);
+        background: rgb(17 24 39 / 0.4);
+        box-shadow: 0 10px 24px rgb(0 0 0 / 0.22);
+        backdrop-filter: blur(16px);
+      }
+
+      .tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin: 0 0 14px;
+        border-radius: 999px;
+        padding: 6px;
+      }
+
+      .tab {
+        border-radius: 999px;
+        padding: 10px 12px;
+        color: rgb(255 255 255 / 0.82);
+        font-size: 0.86rem;
+        font-weight: 850;
+        text-align: center;
+        text-decoration: none;
+      }
+
+      .tab[aria-current="page"] {
+        background: rgb(255 255 255 / 0.14);
+        color: white;
+      }
+
+      .card {
+        border-radius: 28px;
+        padding: 22px;
+      }
+
+      .updated {
+        margin: 0 0 18px;
+        color: rgb(255 255 255 / 0.62);
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      h2 {
+        margin: 28px 0 8px;
+        color: white;
+        font-size: 1.18rem;
+        letter-spacing: -0.02em;
+        text-shadow: 0 1px 2px rgb(0 0 0 / 0.55);
+      }
+
+      p,
+      li {
+        color: rgb(255 255 255 / 0.78);
+        line-height: 1.64;
+      }
+
+      ul {
+        padding-left: 1.25rem;
+      }
+
+      .card > p:first-of-type {
+        margin-top: 0;
+      }
+
+      .card a {
+        color: white;
+        font-weight: 850;
+        text-underline-offset: 0.2em;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 26px;
+      }
+
+      .button {
+        border: 1px solid rgb(255 255 255 / 0.1);
+        border-radius: 999px;
+        padding: 10px 13px;
+        background: rgb(255 255 255 / 0.1);
+        color: white;
+        font-size: 0.84rem;
+        font-weight: 850;
+        text-decoration: none;
+      }
+
+      @media (min-width: 1024px) {
+        .app-frame {
+          width: auto;
+          height: 100dvh;
+          max-height: 1200px;
+          aspect-ratio: 9 / 18;
+          border-radius: 24px;
+          box-shadow: 0 24px 70px rgb(0 0 0 / 0.45);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <main class="app-frame">
+        <nav class="topbar" aria-label="JackCast legal navigation">
+          <a class="brand" href="/" aria-label="Return to JackCast">
+            <img src="/logo_192.png" alt="" />
+            <span class="brand-text">
+              <span class="brand-title">JackCast</span>
+              <span class="brand-subtitle">Legal</span>
+            </span>
+          </a>
+          <a class="header-link" href="/">Open app</a>
+        </nav>
+
+        <div class="content">
+          <header class="hero">
+            <p class="eyebrow">Use &amp; Responsibility</p>
+            <h1>Terms of Use</h1>
+            <p class="lede">
+              A short agreement for using JackCast, including forecast accuracy,
+              third-party data, and responsible use.
+            </p>
+          </header>
+
+          <div class="tabs" aria-label="Legal pages">
+            <a class="tab" href="/privacy/">Privacy</a>
+            <a class="tab" href="/terms/" aria-current="page">Terms</a>
+          </div>
+
+          <article class="card">
+            <p class="updated">Last updated: April 28, 2026</p>
+
+            <p>
+              By using JackCast, you agree to these Terms of Use. If you do not
+              agree with these terms, do not use the app.
+            </p>
+
+            <h2>Weather Information</h2>
+            <p>
+              JackCast provides weather, forecast, and air-quality information for
+              general personal use. Weather data can be delayed, incomplete, or
+              inaccurate. Do not rely on JackCast for emergency decisions, severe
+              weather safety, travel safety, medical decisions, or any situation
+              where inaccurate weather information could cause harm.
+            </p>
+
+            <h2>Third-Party Services</h2>
+            <p>
+              JackCast uses third-party services, including Open-Meteo, to provide
+              weather, air-quality, and geocoding data. Those services are
+              controlled by their respective providers and may change, fail, or
+              become unavailable without notice.
+            </p>
+
+            <h2>Location Features</h2>
+            <p>
+              Some features work best when your browser or device shares location
+              access with JackCast. You are responsible for deciding whether to
+              grant location permission. If location access is unavailable, you can
+              search for a city manually.
+            </p>
+
+            <h2>Artwork and App Experience</h2>
+            <p>
+              JackCast includes illustrative weather artwork and animations
+              designed to make forecasts more enjoyable. Artwork is decorative and
+              should not be interpreted as a precise or safety-critical
+              representation of local conditions.
+            </p>
+
+            <h2>Acceptable Use</h2>
+            <p>You agree not to misuse JackCast. This includes:</p>
+            <ul>
+              <li>Attempting to disrupt or overload the app or its data providers.</li>
+              <li>Reverse engineering the app except where allowed by law.</li>
+              <li>Using the app in a way that violates applicable laws.</li>
+            </ul>
+
+            <h2>No Warranty</h2>
+            <p>
+              JackCast is provided as is and as available. To the fullest extent
+              permitted by law, the publisher disclaims warranties of accuracy,
+              availability, fitness for a particular purpose, and non-infringement.
+            </p>
+
+            <h2>Limitation of Liability</h2>
+            <p>
+              To the fullest extent permitted by law, the publisher is not liable
+              for losses or damages arising from your use of JackCast, your
+              reliance on forecast information, third-party service outages, or app
+              availability.
+            </p>
+
+            <h2>Changes</h2>
+            <p>
+              JackCast may change, add, remove, or discontinue features at any
+              time. These terms may also be updated from time to time. Continued
+              use of the app after updates means you accept the updated terms.
+            </p>
+
+            <h2>Contact</h2>
+            <p>
+              For questions about these terms, contact the app publisher through
+              <a href="https://codingnoodles.com/">codingnoodles.com</a>.
+            </p>
+
+            <div class="actions">
+              <a class="button" href="/">Return to JackCast</a>
+              <a class="button" href="/privacy/">Read Privacy</a>
+            </div>
+          </article>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

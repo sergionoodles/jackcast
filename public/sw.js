@@ -7,9 +7,12 @@ const APP_SHELL_URLS = [
   "/",
   "/index.html",
   "/manifest.json",
-  "/icon.jpg",
+  "/apple-touch-icon.png",
+  "/favicon.png",
+  "/logo-512.png",
   "/logo.png",
   "/logo_192.png",
+  "/maskable-512.png",
 ];
 const STATIC_DESTINATIONS = new Set(["font", "image", "script", "style"]);
 const WEATHER_API_HOSTS = new Set([

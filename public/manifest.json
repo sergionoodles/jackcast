@@ -1,8 +1,10 @@
 {
   "name": "JackCast",
   "short_name": "JackCast",
-  "description": "A playful, relaxing weather PWA inspired by Google Weather.",
-  "start_url": "https://jackcast.codingnoodles.com",
+  "description": "A playful, installable weather app with current conditions, hourly forecasts, weekly outlooks, air quality, and dynamic Jack Russell artwork.",
+  "id": "https://jackcast.codingnoodles.com/",
+  "start_url": "https://jackcast.codingnoodles.com/",
+  "scope": "https://jackcast.codingnoodles.com/",
   "display": "standalone",
   "background_color": "#161b1d",
   "theme_color": "#161b1d",
@@ -13,11 +15,32 @@
       "type": "image/png"
     },
     {
-      "src": "/logo.png",
+      "src": "/logo-512.png",
       "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "1024x1024",
       "type": "image/png"
     }
   ],
+  "screenshots": [
+    {
+      "src": "/screenshots/mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "JackCast mobile forecast view"
+    }
+  ],
+  "categories": ["weather", "lifestyle", "utilities"],
   "dir": "ltr",
   "lang": "en",
   "orientation": "portrait"
