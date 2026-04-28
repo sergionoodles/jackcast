@@ -43,19 +43,23 @@ const WEATHER_TO_CATEGORY = {
 
 const MODEL = process.env.VENICE_MODEL || "qwen-image";
 const API_KEY = process.env.VENICE_API_KEY;
+const MAX_PROMPT_LENGTH = parseInt(process.env.MAX_PROMPT_LENGTH || "1500", 10);
 
 const AESTHETIC_DIRECTION =
-  "Overall art direction: pure surreal nostalgic illustration, abstract weather shapes, soft-focus edges, hazy analog color, imperfect hand-drawn forms, visible brush texture, dreamlike storybook mood. Keep the dog charming, loosely rendered, and non-literal with simplified anatomy.";
+  "Art direction: surreal nostalgic flat hand-painted illustration, soft-focus, abstract weather, hazy color, visible brush/paper texture. Avoid 3D, CGI, plastic, render/game look.";
+
+const SUBJECT_DIRECTION =
+  "Dog: same small Jack Russell Terrier mascot, white fur, warm brown ears, one brown eye patch, small brown back patch, black nose, folded ears, slim tail.";
 
 const STYLES = [
-  "Surreal anime-inspired painterly illustration, loose sweeping brushstrokes, softened ink lines, luminous hazy glow, abstract sky gradients, nostalgic color, visible handmade texture, dreamlike weather-cover mood",
-  "Washed watercolor storybook illustration, saturated pigment blooms, wet-on-wet bleeding, visible paper grain, soft unresolved edges, colors drifting into one another, abstract environment, nostalgic rainy-day sketchbook feeling",
-  "Dreamlike oil-pastel painting, smeared color glazes, soft impasto-like texture, blurred light and shadow, imperfect handmade shapes, warm-cool haze, old illustrated book atmosphere",
-  "Matte gouache folk illustration, thick opaque brush shapes, simplified abstract forms, softened color contrasts, charming imperfect mascot design, whimsical nostalgic cover art",
-  "Expressive ink-and-wash fantasy illustration, loose black linework, translucent color washes, atmospheric fog, textured paper grain, elegant negative space, symbolic weather effects, softly rendered character",
-  "Layered storybook poster art, bold gouache shapes, hand-painted texture, softened silhouette design, rich but slightly faded color blocking, charming editorial illustration mood, abstract scenery",
-  "Soft pastel and chalk animation background art, velvety grain, luminous color fields, smudged edges, hazy environmental lighting, expressive hand-drawn marks, warm whimsical memory-like atmosphere",
-  "Decorative painterly art print, woodblock-inspired composition, strong graphic shapes, softened carved-line texture, saturated limited palette, symbolic weather patterning, nostalgic handmade illustration",
+  "Surreal anime painterly illustration, flat hand-painted surface, loose brushstrokes, soft ink, hazy glow, abstract sky, nostalgic texture",
+  "Washed watercolor storybook illustration, flat paper, pigment blooms, wet-on-wet bleed, soft edges, visible grain, nostalgic sketchbook mood",
+  "Dreamlike oil-pastel painting, smeared color, soft texture, blurred light, imperfect handmade shapes, old illustrated book mood",
+  "Matte gouache folk illustration, flat painted-paper look, thick brush shapes, simplified forms, soft contrast, imperfect mascot design",
+  "Ink-and-wash fantasy illustration, loose black linework, translucent washes, foggy paper grain, symbolic weather, softly drawn character",
+  "Layered storybook poster art, flat cut-paper feeling, bold gouache shapes, hand-painted texture, softened silhouettes, abstract scenery",
+  "Soft pastel and chalk animation background, velvety grain, luminous color fields, smudged edges, hazy light, hand-drawn marks",
+  "Decorative painterly art print, woodblock-inspired composition, strong graphic shapes, softened carved-line texture, symbolic weather",
 ];
 
 const args = process.argv.slice(2);
@@ -91,6 +95,14 @@ function getPromptTemplate(config, weatherCategory) {
   return getRandomTemplate(config.promptTemplates);
 }
 
+function getDogAction(time, weather) {
+  if (time.id === "night") {
+    return "sleeping curled up peacefully, eyes closed, tucked paws, cozy and calm";
+  }
+
+  return weather.actionExpressionAccessory;
+}
+
 function buildPrompt(template, style, time, weather) {
   const weatherDescription = `${weather.name} weather, ${time.lighting}`;
   const prompt = template
@@ -98,10 +110,18 @@ function buildPrompt(template, style, time, weather) {
     .replace("[WEATHER DESCRIPTION]", weatherDescription)
     .replace(
       /\[(JACKRUSSEL|DOG) ACTION \+ EXPRESSION \+ ACCESSORY\]/g,
-      weather.actionExpressionAccessory,
+      getDogAction(time, weather),
     );
 
-  return `${prompt}\n\n${AESTHETIC_DIRECTION}`;
+  const finalPrompt = `${prompt}\n\n${SUBJECT_DIRECTION}\n\n${AESTHETIC_DIRECTION}`;
+
+  if (finalPrompt.length > MAX_PROMPT_LENGTH) {
+    throw new Error(
+      `Prompt length ${finalPrompt.length} exceeds max ${MAX_PROMPT_LENGTH}`,
+    );
+  }
+
+  return finalPrompt;
 }
 
 function ensureDir(dirPath) {
