@@ -46,20 +46,20 @@ const API_KEY = process.env.VENICE_API_KEY;
 const MAX_PROMPT_LENGTH = parseInt(process.env.MAX_PROMPT_LENGTH || "1500", 10);
 
 const AESTHETIC_DIRECTION =
-  "Art direction: surreal nostalgic flat hand-painted illustration, soft-focus, abstract weather, hazy color, visible brush/paper texture. Avoid 3D, CGI, plastic, render/game look.";
+  "Art direction: ethereal watercolor painting, aetherial haze, pigment blooms, soft-focus, vague abstract weather, luminous washes, visible paper texture. Avoid 3D, CGI, plastic, render/game look.";
 
 const SUBJECT_DIRECTION =
-  "Dog: same small Jack Russell Terrier mascot, white fur, warm brown ears, one brown eye patch, small brown back patch, black nose, folded ears, slim tail.";
+  "Dog: same small Jack Russell Terrier, white fur, warm brown ears, one brown eye patch, small brown back patch, black nose, folded ears, slim tail.";
 
 const STYLES = [
-  "Surreal anime painterly illustration, flat hand-painted surface, loose brushstrokes, soft ink, hazy glow, abstract sky, nostalgic texture",
-  "Washed watercolor storybook illustration, flat paper, pigment blooms, wet-on-wet bleed, soft edges, visible grain, nostalgic sketchbook mood",
-  "Dreamlike oil-pastel painting, smeared color, soft texture, blurred light, imperfect handmade shapes, old illustrated book mood",
-  "Matte gouache folk illustration, flat painted-paper look, thick brush shapes, simplified forms, soft contrast, imperfect mascot design",
-  "Ink-and-wash fantasy illustration, loose black linework, translucent washes, foggy paper grain, symbolic weather, softly drawn character",
-  "Layered storybook poster art, flat cut-paper feeling, bold gouache shapes, hand-painted texture, softened silhouettes, abstract scenery",
-  "Soft pastel and chalk animation background, velvety grain, luminous color fields, smudged edges, hazy light, hand-drawn marks",
-  "Decorative painterly art print, woodblock-inspired composition, strong graphic shapes, softened carved-line texture, symbolic weather",
+  "Ethereal watercolor painting, wet-on-wet pigment blooms, soft ink traces, luminous aetherial haze, abstract sky washes, nostalgic paper texture",
+  "Loose watercolor landscape painting, translucent washes, bleeding color, soft edges, visible grain, vague dreamlike scenery",
+  "Dreamlike watercolor and pastel painting, smeared color, blurred light, soft paper texture, imperfect painterly forms, old memory mood",
+  "Gouache and watercolor wash painting, opaque-soft brush shapes, diffused contrast, atmospheric haze, loose hand-painted dog",
+  "Ink-and-watercolor fantasy painting, loose linework, translucent washes, foggy paper grain, symbolic weather, softly painted subject",
+  "Layered watercolor cover painting, broad color washes, hand-painted texture, softened silhouettes, luminous vague abstract scenery",
+  "Soft pastel watercolor animation background, velvety grain, luminous color fields, smudged edges, aetherial light, painterly marks",
+  "Decorative watercolor art print, flowing composition, softened line texture, limited muted palette, symbolic weather washes",
 ];
 
 const args = process.argv.slice(2);
