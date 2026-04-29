@@ -45,6 +45,18 @@ const MODEL = process.env.VENICE_MODEL || "qwen-image";
 const API_KEY = process.env.VENICE_API_KEY;
 const MAX_PROMPT_LENGTH = parseInt(process.env.MAX_PROMPT_LENGTH || "1500", 10);
 
+const ANSI = {
+  reset: "\x1b[0m",
+  bold: "\x1b[1m",
+  dim: "\x1b[2m",
+  red: "\x1b[31m",
+  green: "\x1b[32m",
+  yellow: "\x1b[33m",
+  blue: "\x1b[34m",
+  magenta: "\x1b[35m",
+  cyan: "\x1b[36m",
+};
+
 const AESTHETIC_DIRECTION =
   "Art direction: ethereal watercolor painting, aetherial haze, pigment blooms, soft-focus, vague abstract weather, luminous washes, visible paper texture. Avoid 3D, CGI, plastic, render/game look.";
 
@@ -128,6 +140,41 @@ function ensureDir(dirPath) {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
   }
+}
+
+function colorize(color, value) {
+  return `${color}${value}${ANSI.reset}`;
+}
+
+function formatLabel(label, color = ANSI.cyan) {
+  return colorize(color, `${ANSI.bold}${label}${ANSI.reset}`);
+}
+
+function printGenerationBlock({
+  combinationLabel,
+  fileName,
+  variationNumber,
+  styleIndex,
+  selectedStyle,
+  seed,
+  prompt,
+}) {
+  const divider = colorize(ANSI.blue, `${"=".repeat(72)}`);
+  const promptDivider = colorize(ANSI.dim, `${"-".repeat(72)}`);
+
+  console.log(`\n${divider}`);
+  console.log(
+    `${formatLabel("GENERATING", ANSI.magenta)} ${colorize(ANSI.bold, fileName)}`,
+  );
+  console.log(`${formatLabel("COMBINATION")} ${combinationLabel}`);
+  console.log(`${formatLabel("VARIATION")} ${variationNumber}`);
+  console.log(`${formatLabel("SEED")} ${seed}`);
+  console.log(
+    `${formatLabel("STYLE")} ${styleIndex + 1}/${STYLES.length} ${selectedStyle}`,
+  );
+  console.log(promptDivider);
+  console.log(`${formatLabel("PROMPT", ANSI.yellow)}\n${prompt}`);
+  console.log(divider);
 }
 
 function getWeatherCategory(weatherId) {
@@ -347,10 +394,6 @@ async function main() {
           const styleIndex = (variationNumber - 1) % STYLES.length;
           const selectedStyle = STYLES[styleIndex];
 
-          console.log(
-            `  -> Using style ${styleIndex + 1}/${STYLES.length}: ${selectedStyle.substring(0, 60)}...`,
-          );
-
           const prompt = buildPrompt(
             getPromptTemplate(config, weatherCategory),
             selectedStyle,
@@ -359,24 +402,36 @@ async function main() {
           );
 
           const seed = getRandomSeed();
+          const fileName = `${outputBaseName}-${variationNumber}.${OUTPUT_EXT}`;
+          const filePath = path.join(OUTPUT_DIR, fileName);
 
           try {
-            console.log(`Prompt: ${prompt}\n\n`);
+            printGenerationBlock({
+              combinationLabel: outputBaseName,
+              fileName,
+              variationNumber,
+              styleIndex,
+              selectedStyle,
+              seed,
+              prompt,
+            });
+
             const images = await generateImage(prompt, width, height, seed);
 
             if (!images || images.length === 0) {
               throw new Error("No image returned by API");
             }
 
-            const fileName = `${outputBaseName}-${variationNumber}.${OUTPUT_EXT}`;
-            const filePath = path.join(OUTPUT_DIR, fileName);
             saveImage(images[0], filePath);
             totalGenerated++;
             savedForCombination++;
+            console.log(
+              `${formatLabel("SAVED", ANSI.green)} ${fileName} ${colorize(ANSI.dim, `(${filePath})`)}`,
+            );
           } catch (error) {
             totalFailed++;
             console.error(
-              `  -> Variation ${variationNumber} failed (seed ${seed}): ${error.message}`,
+              `${formatLabel("FAILED", ANSI.red)} ${fileName} ${colorize(ANSI.dim, `(seed ${seed})`)}: ${error.message}`,
             );
           }
 
