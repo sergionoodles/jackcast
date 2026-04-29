@@ -29,16 +29,17 @@ function hasVariant(
   return availablePaths.has(`${category}-${timeOfDay}-${variant}.jpeg`);
 }
 
-function getVariantCount(
+function getAvailableVariants(
   category: WeatherCategory,
   timeOfDay: TimeOfDay,
-): number {
+): number[] {
+  const variants: number[] = [];
   for (let i = 1; i <= MAX_VARIANTS; i++) {
-    if (!hasVariant(category, timeOfDay, i)) {
-      return i - 1;
+    if (hasVariant(category, timeOfDay, i)) {
+      variants.push(i);
     }
   }
-  return MAX_VARIANTS;
+  return variants;
 }
 
 function getDayOfYear(): number {
@@ -67,18 +68,19 @@ function getLocationHash(location?: BackgroundLocation): number {
 function getDayBasedVariant(
   category: WeatherCategory,
   timeOfDay: TimeOfDay,
-  variantCount: number,
+  availableVariants: number[],
   location?: BackgroundLocation,
 ): number {
-  if (variantCount === 0) {
+  if (availableVariants.length === 0) {
     return 0;
   }
   const dayOfYear = getDayOfYear();
   const locationHash = getLocationHash(location);
+  const variantCount = availableVariants.length;
   const hash =
     (category.length * 31 + timeOfDay.length * 17 + dayOfYear + locationHash) %
     variantCount;
-  return hash + 1;
+  return availableVariants[hash];
 }
 
 export function getBackgroundImageUrl(
@@ -86,14 +88,14 @@ export function getBackgroundImageUrl(
   timeOfDay: TimeOfDay,
   location?: BackgroundLocation,
 ): string {
-  const variantCount = getVariantCount(category, timeOfDay);
-  if (variantCount === 0) {
+  const availableVariants = getAvailableVariants(category, timeOfDay);
+  if (availableVariants.length === 0) {
     return DEFAULT_IMAGE;
   }
   const variant = getDayBasedVariant(
     category,
     timeOfDay,
-    variantCount,
+    availableVariants,
     location,
   );
   return `${BASE_URL}/${category}-${timeOfDay}-${variant}.jpeg`;
