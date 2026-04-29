@@ -403,11 +403,11 @@ export default function App() {
           />
 
           {/* Footer */}
-          <footer className="relative w-full px-3 pt-8 pb-4 text-white/90 drop-shadow-md text-xs mt-2 overflow-hidden">
+          <footer className="relative w-full px-3 pt-8 pb-3 text-white/90 drop-shadow-md text-xs mt-2 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/0 pointer-events-none" />
             <p className="relative z-10 font-medium text-center"></p>
-            <div className="relative z-10 mt-2 flex items-center justify-between gap-4 px-1">
-              <div className="flex items-center gap-1">
+            <div className="relative z-10 mt-2 px-1">
+              <div className="flex flex-wrap items-center justify-center gap-1">
                 <p>&copy; {new Date().getFullYear()} Coding Noodles</p>
                 <span className="text-white/35">//</span>
                 <a
@@ -425,7 +425,7 @@ export default function App() {
                 </a>
               </div>
 
-              <span>
+              <div className="mt-1 text-center">
                 Weather data provided by{" "}
                 <a
                   href="https://open-meteo.com/"
@@ -435,7 +435,7 @@ export default function App() {
                 >
                   Open-Meteo
                 </a>
-              </span>
+              </div>
             </div>
           </footer>
         </motion.div>

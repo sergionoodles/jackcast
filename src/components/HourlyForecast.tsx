@@ -73,7 +73,7 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
 
   return (
     <motion.div
-      className="w-full px-3 mb-6 mt-8"
+      className="w-full px-3 mb-3 mt-8"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
