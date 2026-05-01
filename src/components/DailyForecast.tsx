@@ -22,6 +22,7 @@ import {
 interface DailyForecastProps {
   daily: DailyForecastType;
   hourly: HourlyForecastType;
+  currentTime: string;
 }
 
 const getWeatherIcon = (code: number, isDay = true) => {
@@ -54,8 +55,15 @@ const formatTime = (timeStr: string) => {
   return date.toLocaleTimeString([], { hour: "numeric" });
 };
 
-const DailyForecast: React.FC<DailyForecastProps> = ({ daily, hourly }) => {
+const DailyForecast: React.FC<DailyForecastProps> = ({
+  daily,
+  hourly,
+  currentTime,
+}) => {
   const [expandedDayIndex, setExpandedDayIndex] = useState<number | null>(0);
+  const now = new Date(currentTime);
+  const currentHourStart = new Date(now);
+  currentHourStart.setMinutes(0, 0, 0);
 
   const dailyRows = useMemo(
     () =>
@@ -63,9 +71,15 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ daily, hourly }) => {
         const hourlyIndexes: number[] = [];
         for (let i = 0; i < hourly.time.length; i += 1) {
           const hourTime = hourly.time[i];
-          if (hourTime?.startsWith(day)) {
-            hourlyIndexes.push(i);
+          if (!hourTime?.startsWith(day)) {
+            continue;
           }
+
+          if (index === 0 && new Date(hourTime) < currentHourStart) {
+            continue;
+          }
+
+          hourlyIndexes.push(i);
         }
 
         const dayWindValues = hourlyIndexes
@@ -121,6 +135,7 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ daily, hourly }) => {
       hourly.humidity,
       hourly.precipitationProbability,
       hourly.aqi,
+      currentHourStart,
     ],
   );
 

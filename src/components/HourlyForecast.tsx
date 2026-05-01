@@ -48,10 +48,13 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
   hourly,
   currentTime,
 }) => {
-  // Find the index of the current hour
   const now = new Date(currentTime);
-  const currentHourIndex = hourly.time.findIndex((t) => new Date(t) > now);
-  const startIndex = currentHourIndex > 0 ? currentHourIndex - 1 : 0;
+  const currentHourStart = new Date(now);
+  currentHourStart.setMinutes(0, 0, 0);
+  const currentHourIndex = hourly.time.findIndex(
+    (t) => new Date(t) >= currentHourStart,
+  );
+  const startIndex = currentHourIndex >= 0 ? currentHourIndex : 0;
   const next24Hours = hourly.time.slice(startIndex, startIndex + 24);
   const next24Temps = hourly.temperature.slice(startIndex, startIndex + 24);
   const next24Codes = hourly.weatherCode.slice(startIndex, startIndex + 24);

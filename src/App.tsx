@@ -400,6 +400,7 @@ export default function App() {
           <DailyForecast
             daily={weatherData.daily}
             hourly={weatherData.hourly}
+            currentTime={currentTime}
           />
 
           {/* Footer */}
