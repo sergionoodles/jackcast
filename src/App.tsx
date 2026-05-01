@@ -17,26 +17,35 @@ type RefreshSource =
   | "location-select"
   | "interval"
   | "activate";
+type LoadingPhase = "idle" | "location" | "weather";
+
+const FALLBACK_LOCATION: Location = {
+  id: 3173435,
+  name: "Milan",
+  latitude: 45.4642,
+  longitude: 9.19,
+  country: "Italy",
+};
 
 export default function App() {
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-  const [favorites, setFavorites] = useState<Location[]>([]);
+  const [favorites, setFavorites] = useState<Location[]>(() => {
+    try {
+      const storedFavorites = localStorage.getItem("froggyFavorites");
+      return storedFavorites ? JSON.parse(storedFavorites) : [];
+    } catch {
+      return [];
+    }
+  });
   const [isSearching, setIsSearching] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loadingPhase, setLoadingPhase] = useState<LoadingPhase>("location");
   const [isGpsLocation, setIsGpsLocation] = useState(true);
   const [isMinimal, setIsMinimal] = useState(false);
   const mainRef = useRef<HTMLDivElement | null>(null);
   const lastSuccessfulRefreshAtRef = useRef<number | null>(null);
   const refreshInFlightRef = useRef(false);
-
-  // Load favorites from local storage
-  useEffect(() => {
-    const storedFavorites = localStorage.getItem("froggyFavorites");
-    if (storedFavorites) {
-      setFavorites(JSON.parse(storedFavorites));
-    }
-  }, []);
+  const activeRequestTokenRef = useRef(0);
 
   // Save favorites to local storage
   useEffect(() => {
@@ -48,9 +57,11 @@ export default function App() {
       lat: number,
       lon: number,
       source: RefreshSource,
-      options?: { guardInFlight?: boolean },
+      options?: { guardInFlight?: boolean; requestToken?: number },
     ) => {
       const shouldGuard = options?.guardInFlight ?? false;
+      const requestToken = options?.requestToken;
+
       if (shouldGuard && refreshInFlightRef.current) {
         return null;
       }
@@ -62,6 +73,13 @@ export default function App() {
       try {
         const weather = await getWeatherData(lat, lon);
         if (weather) {
+          if (
+            typeof requestToken === "number" &&
+            requestToken !== activeRequestTokenRef.current
+          ) {
+            return weather;
+          }
+
           setWeatherData(weather);
           lastSuccessfulRefreshAtRef.current = Date.now();
           return weather;
@@ -96,13 +114,53 @@ export default function App() {
     [currentLocation, fetchWeatherForCoords],
   );
 
+  const beginTrackedRequest = useCallback(() => {
+    activeRequestTokenRef.current += 1;
+    return activeRequestTokenRef.current;
+  }, []);
+
+  const isTrackedRequestActive = useCallback((requestToken: number) => {
+    return requestToken === activeRequestTokenRef.current;
+  }, []);
+
   const fetchInitialWeather = useCallback(async () => {
-    setIsLoading(true);
+    const requestToken = beginTrackedRequest();
+    setLoadingPhase("location");
+    setIsGpsLocation(true);
+
+    const applyLocationFallback = async () => {
+      if (!isTrackedRequestActive(requestToken)) {
+        return;
+      }
+
+      const fallbackLocation = favorites[0] ?? FALLBACK_LOCATION;
+      setCurrentLocation(fallbackLocation);
+      setIsGpsLocation(false);
+      setLoadingPhase("weather");
+
+      await fetchWeatherForCoords(
+        fallbackLocation.latitude,
+        fallbackLocation.longitude,
+        "initial-load",
+        { requestToken },
+      );
+
+      if (isTrackedRequestActive(requestToken)) {
+        setLoadingPhase("idle");
+      }
+    };
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
+          if (!isTrackedRequestActive(requestToken)) {
+            return;
+          }
+
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
+          setLoadingPhase("weather");
+
           // Simple reverse geocoding using Open-Meteo search (not perfect but works for demo)
           try {
             const res = await fetch(
@@ -116,61 +174,45 @@ export default function App() {
               latitude: lat,
               longitude: lon,
             };
-            setCurrentLocation(loc);
-            setIsGpsLocation(true);
-            await fetchWeatherForCoords(lat, lon, "initial-load");
-          } catch (e) {
-            // Fallback if reverse geocoding fails
+            if (isTrackedRequestActive(requestToken)) {
+              setCurrentLocation(loc);
+              setIsGpsLocation(true);
+            }
+          } catch (error) {
             const loc: Location = {
               id: Date.now(),
               name: "Current Location",
               latitude: lat,
               longitude: lon,
             };
-            setCurrentLocation(loc);
-            setIsGpsLocation(true);
-            await fetchWeatherForCoords(lat, lon, "initial-load");
+            if (isTrackedRequestActive(requestToken)) {
+              setCurrentLocation(loc);
+              setIsGpsLocation(true);
+            }
           }
-          setIsLoading(false);
+
+          await fetchWeatherForCoords(lat, lon, "initial-load", { requestToken });
+          if (isTrackedRequestActive(requestToken)) {
+            setLoadingPhase("idle");
+          }
         },
         async () => {
-          // Fallback to London
-          const loc: Location = {
-            id: 2643743,
-            name: "London",
-            latitude: 51.5085,
-            longitude: -0.1257,
-            country: "United Kingdom",
-          };
-          setCurrentLocation(loc);
-          setIsGpsLocation(false);
-          await fetchWeatherForCoords(
-            loc.latitude,
-            loc.longitude,
-            "initial-load",
-          );
-          setIsLoading(false);
+          await applyLocationFallback();
+        },
+        {
+          enableHighAccuracy: false,
+          maximumAge: 15 * 60 * 1000,
+          timeout: 15000,
         },
       );
     } else {
-      // Fallback to London
-      const loc: Location = {
-        id: 2643743,
-        name: "London",
-        latitude: 51.5085,
-        longitude: -0.1257,
-        country: "United Kingdom",
-      };
-      setCurrentLocation(loc);
-      setIsGpsLocation(false);
-      await fetchWeatherForCoords(loc.latitude, loc.longitude, "initial-load");
-      setIsLoading(false);
+      await applyLocationFallback();
     }
-  }, [fetchWeatherForCoords]);
+  }, [beginTrackedRequest, favorites, fetchWeatherForCoords, isTrackedRequestActive]);
 
-  // Initial load - try geolocation, fallback to default (London)
+  // Initial load - try geolocation, fallback to first saved favorite or Milan
   useEffect(() => {
-    fetchInitialWeather();
+    void fetchInitialWeather();
   }, [fetchInitialWeather]);
 
   useEffect(() => {
@@ -225,22 +267,29 @@ export default function App() {
 
   const handleSelectCurrentLocation = () => {
     setIsSearching(false);
-    fetchInitialWeather();
+    void fetchInitialWeather();
   };
 
   const handleSelectLocation = async (location: Location) => {
+    const requestToken = beginTrackedRequest();
     setIsSearching(false);
-    setIsLoading(true);
+    setLoadingPhase("weather");
+
     const weather = await fetchWeatherForCoords(
       location.latitude,
       location.longitude,
       "location-select",
+      { requestToken },
     );
-    if (weather) {
+
+    if (weather && isTrackedRequestActive(requestToken)) {
       setCurrentLocation(location);
       setIsGpsLocation(false);
     }
-    setIsLoading(false);
+
+    if (isTrackedRequestActive(requestToken)) {
+      setLoadingPhase("idle");
+    }
   };
 
   const toggleFavorite = () => {
@@ -263,23 +312,28 @@ export default function App() {
     setFavorites(favorites.filter((f) => f.id !== id));
   };
 
-  if (isLoading || !weatherData || !currentLocation) {
-    return (
-      <div className="min-h-screen w-full bg-gradient-to-br from-mist-900 via-mist-800 to-mist-900 flex items-center justify-center p-0 m-0">
-        <div className="w-full lg:aspect-[9/18] lg:max-h-[1200px] lg:w-auto lg:relative h-[100dvh] flex items-center justify-center">
-          <Loader2 className="w-12 h-12 text-white animate-spin" />
-        </div>
-      </div>
-    );
-  }
-
-  const isFavorite = favorites.some((f) => f.id === currentLocation.id);
+  const displayLocation =
+    currentLocation ??
+    (loadingPhase === "location"
+      ? {
+          id: -1,
+          name: "Current Location",
+          latitude: FALLBACK_LOCATION.latitude,
+          longitude: FALLBACK_LOCATION.longitude,
+        }
+      : FALLBACK_LOCATION);
+  const activeWeatherCode = weatherData?.current.weatherCode ?? 0;
+  const isForecastReady = Boolean(weatherData && currentLocation);
+  const isFavorite = currentLocation
+    ? favorites.some((f) => f.id === currentLocation.id)
+    : false;
   const currentTime = new Date().toISOString(); // Approximate current time for hourly forecast
 
   return (
     <WeatherBackground
-      weatherCode={weatherData.current.weatherCode}
-      location={currentLocation}
+      weatherCode={activeWeatherCode}
+      location={displayLocation}
+      showImage={isForecastReady}
     >
       {!isMinimal && <InstallPrompt />}
       {/* Header */}
@@ -290,23 +344,25 @@ export default function App() {
       >
         <div className="flex items-center min-w-0 flex-1">
           <div className="min-w-0 flex items-center gap-2">
-            {isGpsLocation && <MapPin className="w-5 h-5 shrink-0" />}
+            {(isGpsLocation || loadingPhase === "location") && (
+              <MapPin className="w-5 h-5 shrink-0" />
+            )}
             <h1 className="min-w-0">
               <button
                 type="button"
                 onClick={() => setIsSearching(true)}
                 className="block truncate text-left text-2xl font-medium tracking-wide weather-hero-text cursor-pointer"
-                title={currentLocation.name}
+                title={displayLocation.name}
                 aria-label="Open location search panel"
               >
-                {currentLocation.name}
+                {displayLocation.name}
               </button>
             </h1>
           </div>
         </div>
 
         <div className="flex items-center space-x-2 shrink-0">
-          {!isGpsLocation && (
+          {!isGpsLocation && isForecastReady && (
             <button
               onClick={toggleFavorite}
               type="button"
@@ -338,14 +394,55 @@ export default function App() {
         ref={mainRef}
         className={`relative flex-1 min-h-0 z-10 flex flex-col scroll-touch${isMinimal ? " overflow-hidden" : " overflow-y-auto scrollbar-hide"}`}
       >
-        <div className="flex flex-col h-full shrink-0">
-          <div className="sticky top-0 z-20">
+        {!isForecastReady ? (
+          <div className="flex-1 flex items-center justify-center px-6">
+            <div className="flex flex-col items-center gap-4 text-white">
+              <Loader2 className="w-12 h-12 animate-spin" />
+              <p className="text-sm font-medium tracking-wide text-white/85">
+                {loadingPhase === "location"
+                  ? "Loading location..."
+                  : "Loading weather..."}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="flex flex-col h-full shrink-0">
+              <div className="sticky top-0 z-20">
+                <motion.div
+                  animate={{
+                    opacity: isMinimal ? 0 : 1,
+                    scale: isMinimal ? 0.3 : 1,
+                    y: isMinimal ? -20 : 0,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 30,
+                    mass: 0.8,
+                  }}
+                >
+                  <CurrentWeather weather={weatherData.current} />
+                </motion.div>
+              </div>
+
+              <div
+                className="flex-1 cursor-pointer"
+                onClick={toggleMinimal}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") toggleMinimal();
+                }}
+                aria-label={
+                  isMinimal ? "Show full interface" : "Hide interface to view image"
+                }
+              />
+            </div>
+
             <motion.div
-              animate={{
-                opacity: isMinimal ? 0 : 1,
-                scale: isMinimal ? 0.3 : 1,
-                y: isMinimal ? -20 : 0,
-              }}
+              className="sticky bottom-0 z-20 shrink-0"
+              animate={{ y: isMinimal ? "85%" : 0 }}
               transition={{
                 type: "spring",
                 stiffness: 300,
@@ -353,93 +450,67 @@ export default function App() {
                 mass: 0.8,
               }}
             >
-              <CurrentWeather weather={weatherData.current} />
+              <HourlyForecast
+                hourly={weatherData.hourly}
+                currentTime={currentTime}
+              />
             </motion.div>
-          </div>
 
-          <div
-            className="flex-1 cursor-pointer"
-            onClick={toggleMinimal}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") toggleMinimal();
-            }}
-            aria-label={
-              isMinimal ? "Show full interface" : "Hide interface to view image"
-            }
-          />
-        </div>
+            <motion.div
+              className="flex flex-col shrink-0"
+              animate={{ y: isMinimal ? "85%" : 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+                mass: 0.8,
+              }}
+            >
+              <DailyForecast
+                daily={weatherData.daily}
+                hourly={weatherData.hourly}
+                currentTime={currentTime}
+              />
 
-        <motion.div
-          className="sticky bottom-0 z-20 shrink-0"
-          animate={{ y: isMinimal ? "85%" : 0 }}
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 30,
-            mass: 0.8,
-          }}
-        >
-          <HourlyForecast
-            hourly={weatherData.hourly}
-            currentTime={currentTime}
-          />
-        </motion.div>
+              {/* Footer */}
+              <footer className="relative w-full px-3 pt-8 pb-3 text-white/90 drop-shadow-md text-xs mt-2 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/0 pointer-events-none" />
+                <p className="relative z-10 font-medium text-center"></p>
+                <div className="relative z-10 mt-2 px-1">
+                  <div className="flex flex-wrap items-center justify-center gap-1">
+                    <p>&copy; {new Date().getFullYear()} Coding Noodles</p>
+                    <span className="text-white/35">//</span>
+                    <a
+                      href="/privacy/"
+                      className="underline hover:text-white font-semibold transition-colors"
+                    >
+                      Privacy
+                    </a>
+                    <span className="text-white/35">//</span>
+                    <a
+                      href="/terms/"
+                      className="underline hover:text-white font-semibold transition-colors"
+                    >
+                      Terms
+                    </a>
+                  </div>
 
-        <motion.div
-          className="flex flex-col shrink-0"
-          animate={{ y: isMinimal ? "85%" : 0 }}
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 30,
-            mass: 0.8,
-          }}
-        >
-          <DailyForecast
-            daily={weatherData.daily}
-            hourly={weatherData.hourly}
-            currentTime={currentTime}
-          />
-
-          {/* Footer */}
-          <footer className="relative w-full px-3 pt-8 pb-3 text-white/90 drop-shadow-md text-xs mt-2 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/0 pointer-events-none" />
-            <p className="relative z-10 font-medium text-center"></p>
-            <div className="relative z-10 mt-2 px-1">
-              <div className="flex flex-wrap items-center justify-center gap-1">
-                <p>&copy; {new Date().getFullYear()} Coding Noodles</p>
-                <span className="text-white/35">//</span>
-                <a
-                  href="/privacy/"
-                  className="underline hover:text-white font-semibold transition-colors"
-                >
-                  Privacy
-                </a>
-                <span className="text-white/35">//</span>
-                <a
-                  href="/terms/"
-                  className="underline hover:text-white font-semibold transition-colors"
-                >
-                  Terms
-                </a>
-              </div>
-
-              <div className="mt-1 text-center">
-                Weather data provided by{" "}
-                <a
-                  href="https://open-meteo.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline hover:text-white font-semibold transition-colors"
-                >
-                  Open-Meteo
-                </a>
-              </div>
-            </div>
-          </footer>
-        </motion.div>
+                  <div className="mt-1 text-center">
+                    Weather data provided by{" "}
+                    <a
+                      href="https://open-meteo.com/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline hover:text-white font-semibold transition-colors"
+                    >
+                      Open-Meteo
+                    </a>
+                  </div>
+                </div>
+              </footer>
+            </motion.div>
+          </>
+        )}
       </main>
 
       {/* Modals / Drawers */}

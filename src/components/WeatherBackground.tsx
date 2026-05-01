@@ -10,12 +10,14 @@ import type { Location } from "../types";
 interface WeatherBackgroundProps {
   weatherCode: number;
   location: Location;
+  showImage?: boolean;
   children: React.ReactNode;
 }
 
 const WeatherBackground: React.FC<WeatherBackgroundProps> = ({
   weatherCode,
   location,
+  showImage = true,
   children,
 }) => {
   const category = getWeatherCategory(weatherCode);
@@ -31,12 +33,14 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({
         transition={{ duration: 1 }}
       >
         {/* Background Image Overlay */}
-        <div
-          className="weather-bg-image absolute inset-0 z-0 opacity-100 bg-cover bg-center transition-all duration-1000"
-          style={{
-            backgroundImage: `url(${imageUrl}), url('/backgrounds/clear-afternoon-1.jpeg')`,
-          }}
-        />
+        {showImage && (
+          <div
+            className="weather-bg-image absolute inset-0 z-0 opacity-100 bg-cover bg-center transition-all duration-1000"
+            style={{
+              backgroundImage: `url(${imageUrl}), url('/backgrounds/clear-afternoon-1.jpeg')`,
+            }}
+          />
+        )}
 
         {/* Dark overlay for better text contrast */}
         <div className="absolute inset-0 z-0 pointer-events-none" />
