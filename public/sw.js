@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v4";
+const CACHE_VERSION = "v5";
 const SHELL_CACHE = `jackcast-shell-${CACHE_VERSION}`;
 const STATIC_CACHE = `jackcast-static-${CACHE_VERSION}`;
 const API_CACHE = `jackcast-api-${CACHE_VERSION}`;
