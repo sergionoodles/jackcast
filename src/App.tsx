@@ -199,7 +199,9 @@ export default function App() {
             }
           }
 
-          await fetchWeatherForCoords(lat, lon, "initial-load", { requestToken });
+          await fetchWeatherForCoords(lat, lon, "initial-load", {
+            requestToken,
+          });
           if (isTrackedRequestActive(requestToken)) {
             setLoadingPhase("idle");
           }
@@ -216,7 +218,12 @@ export default function App() {
     } else {
       await applyLocationFallback();
     }
-  }, [beginTrackedRequest, favorites, fetchWeatherForCoords, isTrackedRequestActive]);
+  }, [
+    beginTrackedRequest,
+    favorites,
+    fetchWeatherForCoords,
+    isTrackedRequestActive,
+  ]);
 
   // Initial load - try geolocation, fallback to first saved favorite or Milan
   useEffect(() => {
@@ -611,7 +618,7 @@ export default function App() {
         onTouchEnd={handleTouchEnd}
       >
         <motion.div
-          className="flex min-h-full flex-col"
+          className="flex min-h-dvh flex-col"
           style={{ x: swipeX, opacity: swipeOpacity }}
         >
           {!isForecastReady ? (
@@ -662,75 +669,75 @@ export default function App() {
                 />
               </div>
 
-            <motion.div
-              className="sticky bottom-0 z-20 shrink-0"
-              animate={{ y: isMinimal ? "85%" : 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 30,
-                mass: 0.8,
-              }}
-            >
-              <HourlyForecast
-                hourly={weatherData.hourly}
-                currentTime={currentTime}
-              />
-            </motion.div>
+              <motion.div
+                className="sticky bottom-0 z-20 shrink-0"
+                animate={{ y: isMinimal ? "85%" : 0 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 30,
+                  mass: 0.8,
+                }}
+              >
+                <HourlyForecast
+                  hourly={weatherData.hourly}
+                  currentTime={currentTime}
+                />
+              </motion.div>
 
-            <motion.div
-              className="flex flex-col shrink-0"
-              animate={{ y: isMinimal ? "85%" : 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 30,
-                mass: 0.8,
-              }}
-            >
-              <DailyForecast
-                daily={weatherData.daily}
-                hourly={weatherData.hourly}
-                currentTime={currentTime}
-              />
+              <motion.div
+                className="flex flex-col shrink-0"
+                animate={{ y: isMinimal ? "85%" : 0 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 30,
+                  mass: 0.8,
+                }}
+              >
+                <DailyForecast
+                  daily={weatherData.daily}
+                  hourly={weatherData.hourly}
+                  currentTime={currentTime}
+                />
 
-              {/* Footer */}
-              <footer className="relative w-full px-3 pt-8 pb-3 text-white/90 drop-shadow-md text-xs mt-2 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/0 pointer-events-none" />
-                <p className="relative z-10 font-medium text-center"></p>
-                <div className="relative z-10 mt-2 px-1">
-                  <div className="flex flex-wrap items-center justify-center gap-1">
-                    <p>&copy; {new Date().getFullYear()} Coding Noodles</p>
-                    <span className="text-white/35">//</span>
-                    <a
-                      href="/privacy/"
-                      className="underline hover:text-white font-semibold transition-colors"
-                    >
-                      Privacy
-                    </a>
-                    <span className="text-white/35">//</span>
-                    <a
-                      href="/terms/"
-                      className="underline hover:text-white font-semibold transition-colors"
-                    >
-                      Terms
-                    </a>
+                {/* Footer */}
+                <footer className="relative w-full px-3 pt-8 pb-3 text-white/90 drop-shadow-md text-xs mt-2 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/0 pointer-events-none" />
+                  <p className="relative z-10 font-medium text-center"></p>
+                  <div className="relative z-10 mt-2 px-1">
+                    <div className="flex flex-wrap items-center justify-center gap-1">
+                      <p>&copy; {new Date().getFullYear()} Coding Noodles</p>
+                      <span className="text-white/35">//</span>
+                      <a
+                        href="/privacy/"
+                        className="underline hover:text-white font-semibold transition-colors"
+                      >
+                        Privacy
+                      </a>
+                      <span className="text-white/35">//</span>
+                      <a
+                        href="/terms/"
+                        className="underline hover:text-white font-semibold transition-colors"
+                      >
+                        Terms
+                      </a>
+                    </div>
+
+                    <div className="mt-1 text-center">
+                      Weather data provided by{" "}
+                      <a
+                        href="https://open-meteo.com/"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="underline hover:text-white font-semibold transition-colors"
+                      >
+                        Open-Meteo
+                      </a>
+                    </div>
                   </div>
-
-                  <div className="mt-1 text-center">
-                    Weather data provided by{" "}
-                    <a
-                      href="https://open-meteo.com/"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="underline hover:text-white font-semibold transition-colors"
-                    >
-                      Open-Meteo
-                    </a>
-                  </div>
-                </div>
-              </footer>
-            </motion.div>
+                </footer>
+              </motion.div>
             </>
           )}
         </motion.div>
