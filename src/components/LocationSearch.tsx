@@ -57,7 +57,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 bg-mist-900/40 backdrop-blur-sm flex justify-end"
+      className="fixed inset-0 z-50 bg-mist-900/35 backdrop-blur-sm flex justify-end"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -69,13 +69,13 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
         exit={{ x: "100%" }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
       >
-        <div className="p-6 flex items-center border-b border-white/10 shrink-0">
-          <Search className="w-7 h-7 text-white/50 mr-3 shrink-0" />
+        <div className="app-safe-header app-no-pull-refresh px-4 pb-4 flex items-center border-b border-white/10 shrink-0">
+          <Search className="w-6 h-6 text-white/50 mr-3 shrink-0" />
           <input
             autoFocus
             type="text"
             placeholder="Search for a city..."
-            className="flex-1 bg-transparent border-none outline-none text-white text-lg placeholder-white/50"
+            className="h-10 flex-1 bg-transparent border-none outline-none text-white text-lg placeholder-white/50"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />

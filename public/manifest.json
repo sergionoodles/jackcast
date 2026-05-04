@@ -20,12 +20,6 @@
       "type": "image/png"
     },
     {
-      "src": "/maskable-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
       "src": "/logo.png",
       "sizes": "1024x1024",
       "type": "image/png"

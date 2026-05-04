@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v5";
+const CACHE_VERSION = "v6";
 const SHELL_CACHE = `jackcast-shell-${CACHE_VERSION}`;
 const STATIC_CACHE = `jackcast-static-${CACHE_VERSION}`;
 const API_CACHE = `jackcast-api-${CACHE_VERSION}`;
@@ -12,7 +12,6 @@ const APP_SHELL_URLS = [
   "/logo-512.png",
   "/logo.png",
   "/logo_192.png",
-  "/maskable-512.png",
   "/screenshots/mobile_1.png",
   "/screenshots/mobile_2.png",
 ];
