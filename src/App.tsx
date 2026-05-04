@@ -51,12 +51,14 @@ export default function App() {
   const lastSuccessfulRefreshAtRef = useRef<number | null>(null);
   const refreshInFlightRef = useRef(false);
   const activeRequestTokenRef = useRef(0);
+  const favoritesRef = useRef(favorites);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const swipeX = useMotionValue(0);
   const swipeOpacity = useMotionValue(1);
 
   // Save favorites to local storage
   useEffect(() => {
+    favoritesRef.current = favorites;
     localStorage.setItem("froggyFavorites", JSON.stringify(favorites));
   }, [favorites]);
 
@@ -141,7 +143,7 @@ export default function App() {
         return;
       }
 
-      const fallbackLocation = favorites[0] ?? FALLBACK_LOCATION;
+      const fallbackLocation = favoritesRef.current[0] ?? FALLBACK_LOCATION;
       setCurrentLocation(fallbackLocation);
       setIsGpsLocation(false);
       setLoadingPhase("weather");
@@ -220,7 +222,6 @@ export default function App() {
     }
   }, [
     beginTrackedRequest,
-    favorites,
     fetchWeatherForCoords,
     isTrackedRequestActive,
   ]);
