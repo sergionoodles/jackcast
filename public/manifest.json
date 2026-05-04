@@ -33,11 +33,18 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshots/mobile.png",
+      "src": "/screenshots/mobile_1.png",
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "JackCast mobile forecast view"
+    },
+    {
+      "src": "/screenshots/mobile_2.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "JackCast mobile overcast view"
     }
   ],
   "categories": ["weather", "lifestyle", "utilities"],
