@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v3";
+const CACHE_VERSION = "v4";
 const SHELL_CACHE = `jackcast-shell-${CACHE_VERSION}`;
 const STATIC_CACHE = `jackcast-static-${CACHE_VERSION}`;
 const API_CACHE = `jackcast-api-${CACHE_VERSION}`;
@@ -13,6 +13,8 @@ const APP_SHELL_URLS = [
   "/logo.png",
   "/logo_192.png",
   "/maskable-512.png",
+  "/screenshots/mobile_1.png",
+  "/screenshots/mobile_2.png",
 ];
 const STATIC_DESTINATIONS = new Set(["font", "image", "script", "style"]);
 const WEATHER_API_HOSTS = new Set([
@@ -151,6 +153,14 @@ self.addEventListener("fetch", (event) => {
         }
       })(),
     );
+    return;
+  }
+
+  if (
+    requestUrl.origin === self.location.origin &&
+    requestUrl.pathname === "/manifest.json"
+  ) {
+    event.respondWith(networkFirst(event.request, SHELL_CACHE));
     return;
   }
 
