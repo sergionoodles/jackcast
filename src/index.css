@@ -6,12 +6,10 @@
     --app-safe-bottom: 0px;
   }
 
-  @media (display-mode: standalone) {
-    @supports (-webkit-touch-callout: none) {
-      :root {
-        --app-safe-top: env(safe-area-inset-top, 0px);
-        --app-safe-bottom: env(safe-area-inset-bottom, 0px);
-      }
+  @supports (-webkit-touch-callout: none) {
+    html.ios-standalone {
+      --app-safe-top: env(safe-area-inset-top, 0px);
+      --app-safe-bottom: env(safe-area-inset-bottom, 0px);
     }
   }
 
