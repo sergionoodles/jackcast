@@ -558,7 +558,7 @@ export default function App() {
       {!isMinimal && <InstallPrompt />}
       {/* Header */}
       <motion.header
-        className="app-safe-header flex justify-between items-center gap-3 px-4 pb-4 text-white z-20 bg-linear-to-b from-mist-900 via-60 via-mist-900/70 to-mist-900/30 backdrop-blur-md shadow-lg ring ring-white/10"
+        className="app-safe-header app-no-pull-refresh flex justify-between items-center gap-3 px-4 pb-4 text-white z-20 bg-linear-to-b from-mist-900 via-60 via-mist-900/70 to-mist-900/30 backdrop-blur-md shadow-lg ring ring-white/10"
         animate={{ y: isMinimal ? -80 : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.8 }}
       >

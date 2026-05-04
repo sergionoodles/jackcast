@@ -40,6 +40,11 @@
     padding-bottom: var(--app-safe-bottom);
   }
 
+  .app-no-pull-refresh {
+    overscroll-behavior-y: none;
+    touch-action: pan-x;
+  }
+
   .weather-bg-image {
     mix-blend-mode: overlay;
   }

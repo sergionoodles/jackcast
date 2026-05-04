@@ -12,7 +12,7 @@ interface CurrentWeatherProps {
 const CurrentWeather: React.FC<CurrentWeatherProps> = ({ weather }) => {
   return (
     <motion.div
-      className="flex flex-col items-center text-white mt-8 mb-4 px-3"
+      className="flex flex-col items-center text-white mt-5 mb-4 px-3"
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.1 }}
