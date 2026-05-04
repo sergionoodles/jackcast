@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, animate, motion, useMotionValue } from "motion/react";
 import { Search, MapPin, Heart, Loader2 } from "lucide-react";
 import { Location, WeatherData } from "./types";
 import { getWeatherData } from "./services/weather";
@@ -11,6 +11,11 @@ import LocationSearch from "./components/LocationSearch";
 import InstallPrompt from "./components/InstallPrompt";
 
 const REFRESH_INTERVAL_MS = 15 * 60 * 1000;
+const SWIPE_MIN_DISTANCE_PX = 72;
+const SWIPE_MAX_VERTICAL_DRIFT_PX = 96;
+const SWIPE_MAX_DRAG_PX = 96;
+const SWIPE_DRAG_RESISTANCE = 0.42;
+const SWIPE_EXIT_DISTANCE_PX = 160;
 
 type RefreshSource =
   | "initial-load"
@@ -46,6 +51,9 @@ export default function App() {
   const lastSuccessfulRefreshAtRef = useRef<number | null>(null);
   const refreshInFlightRef = useRef(false);
   const activeRequestTokenRef = useRef(0);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const swipeX = useMotionValue(0);
+  const swipeOpacity = useMotionValue(1);
 
   // Save favorites to local storage
   useEffect(() => {
@@ -265,10 +273,10 @@ export default function App() {
     };
   }, [currentLocation, refreshCurrentLocationWeather]);
 
-  const handleSelectCurrentLocation = () => {
+  const handleSelectCurrentLocation = useCallback(() => {
     setIsSearching(false);
     void fetchInitialWeather();
-  };
+  }, [fetchInitialWeather]);
 
   const handleSelectLocation = async (location: Location) => {
     const requestToken = beginTrackedRequest();
@@ -311,6 +319,211 @@ export default function App() {
   const removeFavorite = (id: number) => {
     setFavorites(favorites.filter((f) => f.id !== id));
   };
+
+  const resetSwipeFeedback = useCallback(() => {
+    void animate(swipeX, 0, {
+      type: "spring",
+      stiffness: 520,
+      damping: 42,
+    });
+    void animate(swipeOpacity, 1, { duration: 0.16, ease: "easeOut" });
+  }, [swipeOpacity, swipeX]);
+
+  const playSwipeExit = useCallback(
+    async (direction: "next" | "previous") => {
+      const exitX =
+        direction === "next" ? -SWIPE_EXIT_DISTANCE_PX : SWIPE_EXIT_DISTANCE_PX;
+
+      await Promise.all([
+        animate(swipeX, exitX, {
+          duration: 0.18,
+          ease: [0.22, 1, 0.36, 1],
+        }).finished,
+        animate(swipeOpacity, 0, {
+          duration: 0.16,
+          ease: "easeOut",
+        }).finished,
+      ]);
+    },
+    [swipeOpacity, swipeX],
+  );
+
+  const stageSwipeEntry = useCallback(
+    (direction: "next" | "previous") => {
+      const entryX =
+        direction === "next" ? SWIPE_EXIT_DISTANCE_PX : -SWIPE_EXIT_DISTANCE_PX;
+
+      swipeX.set(entryX);
+      swipeOpacity.set(0);
+    },
+    [swipeOpacity, swipeX],
+  );
+
+  const handleSwipeNavigation = useCallback(
+    async (direction: "next" | "previous") => {
+      if (!currentLocation || loadingPhase !== "idle") {
+        resetSwipeFeedback();
+        return;
+      }
+
+      const isMobileViewport =
+        window.matchMedia("(max-width: 768px)").matches ||
+        window.matchMedia("(pointer: coarse)").matches;
+      if (!isMobileViewport) {
+        resetSwipeFeedback();
+        return;
+      }
+
+      const currentFavoriteIndex = favorites.findIndex((favorite) => {
+        return (
+          favorite.id === currentLocation.id ||
+          (favorite.latitude === currentLocation.latitude &&
+            favorite.longitude === currentLocation.longitude)
+        );
+      });
+
+      if (direction === "next") {
+        if (favorites.length === 0) {
+          await playSwipeExit(direction);
+          setIsSearching(true);
+          resetSwipeFeedback();
+          return;
+        }
+
+        if (currentFavoriteIndex < 0) {
+          await playSwipeExit(direction);
+          await handleSelectLocation(favorites[0]);
+          stageSwipeEntry(direction);
+          resetSwipeFeedback();
+          return;
+        }
+
+        if (currentFavoriteIndex < favorites.length - 1) {
+          await playSwipeExit(direction);
+          await handleSelectLocation(favorites[currentFavoriteIndex + 1]);
+          stageSwipeEntry(direction);
+          resetSwipeFeedback();
+          return;
+        }
+
+        await playSwipeExit(direction);
+        setIsSearching(true);
+        resetSwipeFeedback();
+        return;
+      }
+
+      if (favorites.length === 0) {
+        resetSwipeFeedback();
+        return;
+      }
+
+      if (currentFavoriteIndex < 0) {
+        resetSwipeFeedback();
+        return;
+      }
+
+      if (currentFavoriteIndex > 0) {
+        await playSwipeExit(direction);
+        await handleSelectLocation(favorites[currentFavoriteIndex - 1]);
+        stageSwipeEntry(direction);
+        resetSwipeFeedback();
+        return;
+      }
+
+      await playSwipeExit(direction);
+      handleSelectCurrentLocation();
+      stageSwipeEntry(direction);
+      resetSwipeFeedback();
+    },
+    [
+      currentLocation,
+      favorites,
+      handleSelectCurrentLocation,
+      handleSelectLocation,
+      loadingPhase,
+      playSwipeExit,
+      resetSwipeFeedback,
+      stageSwipeEntry,
+    ],
+  );
+
+  const handleTouchStart = useCallback(
+    (event: React.TouchEvent<HTMLElement>) => {
+      if (isSearching) {
+        return;
+      }
+
+      const touch = event.changedTouches[0];
+      if (!touch) {
+        return;
+      }
+
+      touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+    },
+    [isSearching],
+  );
+
+  const handleTouchMove = useCallback(
+    (event: React.TouchEvent<HTMLElement>) => {
+      const touchStart = touchStartRef.current;
+      if (!touchStart || isSearching) {
+        return;
+      }
+
+      const touch = event.changedTouches[0];
+      if (!touch) {
+        return;
+      }
+
+      const deltaX = touch.clientX - touchStart.x;
+      const deltaY = touch.clientY - touchStart.y;
+
+      if (Math.abs(deltaY) > Math.abs(deltaX)) {
+        return;
+      }
+
+      const resistedX = Math.max(
+        -SWIPE_MAX_DRAG_PX,
+        Math.min(SWIPE_MAX_DRAG_PX, deltaX * SWIPE_DRAG_RESISTANCE),
+      );
+      const opacity = Math.max(0.72, 1 - Math.abs(deltaX) / 360);
+
+      swipeX.set(resistedX);
+      swipeOpacity.set(opacity);
+    },
+    [isSearching, swipeOpacity, swipeX],
+  );
+
+  const handleTouchEnd = useCallback(
+    (event: React.TouchEvent<HTMLElement>) => {
+      const touchStart = touchStartRef.current;
+      touchStartRef.current = null;
+
+      if (!touchStart || isSearching) {
+        return;
+      }
+
+      const touch = event.changedTouches[0];
+      if (!touch) {
+        return;
+      }
+
+      const deltaX = touch.clientX - touchStart.x;
+      const deltaY = touch.clientY - touchStart.y;
+
+      if (
+        Math.abs(deltaX) < SWIPE_MIN_DISTANCE_PX ||
+        Math.abs(deltaY) > SWIPE_MAX_VERTICAL_DRIFT_PX ||
+        Math.abs(deltaX) <= Math.abs(deltaY)
+      ) {
+        resetSwipeFeedback();
+        return;
+      }
+
+      void handleSwipeNavigation(deltaX < 0 ? "next" : "previous");
+    },
+    [handleSwipeNavigation, isSearching, resetSwipeFeedback],
+  );
 
   const displayLocation =
     currentLocation ??
@@ -393,52 +606,61 @@ export default function App() {
       <main
         ref={mainRef}
         className={`relative flex-1 min-h-0 z-10 flex flex-col scroll-touch${isMinimal ? " overflow-hidden" : " overflow-y-auto scrollbar-hide"}`}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
-        {!isForecastReady ? (
-          <div className="flex-1 flex items-center justify-center px-6">
-            <div className="flex flex-col items-center gap-4 text-white">
-              <Loader2 className="w-12 h-12 animate-spin" />
-              <p className="text-sm font-medium tracking-wide text-white/85">
-                {loadingPhase === "location"
-                  ? "Loading location..."
-                  : "Loading weather..."}
-              </p>
-            </div>
-          </div>
-        ) : (
-          <>
-            <div className="flex flex-col h-full shrink-0">
-              <div className="sticky top-0 z-20">
-                <motion.div
-                  animate={{
-                    opacity: isMinimal ? 0 : 1,
-                    scale: isMinimal ? 0.3 : 1,
-                    y: isMinimal ? -20 : 0,
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 30,
-                    mass: 0.8,
-                  }}
-                >
-                  <CurrentWeather weather={weatherData.current} />
-                </motion.div>
+        <motion.div
+          className="flex min-h-full flex-col"
+          style={{ x: swipeX, opacity: swipeOpacity }}
+        >
+          {!isForecastReady ? (
+            <div className="flex-1 flex items-center justify-center px-6">
+              <div className="flex flex-col items-center gap-4 text-white">
+                <Loader2 className="w-12 h-12 animate-spin" />
+                <p className="text-sm font-medium tracking-wide text-white/85">
+                  {loadingPhase === "location"
+                    ? "Loading location..."
+                    : "Loading weather..."}
+                </p>
               </div>
-
-              <div
-                className="flex-1 cursor-pointer"
-                onClick={toggleMinimal}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") toggleMinimal();
-                }}
-                aria-label={
-                  isMinimal ? "Show full interface" : "Hide interface to view image"
-                }
-              />
             </div>
+          ) : (
+            <>
+              <div className="flex flex-col h-full shrink-0">
+                <div className="sticky top-0 z-20">
+                  <motion.div
+                    animate={{
+                      opacity: isMinimal ? 0 : 1,
+                      scale: isMinimal ? 0.3 : 1,
+                      y: isMinimal ? -20 : 0,
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 30,
+                      mass: 0.8,
+                    }}
+                  >
+                    <CurrentWeather weather={weatherData.current} />
+                  </motion.div>
+                </div>
+
+                <div
+                  className="flex-1 cursor-pointer"
+                  onClick={toggleMinimal}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") toggleMinimal();
+                  }}
+                  aria-label={
+                    isMinimal
+                      ? "Show full interface"
+                      : "Hide interface to view image"
+                  }
+                />
+              </div>
 
             <motion.div
               className="sticky bottom-0 z-20 shrink-0"
@@ -509,8 +731,9 @@ export default function App() {
                 </div>
               </footer>
             </motion.div>
-          </>
-        )}
+            </>
+          )}
+        </motion.div>
       </main>
 
       {/* Modals / Drawers */}
