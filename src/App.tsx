@@ -392,8 +392,6 @@ export default function App() {
 
       if (direction === "next") {
         if (favorites.length === 0) {
-          await playSwipeExit(direction);
-          setIsSearching(true);
           resetSwipeFeedback();
           return;
         }
@@ -414,8 +412,6 @@ export default function App() {
           return;
         }
 
-        await playSwipeExit(direction);
-        setIsSearching(true);
         resetSwipeFeedback();
         return;
       }
