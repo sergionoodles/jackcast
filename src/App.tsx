@@ -614,9 +614,6 @@ export default function App() {
       <main
         ref={mainRef}
         className={`relative flex-1 min-h-0 z-10 flex flex-col scroll-touch${isMinimal ? " overflow-hidden" : " overflow-y-auto scrollbar-hide"}`}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
       >
         <motion.div
           className="flex min-h-dvh flex-col"
@@ -635,7 +632,12 @@ export default function App() {
             </div>
           ) : (
             <>
-              <div className="flex flex-col h-full shrink-0">
+              <div
+                className="flex flex-col h-full shrink-0"
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+              >
                 <div className="sticky top-0 z-20">
                   <motion.div
                     animate={{
