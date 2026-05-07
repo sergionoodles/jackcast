@@ -16,6 +16,7 @@ const SWIPE_MAX_VERTICAL_DRIFT_PX = 96;
 const SWIPE_MAX_DRAG_PX = 96;
 const SWIPE_DRAG_RESISTANCE = 0.42;
 const SWIPE_EXIT_DISTANCE_PX = 160;
+const PRELOAD_BATCH_DELAY_MS = 150;
 
 type RefreshSource =
   | "initial-load"
@@ -31,6 +32,9 @@ const FALLBACK_LOCATION: Location = {
   longitude: 9.19,
   country: "Italy",
 };
+
+const getLocationCacheKey = (location: Pick<Location, "latitude" | "longitude">) =>
+  `${location.latitude.toFixed(4)},${location.longitude.toFixed(4)}`;
 
 export default function App() {
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
@@ -52,6 +56,8 @@ export default function App() {
   const refreshInFlightRef = useRef(false);
   const activeRequestTokenRef = useRef(0);
   const favoritesRef = useRef(favorites);
+  const weatherCacheRef = useRef(new Map<string, WeatherData>());
+  const preloadInFlightRef = useRef(new Set<string>());
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const swipeX = useMotionValue(0);
   const swipeOpacity = useMotionValue(1);
@@ -83,6 +89,10 @@ export default function App() {
       try {
         const weather = await getWeatherData(lat, lon);
         if (weather) {
+          weatherCacheRef.current.set(
+            getLocationCacheKey({ latitude: lat, longitude: lon }),
+            weather,
+          );
           if (
             typeof requestToken === "number" &&
             requestToken !== activeRequestTokenRef.current
@@ -287,9 +297,20 @@ export default function App() {
   }, [fetchInitialWeather]);
 
   const handleSelectLocation = async (location: Location) => {
+    const cachedWeather = weatherCacheRef.current.get(
+      getLocationCacheKey(location),
+    );
     const requestToken = beginTrackedRequest();
     setIsSearching(false);
-    setLoadingPhase("weather");
+
+    if (cachedWeather) {
+      setCurrentLocation(location);
+      setWeatherData(cachedWeather);
+      setIsGpsLocation(false);
+      setLoadingPhase("idle");
+    } else {
+      setLoadingPhase("weather");
+    }
 
     const weather = await fetchWeatherForCoords(
       location.latitude,
@@ -303,10 +324,70 @@ export default function App() {
       setIsGpsLocation(false);
     }
 
-    if (isTrackedRequestActive(requestToken)) {
+    if (!cachedWeather && isTrackedRequestActive(requestToken)) {
       setLoadingPhase("idle");
     }
   };
+
+  useEffect(() => {
+    if (loadingPhase !== "idle" || !weatherData || !currentLocation) {
+      return;
+    }
+
+    let cancelled = false;
+
+    const preloadSavedLocations = async () => {
+      const currentCacheKey = getLocationCacheKey(currentLocation);
+      const preloadTargets = favoritesRef.current.filter((favorite) => {
+        const cacheKey = getLocationCacheKey(favorite);
+        return (
+          cacheKey !== currentCacheKey &&
+          !weatherCacheRef.current.has(cacheKey) &&
+          !preloadInFlightRef.current.has(cacheKey)
+        );
+      });
+
+      for (const favorite of preloadTargets) {
+        if (cancelled) {
+          return;
+        }
+
+        const cacheKey = getLocationCacheKey(favorite);
+        preloadInFlightRef.current.add(cacheKey);
+
+        try {
+          const weather = await getWeatherData(
+            favorite.latitude,
+            favorite.longitude,
+          );
+
+          if (cancelled) {
+            return;
+          }
+
+          if (weather) {
+            weatherCacheRef.current.set(cacheKey, weather);
+          }
+        } finally {
+          preloadInFlightRef.current.delete(cacheKey);
+        }
+
+        if (cancelled) {
+          return;
+        }
+
+        await new Promise<void>((resolve) => {
+          window.setTimeout(resolve, PRELOAD_BATCH_DELAY_MS);
+        });
+      }
+    };
+
+    void preloadSavedLocations();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [currentLocation, loadingPhase, weatherData]);
 
   const toggleFavorite = () => {
     if (!currentLocation) return;
