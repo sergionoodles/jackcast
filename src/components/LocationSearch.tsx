@@ -128,7 +128,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
         <div className="app-safe-header app-no-pull-refresh px-4 pb-4 flex items-center border-b border-white/10 shrink-0">
           <Search className="w-6 h-6 text-white/50 mr-3 shrink-0" />
           <input
-            autoFocus
+            autoFocus={favorites.length === 0}
             type="text"
             placeholder="Search for a city..."
             className="h-10 flex-1 bg-transparent border-none outline-none text-white text-lg placeholder-white/50"
