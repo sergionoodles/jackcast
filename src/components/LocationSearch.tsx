@@ -1,19 +1,75 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Search, MapPin, X, Trash2, Navigation } from "lucide-react";
+import {
+  Search,
+  MapPin,
+  X,
+  Trash2,
+  Navigation,
+  Sun,
+  Moon,
+  Cloud,
+  CloudDrizzle,
+  CloudFog,
+  CloudLightning,
+  CloudRain,
+  CloudSnow,
+  CircleHelp,
+} from "lucide-react";
 import { searchLocations } from "../services/weather";
-import { Location } from "../types";
+import { Location, WeatherData } from "../types";
 
 interface LocationSearchProps {
   favorites: Location[];
+  currentLocation: Location | null;
+  weatherByLocation: Record<string, WeatherData>;
   onSelect: (location: Location) => void;
   onSelectCurrentLocation: () => void;
   onRemove: (locationId: number) => void;
   onClose: () => void;
 }
 
+const getLocationCacheKey = (
+  location: Pick<Location, "latitude" | "longitude">,
+) => `${location.latitude.toFixed(4)},${location.longitude.toFixed(4)}`;
+
+const getWeatherIcon = (code?: number, isDay = true) => {
+  if (typeof code !== "number") {
+    return <CircleHelp className="h-9 w-9 text-white/70" />;
+  }
+  if (code <= 1) {
+    return isDay ? (
+      <Sun className="h-9 w-9 text-amber-300" />
+    ) : (
+      <Moon className="h-9 w-9 text-sky-200" />
+    );
+  }
+  if (code === 2) {
+    return <Cloud className="h-9 w-9 text-slate-200" />;
+  }
+  if (code === 3 || code === 45 || code === 48) {
+    return <CloudFog className="h-9 w-9 text-slate-300" />;
+  }
+  if (code >= 51 && code <= 57) {
+    return <CloudDrizzle className="h-9 w-9 text-cyan-200" />;
+  }
+  if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82)) {
+    return <CloudRain className="h-9 w-9 text-sky-300" />;
+  }
+  if ((code >= 71 && code <= 77) || code === 85 || code === 86) {
+    return <CloudSnow className="h-9 w-9 text-white" />;
+  }
+  if (code >= 95) {
+    return <CloudLightning className="h-9 w-9 text-yellow-200" />;
+  }
+
+  return <Sun className="h-9 w-9 text-amber-300" />;
+};
+
 const LocationSearch: React.FC<LocationSearchProps> = ({
   favorites,
+  currentLocation,
+  weatherByLocation,
   onSelect,
   onSelectCurrentLocation,
   onRemove,
@@ -118,42 +174,79 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                   </p>
                 </div>
               ) : (
-                <AnimatePresence>
-                  {favorites.map((location) => (
-                    <motion.div
-                      key={location.id}
-                      className="bg-white/5 rounded-2xl p-4 flex items-center justify-between shadow-sm border border-white/10"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      layout
-                    >
-                      <button
-                        type="button"
-                        className="flex-1 text-left"
-                        onClick={() => onSelect(location)}
-                      >
-                        <h4 className="text-white font-medium text-lg">
-                          {location.name}
-                        </h4>
-                        <p className="text-white/60 text-sm">
-                          {location.admin1 ? `${location.admin1}, ` : ""}
-                          {location.country}
-                        </p>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onRemove(location.id);
-                        }}
-                        className="p-2 text-white/60 hover:text-red-400 hover:bg-white/10 rounded-full transition-colors ml-4"
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </button>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
+                <motion.div
+                  className="grid grid-cols-2 gap-3"
+                  initial="hidden"
+                  animate="visible"
+                  variants={{
+                    hidden: {},
+                    visible: {
+                      transition: {
+                        staggerChildren: 0.05,
+                      },
+                    },
+                  }}
+                >
+                  <AnimatePresence>
+                    {favorites.map((location) => {
+                      const weather =
+                        weatherByLocation[getLocationCacheKey(location)];
+                      const isSelected =
+                        currentLocation?.id === location.id ||
+                        (currentLocation?.latitude === location.latitude &&
+                          currentLocation?.longitude === location.longitude);
+
+                      return (
+                        <motion.div
+                          key={location.id}
+                          className={`group relative overflow-hidden rounded-2xl border p-4 shadow-lg transition-colors ${
+                            isSelected
+                              ? "border-white/30 bg-white/18"
+                              : "border-white/10 bg-white/8 hover:bg-white/12"
+                          }`}
+                          initial={{ opacity: 0, y: 18, scale: 0.94 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 12, scale: 0.94 }}
+                          layout
+                        >
+                          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.18),_transparent_58%)] opacity-80" />
+                          <button
+                            type="button"
+                            className="relative flex w-full flex-col items-start text-left"
+                            onClick={() => onSelect(location)}
+                          >
+                            <div className="mb-2 flex h-16 w-16 items-center justify-center rounded-2xl bg-black/10">
+                              {getWeatherIcon(
+                                weather?.current.weatherCode,
+                                weather?.current.isDay ?? true,
+                              )}
+                            </div>
+                            <div className="min-w-0">
+                              <h4 className="truncate text-lg font-semibold text-white">
+                                {location.name}
+                              </h4>
+                              <p className="mt-1 line-clamp-2 text-sm leading-4 text-white/58">
+                                {location.admin1 ? `${location.admin1}, ` : ""}
+                                {location.country}
+                              </p>
+                            </div>
+                          </button>
+                          <button
+                            type="button"
+                            aria-label={`Remove ${location.name} from saved locations`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onRemove(location.id);
+                            }}
+                            className="absolute right-2 top-2 rounded-full p-2 text-white/50 transition-colors hover:bg-white/12 hover:text-red-300"
+                          >
+                            <Trash2 className="h-4.5 w-4.5" />
+                          </button>
+                        </motion.div>
+                      );
+                    })}
+                  </AnimatePresence>
+                </motion.div>
               )}
             </>
           )}

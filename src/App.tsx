@@ -39,6 +39,9 @@ const getLocationCacheKey = (location: Pick<Location, "latitude" | "longitude">)
 export default function App() {
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+  const [weatherByLocation, setWeatherByLocation] = useState<
+    Record<string, WeatherData>
+  >({});
   const [favorites, setFavorites] = useState<Location[]>(() => {
     try {
       const storedFavorites = localStorage.getItem("froggyFavorites");
@@ -68,6 +71,24 @@ export default function App() {
     localStorage.setItem("froggyFavorites", JSON.stringify(favorites));
   }, [favorites]);
 
+  const storeWeatherForLocation = useCallback(
+    (location: Pick<Location, "latitude" | "longitude">, weather: WeatherData) => {
+      const cacheKey = getLocationCacheKey(location);
+      weatherCacheRef.current.set(cacheKey, weather);
+      setWeatherByLocation((previous) => {
+        if (previous[cacheKey] === weather) {
+          return previous;
+        }
+
+        return {
+          ...previous,
+          [cacheKey]: weather,
+        };
+      });
+    },
+    [],
+  );
+
   const fetchWeatherForCoords = useCallback(
     async (
       lat: number,
@@ -89,10 +110,7 @@ export default function App() {
       try {
         const weather = await getWeatherData(lat, lon);
         if (weather) {
-          weatherCacheRef.current.set(
-            getLocationCacheKey({ latitude: lat, longitude: lon }),
-            weather,
-          );
+          storeWeatherForLocation({ latitude: lat, longitude: lon }, weather);
           if (
             typeof requestToken === "number" &&
             requestToken !== activeRequestTokenRef.current
@@ -115,7 +133,7 @@ export default function App() {
         }
       }
     },
-    [],
+    [storeWeatherForLocation],
   );
 
   const refreshCurrentLocationWeather = useCallback(
@@ -366,7 +384,7 @@ export default function App() {
           }
 
           if (weather) {
-            weatherCacheRef.current.set(cacheKey, weather);
+            storeWeatherForLocation(favorite, weather);
           }
         } finally {
           preloadInFlightRef.current.delete(cacheKey);
@@ -387,7 +405,7 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [currentLocation, loadingPhase, weatherData]);
+  }, [currentLocation, loadingPhase, storeWeatherForLocation, weatherData]);
 
   const toggleFavorite = () => {
     if (!currentLocation) return;
@@ -828,6 +846,8 @@ export default function App() {
         {isSearching && (
           <LocationSearch
             favorites={favorites}
+            currentLocation={currentLocation}
+            weatherByLocation={weatherByLocation}
             onSelect={handleSelectLocation}
             onSelectCurrentLocation={handleSelectCurrentLocation}
             onRemove={removeFavorite}
