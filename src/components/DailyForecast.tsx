@@ -205,7 +205,7 @@ const DailyForecast: React.FC<DailyForecastProps> = ({
                         <Droplets className="h-3.5 w-3.5" />
                         {Math.round(dailyHumidityAvg)}%
                       </span>
-                      {dailyRainChanceAvg > 0 && (
+                      {dailyRainChanceAvg >= 5 && (
                         <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5">
                           <CloudRain className="h-3.5 w-3.5 text-blue-300" />
                           {Math.round(dailyRainChanceAvg)}%
