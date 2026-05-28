@@ -8,6 +8,9 @@
     <img src="https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind CSS">
     <img src="https://img.shields.io/badge/Cloudflare-F38020?logo=cloudflare&logoColor=white" alt="Cloudflare">
   </p>
+  <p>
+    <img src="public/screenshots/jackcast.jpg" alt="JackCast weather app screenshot" width="720">
+  </p>
 </div>
 
 ---
