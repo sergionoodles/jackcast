@@ -8,9 +8,6 @@
     <img src="https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind CSS">
     <img src="https://img.shields.io/badge/Cloudflare-F38020?logo=cloudflare&logoColor=white" alt="Cloudflare">
   </p>
-  <p>
-    <img src="public/screenshots/jackcast.jpg" alt="JackCast weather app screenshot" width="720">
-  </p>
 </div>
 
 ---
@@ -20,6 +17,10 @@
 JackCast is a **Progressive Web App** that reimagines the weather forecast as a cozy, visually immersive experience. Instead of sterile icons and plain numbers, every forecast is wrapped in a **hand-crafted, AI-generated painterly scene** starring a spirited Jack Russell Terrier reacting to the weather around them.
 
 Whether it's a golden sunrise over rolling hills, a cozy snowfall under moonlight, or a playful dash through autumn rain, the background art shifts dynamically to match your local conditions and time of day. The result feels less like a utility and more like a little window into a living storybook.
+
+<div align="center">
+  <img src="public/screenshots/jackcast.jpg" alt="JackCast weather app screenshot" width="720">
+</div>
 
 ## Features
 
