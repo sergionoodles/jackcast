@@ -7,8 +7,6 @@ type BackgroundLocation = Pick<
   Location,
   "name" | "latitude" | "longitude"
 >;
-
-const MAX_VARIANTS = 10;
 const BASE_URL = "/backgrounds";
 const DEFAULT_IMAGE = "/backgrounds/default.png";
 
@@ -21,26 +19,29 @@ const availablePaths = new Set(
   ),
 );
 
-function hasVariant(
-  category: WeatherCategory,
-  timeOfDay: TimeOfDay,
-  variant: number,
-): boolean {
-  return availablePaths.has(`${category}-${timeOfDay}-${variant}.jpeg`);
-}
 
 function getAvailableVariants(
   category: WeatherCategory,
   timeOfDay: TimeOfDay,
 ): number[] {
+  const prefix = `${category}-${timeOfDay}-`;
   const variants: number[] = [];
-  for (let i = 1; i <= MAX_VARIANTS; i++) {
-    if (hasVariant(category, timeOfDay, i)) {
-      variants.push(i);
+
+  for (const fileName of availablePaths) {
+    if (!fileName.startsWith(prefix) || !fileName.endsWith(".jpeg")) {
+      continue;
+    }
+
+    const suffix = fileName.slice(prefix.length, -".jpeg".length);
+    const variant = Number.parseInt(suffix, 10);
+    if (Number.isFinite(variant) && variant >= 1) {
+      variants.push(variant);
     }
   }
-  return variants;
+
+  return variants.sort((a, b) => a - b);
 }
+
 
 function getDayOfYear(): number {
   const now = new Date();

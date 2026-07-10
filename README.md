@@ -39,16 +39,9 @@ The soul of JackCast lives in `scripts/cover-generator/`. This is a fully automa
 
 1. **Maps 28 weather codes** (from Open-Meteo WMO codes) into 5 visual categories: `clear`, `cloudy`, `rain`, `snow`, and `storm`.
 2. **Combines 4 times of day** (morning, afternoon, evening, night) with category-specific lighting prompts.
-3. **Generates 8 artistic variations per combination** across 8 distinct styles:
-   - Surreal anime-inspired painterly illustration
-   - Washed watercolor storybook illustration
-   - Dreamlike oil-pastel painting
-   - Matte gouache folk illustration
-   - Expressive ink-and-wash fantasy illustration
-   - Layered storybook poster art
-   - Soft pastel and chalk animation background art
-   - Decorative painterly art print
-4. **Produces 160 unique category/time scenes** featuring a small Jack Russell Terrier reacting charmingly to each condition — basking in sun, trotting through drizzle, catching snowflakes, or bravely weathering a thunderstorm.
+3. **Generates up to 12 artistic variations per weather category × time-of-day** (e.g. `clear-afternoon-7.jpeg`), cycling through watercolor style presets in `scripts/cover-generator/generate.js` (`STYLES`).
+4. **Fills only missing slots** — re-run `pnpm generate` to repair gaps up to variant 12 without redoing existing files.
+5. **Produces up to 240 unique category/time scenes** (5 categories × 4 times × 12 variants) featuring a small Jack Russell Terrier reacting charmingly to each condition — basking in sun, trotting through drizzle, catching snowflakes, or bravely weathering a thunderstorm.
 
 Run the generator with:
 
@@ -57,6 +50,8 @@ cd scripts/cover-generator
 # Ensure VENICE_API_KEY is set in your environment
 pnpm install
 pnpm generate
+pnpm generate -- --limit 10   # optional: cap images per run
+
 ```
 
 ## Tech Stack
