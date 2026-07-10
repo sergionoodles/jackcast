@@ -37,6 +37,8 @@ export interface DailyForecast {
   windDirectionDominant: number[];
   humidityMean: number[];
   precipitationProbabilityMax: number[];
+  sunrise: string[];
+  sunset: string[];
 }
 
 export interface WeatherData {

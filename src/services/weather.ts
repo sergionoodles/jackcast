@@ -11,6 +11,51 @@ export const searchLocations = async (query: string): Promise<Location[]> => {
     return [];
   }
 };
+export const reverseGeocodeLocation = async (
+  latitude: number,
+  longitude: number,
+): Promise<Pick<Location, "name" | "country" | "admin1"> | null> => {
+  try {
+    const params = new URLSearchParams({
+      latitude: String(latitude),
+      longitude: String(longitude),
+      localityLanguage: "en",
+    });
+    const response = await fetch(
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?${params.toString()}`,
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    const name =
+      data.city ||
+      data.locality ||
+      data.localityName ||
+      data.principalSubdivision ||
+      data.countryName;
+
+    if (typeof name !== "string" || !name.trim()) {
+      return null;
+    }
+
+    return {
+      name: name.trim(),
+      country:
+        typeof data.countryName === "string" ? data.countryName : undefined,
+      admin1:
+        typeof data.principalSubdivision === "string"
+          ? data.principalSubdivision
+          : undefined,
+    };
+  } catch (error) {
+    console.error("Error reverse geocoding location:", error);
+    return null;
+  }
+};
+
 
 export const getWeatherData = async (lat: number, lon: number): Promise<WeatherData | null> => {
   try {
@@ -38,6 +83,8 @@ export const getWeatherData = async (lat: number, lon: number): Promise<WeatherD
       'wind_direction_10m_dominant',
       'relative_humidity_2m_mean',
       'precipitation_probability_max',
+      'sunrise',
+      'sunset',
     ].join(',');
 
     const [weatherRes, aqiRes] = await Promise.all([
@@ -100,6 +147,8 @@ export const getWeatherData = async (lat: number, lon: number): Promise<WeatherD
         windDirectionDominant: data.daily.wind_direction_10m_dominant ?? [],
         humidityMean: data.daily.relative_humidity_2m_mean ?? [],
         precipitationProbabilityMax: data.daily.precipitation_probability_max ?? [],
+        sunrise: data.daily.sunrise ?? [],
+        sunset: data.daily.sunset ?? [],
       },
       timezone: data.timezone,
     };

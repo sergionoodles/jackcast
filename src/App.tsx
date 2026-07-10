@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { AnimatePresence, animate, motion, useMotionValue } from "motion/react";
 import { Search, MapPin, Heart, Loader2 } from "lucide-react";
 import { Location, WeatherData } from "./types";
-import { getWeatherData } from "./services/weather";
+import { reverseGeocodeLocation, getWeatherData } from "./services/weather";
 import WeatherBackground from "./components/WeatherBackground";
 import CurrentWeather from "./components/CurrentWeather";
 import HourlyForecast from "./components/HourlyForecast";
@@ -199,34 +199,18 @@ export default function App() {
           const lon = position.coords.longitude;
           setLoadingPhase("weather");
 
-          // Simple reverse geocoding using Open-Meteo search (not perfect but works for demo)
-          try {
-            const res = await fetch(
-              `https://geocoding-api.open-meteo.com/v1/search?name=${lat},${lon}&count=1&language=en&format=json`,
-            );
-            const data = await res.json();
-            const locName = data.results?.[0]?.name || "Current Location";
-            const loc: Location = {
-              id: Date.now(),
-              name: locName,
-              latitude: lat,
-              longitude: lon,
-            };
-            if (isTrackedRequestActive(requestToken)) {
-              setCurrentLocation(loc);
-              setIsGpsLocation(true);
-            }
-          } catch (error) {
-            const loc: Location = {
-              id: Date.now(),
-              name: "Current Location",
-              latitude: lat,
-              longitude: lon,
-            };
-            if (isTrackedRequestActive(requestToken)) {
-              setCurrentLocation(loc);
-              setIsGpsLocation(true);
-            }
+          const locationDetails = await reverseGeocodeLocation(lat, lon);
+          const loc: Location = {
+            id: Date.now(),
+            name: locationDetails?.name ?? "Current Location",
+            latitude: lat,
+            longitude: lon,
+            country: locationDetails?.country,
+            admin1: locationDetails?.admin1,
+          };
+          if (isTrackedRequestActive(requestToken)) {
+            setCurrentLocation(loc);
+            setIsGpsLocation(true);
           }
 
           await fetchWeatherForCoords(lat, lon, "initial-load", {
@@ -747,7 +731,11 @@ export default function App() {
                       mass: 0.8,
                     }}
                   >
-                    <CurrentWeather weather={weatherData.current} />
+                    <CurrentWeather
+                      weather={weatherData.current}
+                      sunrise={weatherData.daily.sunrise[0]}
+                      sunset={weatherData.daily.sunset[0]}
+                    />
                   </motion.div>
                 </div>
 

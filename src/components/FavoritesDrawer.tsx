@@ -5,13 +5,14 @@ import { Location } from '../types';
 
 interface FavoritesDrawerProps {
   favorites: Location[];
+  currentLocation?: Location | null;
   onSelect: (location: Location) => void;
   onSelectCurrentLocation: () => void;
   onRemove: (locationId: number) => void;
   onClose: () => void;
 }
 
-const FavoritesDrawer: React.FC<FavoritesDrawerProps> = ({ favorites, onSelect, onSelectCurrentLocation, onRemove, onClose }) => {
+const FavoritesDrawer: React.FC<FavoritesDrawerProps> = ({ favorites, currentLocation, onSelect, onSelectCurrentLocation, onRemove, onClose }) => {
   return (
     <motion.div
       className="fixed inset-0 z-50 bg-mist-900/40 backdrop-blur-sm flex justify-start"

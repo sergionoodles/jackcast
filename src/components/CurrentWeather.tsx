@@ -2,14 +2,41 @@ import React from "react";
 import { motion } from "motion/react";
 import { CurrentWeather as CurrentWeatherType } from "../types";
 import { getWeatherDescription } from "../services/weather";
-import { Droplets, Wind } from "lucide-react";
+import { Droplets, Sunrise, Sunset, Wind } from "lucide-react";
 import { getAqiColor } from "../utils/aqi";
 
 interface CurrentWeatherProps {
   weather: CurrentWeatherType;
+  sunrise?: string;
+  sunset?: string;
 }
 
-const CurrentWeather: React.FC<CurrentWeatherProps> = ({ weather }) => {
+const formatSunTime = (value?: string) => {
+  const match = value?.match(/(?:T|^)(\d{2}):(\d{2})/);
+  if (!match) {
+    return null;
+  }
+
+  const hour = Number(match[1]);
+  const minute = Number(match[2]);
+  if (hour > 23 || minute > 59) {
+    return null;
+  }
+
+  return new Intl.DateTimeFormat(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(2000, 0, 1, hour, minute));
+};
+
+const CurrentWeather: React.FC<CurrentWeatherProps> = ({
+  weather,
+  sunrise: sunriseTime,
+  sunset: sunsetTime,
+}) => {
+  const sunrise = formatSunTime(sunriseTime);
+  const sunset = formatSunTime(sunsetTime);
+
   return (
     <motion.div
       className="flex flex-col items-center text-white mt-5 mb-4 px-3"
@@ -46,6 +73,22 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ weather }) => {
           {Math.round(weather.humidity)}%
         </span>
       </div>
+      {sunrise || sunset ? (
+        <div className="mt-1.5 flex flex-wrap items-center justify-center gap-2 text-sm font-semibold text-white/90 weather-hero-text">
+          {sunrise && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-mist-900/40 shadow-lg border border-white/10 px-2.5 py-1">
+              <span className="text-white/65">Sunrise</span>
+              {sunrise}
+            </span>
+          )}
+          {sunset && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-mist-900/40 shadow-lg border border-white/10 px-2.5 py-1">
+              <span className="text-white/65">Sunset</span>
+              {sunset}
+            </span>
+          )}
+        </div>
+      ) : null}
     </motion.div>
   );
 };
