@@ -146,7 +146,7 @@ const DailyForecast: React.FC<DailyForecastProps> = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4 }}
     >
-      <div className="bg-black/40 backdrop-blur-md rounded-3xl p-4 shadow-lg border border-white/10">
+      <div className="forecast-glass rounded-3xl p-4">
         <h3 className="text-white/90 text-sm font-medium mb-4 uppercase tracking-wider">
           7-Day Forecast
         </h3>
