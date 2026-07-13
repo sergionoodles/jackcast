@@ -81,7 +81,7 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
     >
-      <div className="bg-mist-900/40 backdrop-blur-md rounded-3xl p-4 shadow-lg border border-white/10">
+      <div className="forecast-glass rounded-3xl p-4">
         <div className="mb-4 flex items-start justify-between gap-3">
           <h3 className="text-white/90 text-sm font-medium uppercase tracking-wider">
             Today
