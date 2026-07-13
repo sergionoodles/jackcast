@@ -11,6 +11,7 @@ interface WeatherBackgroundProps {
   weatherCode: number;
   location: Location;
   showImage?: boolean;
+  hideGradient?: boolean;
   children: React.ReactNode;
 }
 
@@ -18,6 +19,7 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({
   weatherCode,
   location,
   showImage = true,
+  hideGradient = false,
   children,
 }) => {
   const category = getWeatherCategory(weatherCode);
@@ -27,7 +29,7 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({
   return (
     <div className="min-h-[100dvh] w-full bg-gradient-to-br from-mist-900 via-mist-800 to-mist-900 flex items-center justify-center p-0 m-0">
       <motion.div
-        className={`app-safe-shell z-10 w-full lg:aspect-[9/18] lg:max-h-[1200px] lg:w-auto lg:relative h-[100dvh] bg-linear-to-b from-gray-700 via-25% via-gray-700/70 to-40% to-gray-700/0 transition-colors duration-1000 ease-in-out relative overflow-hidden flex flex-col lg:rounded-2xl lg:shadow-lg`}
+        className="app-safe-shell z-10 w-full lg:aspect-[9/18] lg:max-h-[1200px] lg:w-auto lg:relative h-[100dvh] transition-colors duration-1000 ease-in-out relative overflow-hidden flex flex-col lg:rounded-2xl lg:shadow-lg"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
@@ -42,8 +44,12 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({
           />
         )}
 
-        {/* Dark overlay for better text contrast */}
-        <div className="absolute inset-0 z-0 pointer-events-none" />
+        {/* Gradient overlay for text contrast */}
+        <div
+          className={`absolute inset-0 z-0 pointer-events-none bg-linear-to-b from-black/70 via-25% via-black/45 to-40% to-black/0 transition-opacity duration-500 ease-out ${
+            hideGradient ? "opacity-0" : "opacity-100"
+          }`}
+        />
 
         <div className="relative z-10 h-full flex flex-col overflow-hidden">
           {children}

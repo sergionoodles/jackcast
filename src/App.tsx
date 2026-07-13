@@ -634,6 +634,7 @@ export default function App() {
       weatherCode={activeWeatherCode}
       location={displayLocation}
       showImage={isForecastReady}
+      hideGradient={isMinimal}
     >
       {!isMinimal && <InstallPrompt />}
       {/* Header */}
