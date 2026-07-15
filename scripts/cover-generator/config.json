@@ -175,6 +175,135 @@
           "high-energy grayscale arcs colliding around a dark center with controlled red interference"
         ]
       }
+    },
+    "arcade-fighter": {
+      "backgroundSet": "arcade-fighter",
+      "subject": "one or two original fictional martial-arts challengers, rendered as small dynamic cel-painted silhouettes in generic training clothes, with no recognizable character, costume, franchise, logo, or real person",
+      "artDirections": [
+        "hand-painted 1990s arcade fighting-game stage illustration, muscular brushwork, chunky cel shading, saturated color ramps, atmospheric depth, and subtle CRT grain",
+        "original arcade cabinet key art aesthetic, bold ink contours, screen-printed halftone shadows, electric rim light, and dramatic but uncluttered color blocking",
+        "retro tournament-stage animation background, expressive painted scenery, sharp speed-line accents, deep parallax layers, and controlled neon highlights",
+        "high-energy martial-arts arcade illustration, angular cel-painted forms, limited jewel-tone palette, pixel-dither texture, and cinematic environmental lighting"
+      ],
+      "compositions": [
+        "vertical 9:16 composition with a small challenger in the lower corner, a sweeping arena stage, and broad readable sky space above",
+        "vertical 9:16 composition framed by two distant opposing silhouettes at the lower edges, with weather energy dominating the open center",
+        "vertical 9:16 low-angle stage view with a strong diagonal horizon, layered scenery, and the fighter kept below the lower third",
+        "vertical 9:16 composition with an empty central combat arena, one small training silhouette near the bottom, and dramatic environmental depth"
+      ],
+      "scenes": {
+        "clear": [
+          "a sunlit rooftop training arena above a colorful coastal city, with banners reduced to abstract wind shapes",
+          "an open mountain tournament terrace beneath a huge radiant sky and crisp distant peaks",
+          "a lively harbor-side practice stage with bright awnings, sparkling water, and long graphic shadows"
+        ],
+        "cloudy": [
+          "a misty hilltop arena surrounded by layered pagoda-like rooftops and soft rolling cloud banks",
+          "an industrial waterfront stage under broad steel-blue clouds, with distant cranes as abstract silhouettes",
+          "a quiet old-city courtyard where low fog softens tiled roofs and stacked urban shapes"
+        ],
+        "rain": [
+          "a neon market alley arena with rhythmic rain streaks, luminous puddles, and saturated reflections",
+          "a rain-lashed harbor platform with wind-bent ropes, blue reflections, and distant city lights",
+          "a temple courtyard stage transformed by silver rain lines, rippling stone pools, and warm lantern-like glows without fixtures or text"
+        ],
+        "snow": [
+          "a high mountain training stage with sculpted drifts, dark pines, and wind-driven snow arcs",
+          "a frozen lakeside arena beneath pale cliffs, crystalline air, and strong cobalt shadows",
+          "a snow-covered old-town plaza with bold roof silhouettes, powdery flurries, and warm window-like color blocks"
+        ],
+        "storm": [
+          "a cliffside final-round arena beneath towering charged clouds, diagonal rain, and a single explosive lightning shape",
+          "an industrial dock stage filled with wind-whipped spray, electric blue shadows, and a fierce orange horizon",
+          "a ruined hilltop courtyard surrounded by spiraling cloud bands, flying leaves, and sharp violet-white flashes"
+        ]
+      }
+    },
+    "pocket-clay": {
+      "backgroundSet": "pocket-clay",
+      "subject": "a tiny original handcrafted clay weather world with miniature houses, trees, hills, clouds, and weather effects, visibly modeled from matte polymer clay with no text, toy brand, logo, or recognizable character",
+      "artDirections": [
+        "charming stop-motion miniature illustration, hand-shaped polymer clay, soft fingerprints, rounded silhouettes, and warm studio-like environmental light",
+        "tactile clay diorama artwork, gentle imperfect hand modeling, matte painted surfaces, soft ambient shadows, and rich earthy pastels",
+        "small handcrafted weather world in sculpted clay, playful simplified forms, cozy cinematic depth, and visible handmade texture",
+        "whimsical miniature clay landscape illustration, oversized weather shapes, soft squashed geometry, and restrained felt-like texture"
+      ],
+      "compositions": [
+        "vertical 9:16 composition with a small clay village along the lower third and an oversized sculpted sky above",
+        "vertical 9:16 top-down diorama view of winding paths, tiny trees, and broad negative space around the weather event",
+        "vertical 9:16 composition with a single little house nestled in rolling clay hills and a wide sky",
+        "vertical 9:16 composition with a miniature foreground tree framing a tiny landscape and layered soft clouds"
+      ],
+      "scenes": {
+        "clear": [
+          "a sunny little hill village with rounded clay trees, a warm yellow sun, and a winding path",
+          "a tiny greenhouse beside a calm pond with soft grass mounds and puffy sculpted sky shapes",
+          "a miniature coast with smooth clay cliffs, small boats as simple shapes, and open bright air"
+        ],
+        "cloudy": [
+          "a quiet clay valley tucked beneath layered gray-lilac clouds and soft misty hills",
+          "a tiny woodland cabin surrounded by chunky cloud forms and muted moss-green trees",
+          "a little harbor village with a low ceiling of rounded overcast clouds and calm blue water"
+        ],
+        "rain": [
+          "a clay cottage with oversized raindrop strands, glossy puddles, and small ripple rings",
+          "a miniature forest trail with wet emerald clay leaves and a winding stream",
+          "a tiny city block with colorful clay awnings reflected in broad sculpted puddles"
+        ],
+        "snow": [
+          "a small clay cabin under thick rounded snow caps and gently falling soft white pellets",
+          "a miniature pine forest with powdery drifts, pale blue shadows, and a frozen stream",
+          "a tiny hillside village reduced to warm windows-like color dots amid sculpted snow fields"
+        ],
+        "storm": [
+          "a little hilltop house beneath large curling charcoal clouds and one chunky lightning bolt",
+          "a miniature coastal lighthouse-like tower facing clay waves, strong rain, and electric sky flashes",
+          "a small forest clearing with wind-bent clay trees, scattered leaves, and dramatic purple storm clouds"
+        ]
+      }
+    },
+    "nordic-paper": {
+      "backgroundSet": "nordic-paper",
+      "subject": "an original Nordic-inspired layered paper landscape of mountains, fjords, pine forests, cabins, and weather shapes, made from cut paper with visible fibers and no text, logo, or recognizable landmark",
+      "artDirections": [
+        "refined Scandinavian paper-cut illustration, layered matte paper, crisp deckled edges, quiet cool palette, and soft cast shadows",
+        "minimal Nordic travel-poster collage, textured paper fibers, carefully stacked geometric landforms, muted ink color, and generous breathing room",
+        "hand-cut paper landscape artwork, deep dimensional layers, simple graphic silhouettes, subtle grain, and restrained coral accents",
+        "editorial cut-paper weather cover, clean modular shapes, tactile folded paper shadows, glacier blues, pine greens, and foggy neutrals"
+      ],
+      "compositions": [
+        "vertical 9:16 composition with staggered paper mountain layers rising from the lower third into a large open sky",
+        "vertical 9:16 composition looking across a narrow paper fjord, framed by tall foreground pines and a spacious horizon",
+        "vertical 9:16 composition with a small cabin low in frame, layered hills stepping upward, and oversized weather forms above",
+        "vertical 9:16 composition with an asymmetric paper valley and diagonal landscape layers guiding through the frame"
+      ],
+      "scenes": {
+        "clear": [
+          "a bright fjord with clean blue paper water, salmon coral sun, and crisp snow-tipped peaks",
+          "a quiet pine valley with long paper shadows and a small red cabin shape",
+          "an open coastal cliff with layered pale-blue sky bands and a distant island silhouette"
+        ],
+        "cloudy": [
+          "misty paper mountains partly hidden by translucent gray-white cloud layers",
+          "a calm fjord under stacked cool cloud strips and softened evergreen silhouettes",
+          "a small cabin in a wide mossy valley beneath low cut-paper fog"
+        ],
+        "rain": [
+          "a paper-cut coastal village with diagonal blue rain ribbons and dark reflective fjord water",
+          "a pine valley crossed by layered rain strips, small streams, and slate-blue clouds",
+          "a narrow mountain road winding through wet teal hills and translucent paper rain veils"
+        ],
+        "snow": [
+          "a Nordic paper forest with white layered drifts, tiny red cabin accents, and floating snow dots",
+          "a frozen fjord constructed from pale blue paper planes beneath heavy soft snow clouds",
+          "a high valley with folded white mountain layers and scattered delicate snowflake-like cutouts"
+        ],
+        "storm": [
+          "sharp paper mountains beneath torn indigo cloud layers and one clean coral lightning slash",
+          "a dark fjord with overlapping wind ribbons, choppy geometric water, and charged blue-gray sky forms",
+          "a small cabin valley compressed by dramatic folded storm clouds and directional rain strips"
+        ]
+      }
     }
   }
 }

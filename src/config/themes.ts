@@ -1,4 +1,10 @@
-export type ThemeId = "jack-russell" | "samurai-zen" | "nothing-os";
+export type ThemeId =
+  | "jack-russell"
+  | "samurai-zen"
+  | "nothing-os"
+  | "arcade-fighter"
+  | "pocket-clay"
+  | "nordic-paper";
 
 export interface AppTheme {
   id: ThemeId;
@@ -8,6 +14,7 @@ export interface AppTheme {
   backgroundSet: string;
   fallbackBackground: string;
   themeColor: string;
+  isBeta?: boolean;
 }
 
 export const DEFAULT_THEME_ID: ThemeId = "jack-russell";
@@ -41,10 +48,44 @@ export const THEMES: readonly AppTheme[] = [
     fallbackBackground: "/backgrounds/nothing-os/clear-evening-4.jpeg",
     themeColor: "#080808",
   },
+  {
+    id: "arcade-fighter",
+    name: "Arcade Fighter",
+    description: "Every forecast is the next round",
+    className: "theme-arcade-fighter",
+    backgroundSet: "arcade-fighter",
+    fallbackBackground: "/backgrounds/arcade-fighter/clear-morning-1.jpeg",
+    themeColor: "#090b17",
+    isBeta: true,
+  },
+  {
+    id: "pocket-clay",
+    name: "Pocket Clay",
+    description: "Tiny handcrafted weather worlds",
+    className: "theme-pocket-clay",
+    backgroundSet: "pocket-clay",
+    fallbackBackground: "/backgrounds/pocket-clay/clear-morning-1.jpeg",
+    themeColor: "#354c47",
+    isBeta: true,
+  },
+  {
+    id: "nordic-paper",
+    name: "Nordic Paper",
+    description: "Layered landscapes in quiet color",
+    className: "theme-nordic-paper",
+    backgroundSet: "nordic-paper",
+    fallbackBackground: "/backgrounds/nordic-paper/clear-evening-1.jpeg",
+    themeColor: "#203a52",
+    isBeta: true,
+  },
 ];
 
+export const AVAILABLE_THEMES = THEMES.filter(
+  (theme) => !theme.isBeta || import.meta.env.DEV,
+);
+
 export function isThemeId(value: string | null): value is ThemeId {
-  return THEMES.some((theme) => theme.id === value);
+  return AVAILABLE_THEMES.some((theme) => theme.id === value);
 }
 
 export function getTheme(themeId: ThemeId): AppTheme {

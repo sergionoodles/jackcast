@@ -18,7 +18,7 @@ import {
   Check,
   Palette,
 } from "lucide-react";
-import { THEMES, type ThemeId } from "../config/themes";
+import { AVAILABLE_THEMES, type ThemeId } from "../config/themes";
 import { searchLocations } from "../services/weather";
 import { Location, WeatherData } from "../types";
 
@@ -56,16 +56,22 @@ const getWeatherIcon = (code?: number, isDay = true) => {
     return <CloudFog className="drawer-weather-icon h-9 w-9 text-slate-300" />;
   }
   if (code >= 51 && code <= 57) {
-    return <CloudDrizzle className="drawer-weather-icon h-9 w-9 text-cyan-200" />;
+    return (
+      <CloudDrizzle className="drawer-weather-icon h-9 w-9 text-cyan-200" />
+    );
   }
   if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82)) {
     return <CloudRain className="drawer-weather-icon h-9 w-9 text-sky-300" />;
   }
   if ((code >= 71 && code <= 77) || code === 85 || code === 86) {
-    return <CloudSnow className="drawer-weather-icon drawer-snow-icon h-9 w-9" />;
+    return (
+      <CloudSnow className="drawer-weather-icon drawer-snow-icon h-9 w-9" />
+    );
   }
   if (code >= 95) {
-    return <CloudLightning className="drawer-weather-icon h-9 w-9 text-yellow-200" />;
+    return (
+      <CloudLightning className="drawer-weather-icon h-9 w-9 text-yellow-200" />
+    );
   }
 
   return <Sun className="drawer-weather-icon h-9 w-9 text-amber-300" />;
@@ -154,7 +160,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 
         <div className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-3">
           {!isSearchMode && (
-            <div className="flex min-h-full flex-col">
+            <div className="flex min-h-full flex-col gap-3">
               <button
                 type="button"
                 onClick={onSelectCurrentLocation}
@@ -207,9 +213,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                         <motion.div
                           key={location.id}
                           className={`drawer-card group relative overflow-hidden border p-4 shadow-lg transition-colors ${
-                            isSelected
-                              ? "drawer-card-selected"
-                              : ""
+                            isSelected ? "drawer-card-selected" : ""
                           }`}
                           initial={{ opacity: 0, y: 18, scale: 0.94 }}
                           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -256,7 +260,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                 </motion.div>
               )}
 
-              <section className="drawer-divider mt-auto border-t pt-6 pb-3">
+              <section className="drawer-divider mt-auto border-t pt-3">
                 <div className="mb-4 flex items-start gap-3 px-1">
                   <div className="theme-settings-icon rounded-full p-2">
                     <Palette className="h-5 w-5" aria-hidden="true" />
@@ -276,7 +280,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                   role="radiogroup"
                   aria-label="App theme"
                 >
-                  {THEMES.map((theme) => {
+                  {AVAILABLE_THEMES.map((theme) => {
                     const isSelected = selectedTheme === theme.id;
 
                     return (
