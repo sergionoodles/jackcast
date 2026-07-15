@@ -341,37 +341,26 @@ export const availableVariantsBySet: Record<
   },
   "nothing-os": {
     "clear-afternoon": [
-      1,
       2,
-      3,
-      4
+      3
     ],
     "clear-evening": [
       1,
-      2,
       3,
       4
     ],
     "clear-morning": [
-      1,
       2,
-      3,
       4
-    ],
-    "clear-night": [
-      1
     ],
     "cloudy-afternoon": [
       1,
-      2,
       3,
       4
     ],
     "cloudy-evening": [
       1,
-      2,
-      3,
-      4
+      2
     ],
     "cloudy-morning": [
       1,
@@ -380,22 +369,17 @@ export const availableVariantsBySet: Record<
       4
     ],
     "rain-afternoon": [
-      1,
       2,
       3,
       4
     ],
     "rain-evening": [
       1,
-      2,
-      3,
       4
     ],
     "rain-morning": [
       1,
-      2,
-      3,
-      4
+      2
     ],
     "snow-afternoon": [
       1,
@@ -406,32 +390,27 @@ export const availableVariantsBySet: Record<
     "snow-evening": [
       1,
       2,
-      3,
-      4
+      3
     ],
     "snow-morning": [
       1,
-      2,
       3,
       4
     ],
     "storm-afternoon": [
-      1,
-      2,
       3,
       4
     ],
     "storm-evening": [
       1,
       2,
-      3,
-      4
+      3
     ],
     "storm-morning": [
-      1,
-      2,
-      3,
-      4
+      1
     ]
-  }
+  },
+  "arcade-fighter": {},
+  "pocket-clay": {},
+  "nordic-paper": {}
 };

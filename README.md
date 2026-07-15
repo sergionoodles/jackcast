@@ -24,7 +24,7 @@ Whether it's a golden sunrise over rolling hills, a cozy snowfall under moonligh
 
 ## Features
 
-- **Dynamic AI Art Backgrounds** — Every weather condition and time of day (morning, afternoon, evening, night) is paired with a unique, anime-inspired painterly illustration generated via the Venice.ai API. The art cycles daily so the view never gets stale.
+- **Dynamic AI Art Backgrounds** — Every weather condition and time of day (morning, afternoon, evening, night) is paired with a unique theme-specific illustration generated via the Venice.ai API. The art cycles daily so the view never gets stale.
 - **Real-Time Weather Data** — Powered by the free [Open-Meteo](https://open-meteo.com/) API. No API keys needed for weather data.
 - **Geolocation & Search** — Automatically detects your location, or search for any city worldwide.
 - **Favorites** — Save your go-to locations for quick access.
@@ -38,7 +38,7 @@ Whether it's a golden sunrise over rolling hills, a cozy snowfall under moonligh
 The art pipeline in `scripts/cover-generator/` fills every configured theme in one pass:
 
 1. **Combines 5 weather categories** (`clear`, `cloudy`, `rain`, `snow`, `storm`) with 4 times of day.
-2. **Generates up to 12 variations** per category/time combination for each theme, saving to `public/backgrounds/<theme>/`.
+2. **Generates 4 variations** per category/time combination for each theme, saving to `public/backgrounds/<theme>/`.
 3. **Uses theme-specific prompt blocks** in `config.json` for subject, visual language, composition, and weather scenes.
 4. **Requires abstract illustration** in every prompt and explicitly excludes photography, realistic subjects, 3D, devices, logos, and text.
 5. **Fills only missing slots** and updates `src/config/background-assets.ts` so newly generated covers are selectable by the app.
@@ -52,6 +52,7 @@ pnpm install
 pnpm generate -- --dry-run                # review the all-theme plan and prompts
 pnpm generate -- --limit 10               # generate at most 10 API attempts
 pnpm generate -- --theme samurai-zen      # generate one theme only
+pnpm generate -- --theme arcade-fighter   # generate Arcade Fighter covers
 pnpm generate -- --check                  # validate config and asset inventory
 
 ```
@@ -110,7 +111,10 @@ jackcast/
 │   ├── backgrounds/          # Theme-specific weather art sets
 │   │   ├── jack-russell/     # Generated watercolor covers
 │   │   ├── samurai-zen/      # Samurai/Zen covers and fallback
-│   │   └── nothing-os/       # Nothing OS-inspired covers and fallback
+│   │   ├── nothing-os/       # Nothing OS-inspired covers and fallback
+│   │   ├── arcade-fighter/   # Arcade fighting-game covers and fallback
+│   │   ├── pocket-clay/      # Handcrafted miniature-world covers and fallback
+│   │   └── nordic-paper/     # Layered paper landscape covers and fallback
 │   ├── manifest.json         # PWA manifest
 │   └── sw.js                 # Service worker
 ├── scripts/
