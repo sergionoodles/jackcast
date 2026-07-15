@@ -9,6 +9,13 @@ import HourlyForecast from "./components/HourlyForecast";
 import DailyForecast from "./components/DailyForecast";
 import LocationSearch from "./components/LocationSearch";
 import InstallPrompt from "./components/InstallPrompt";
+import {
+  DEFAULT_THEME_ID,
+  getTheme,
+  isThemeId,
+  THEME_STORAGE_KEY,
+  type ThemeId,
+} from "./config/themes";
 
 const REFRESH_INTERVAL_MS = 15 * 60 * 1000;
 const SWIPE_MIN_DISTANCE_PX = 72;
@@ -54,6 +61,14 @@ export default function App() {
   const [loadingPhase, setLoadingPhase] = useState<LoadingPhase>("location");
   const [isGpsLocation, setIsGpsLocation] = useState(true);
   const [isMinimal, setIsMinimal] = useState(false);
+  const [themeId, setThemeId] = useState<ThemeId>(() => {
+    try {
+      const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+      return isThemeId(storedTheme) ? storedTheme : DEFAULT_THEME_ID;
+    } catch {
+      return DEFAULT_THEME_ID;
+    }
+  });
   const mainRef = useRef<HTMLDivElement | null>(null);
   const lastSuccessfulRefreshAtRef = useRef<number | null>(null);
   const refreshInFlightRef = useRef(false);
@@ -70,6 +85,15 @@ export default function App() {
     favoritesRef.current = favorites;
     localStorage.setItem("froggyFavorites", JSON.stringify(favorites));
   }, [favorites]);
+
+  useEffect(() => {
+    const theme = getTheme(themeId);
+    localStorage.setItem(THEME_STORAGE_KEY, themeId);
+    document.documentElement.dataset.theme = themeId;
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", theme.themeColor);
+  }, [themeId]);
 
   const storeWeatherForLocation = useCallback(
     (location: Pick<Location, "latitude" | "longitude">, weather: WeatherData) => {
@@ -633,13 +657,14 @@ export default function App() {
     <WeatherBackground
       weatherCode={activeWeatherCode}
       location={displayLocation}
+      themeId={themeId}
       showImage={isForecastReady}
       hideGradient={isMinimal}
     >
       {!isMinimal && <InstallPrompt />}
       {/* Header */}
       <motion.header
-        className="app-safe-header app-no-pull-refresh flex justify-between items-center gap-3 px-4 pb-4 text-white z-20 bg-linear-to-b from-mist-900 via-60 via-mist-900/70 to-mist-900/30 backdrop-blur-md shadow-lg ring ring-white/10"
+        className="weather-header app-safe-header app-no-pull-refresh flex justify-between items-center gap-3 px-4 pb-4 text-white z-20 backdrop-blur-md shadow-lg ring ring-white/10"
         animate={{ y: isMinimal ? -80 : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.8 }}
       >
@@ -837,6 +862,8 @@ export default function App() {
             favorites={favorites}
             currentLocation={currentLocation}
             weatherByLocation={weatherByLocation}
+            selectedTheme={themeId}
+            onThemeChange={setThemeId}
             onSelect={handleSelectLocation}
             onSelectCurrentLocation={handleSelectCurrentLocation}
             onRemove={removeFavorite}

@@ -7,43 +7,18 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const API_URL = "https://api.venice.ai/api/v1/image/generate";
-const OUTPUT_DIR = path.join(__dirname, "../../public/backgrounds");
-const OUTPUT_EXT = "jpeg";
-
-const WEATHER_TO_CATEGORY = {
-  "clear-sky": "clear",
-  "mainly-clear": "clear",
-  "partly-cloudy": "cloudy",
-  overcast: "cloudy",
-  fog: "cloudy",
-  "depositing-rime-fog": "cloudy",
-  "light-drizzle": "rain",
-  "moderate-drizzle": "rain",
-  "dense-drizzle": "rain",
-  "light-freezing-drizzle": "rain",
-  "dense-freezing-drizzle": "rain",
-  "slight-rain": "rain",
-  "moderate-rain": "rain",
-  "heavy-rain": "rain",
-  "light-freezing-rain": "rain",
-  "heavy-freezing-rain": "rain",
-  "slight-snow-fall": "snow",
-  "moderate-snow-fall": "snow",
-  "heavy-snow-fall": "snow",
-  "snow-grains": "snow",
-  "slight-rain-showers": "rain",
-  "moderate-rain-showers": "rain",
-  "violent-rain-showers": "rain",
-  "slight-snow-showers": "snow",
-  "heavy-snow-showers": "snow",
-  thunderstorm: "storm",
-  "thunderstorm-with-slight-hail": "storm",
-  "thunderstorm-with-heavy-hail": "storm",
-};
-
+const BACKGROUNDS_DIR = path.join(__dirname, "../../public/backgrounds");
+const INVENTORY_PATH = path.join(
+  __dirname,
+  "../../src/config/background-assets.ts",
+);
+const CONFIG_PATH = path.join(__dirname, "config.json");
 const MODEL = process.env.VENICE_MODEL || "qwen-image";
 const API_KEY = process.env.VENICE_API_KEY;
-const MAX_PROMPT_LENGTH = parseInt(process.env.MAX_PROMPT_LENGTH || "1500", 10);
+const MAX_PROMPT_LENGTH = Number.parseInt(
+  process.env.MAX_PROMPT_LENGTH || "1500",
+  10,
+);
 
 const ANSI = {
   reset: "\x1b[0m",
@@ -57,91 +32,6 @@ const ANSI = {
   cyan: "\x1b[36m",
 };
 
-const AESTHETIC_DIRECTION =
-  "Art direction: ethereal watercolor painting, aetherial haze, pigment blooms, soft-focus, vague abstract weather, luminous washes, visible paper texture. Avoid 3D, CGI, plastic, render/game look.";
-
-const SUBJECT_DIRECTION =
-  "Dog: same small Jack Russell Terrier, white fur, warm brown ears, one brown eye patch, small brown back patch, black nose, folded ears, slim tail.";
-
-const STYLES = [
-  "Ethereal watercolor painting, wet-on-wet pigment blooms, soft ink traces, luminous aetherial haze, abstract sky washes, nostalgic paper texture",
-  "Loose watercolor landscape painting, translucent washes, bleeding color, soft edges, visible grain, vague dreamlike scenery",
-  "Dreamlike watercolor and pastel painting, smeared color, blurred light, soft paper texture, imperfect painterly forms, old memory mood",
-  "Gouache and watercolor wash painting, opaque-soft brush shapes, diffused contrast, atmospheric haze, loose hand-painted dog",
-  "Ink-and-watercolor fantasy painting, loose linework, translucent washes, foggy paper grain, symbolic weather, softly painted subject",
-  "Layered watercolor cover painting, broad color washes, hand-painted texture, softened silhouettes, luminous vague abstract scenery",
-  "Soft pastel watercolor animation background, velvety grain, luminous color fields, smudged edges, aetherial light, painterly marks",
-  "Decorative watercolor art print, flowing composition, softened line texture, limited muted palette, symbolic weather washes",
-];
-
-const args = process.argv.slice(2);
-let imageLimit = null;
-for (let i = 0; i < args.length; i++) {
-  if ((args[i] === "--limit" || args[i] === "-n") && args[i + 1]) {
-    imageLimit = parseInt(args[i + 1], 10);
-    break;
-  }
-}
-
-if (!API_KEY) {
-  console.error("Error: VENICE_API_KEY is not set in .env file");
-  process.exit(1);
-}
-
-function loadConfig() {
-  const configPath = path.join(__dirname, "config.json");
-  return JSON.parse(fs.readFileSync(configPath, "utf-8"));
-}
-
-function getRandomTemplate(templates) {
-  return templates[Math.floor(Math.random() * templates.length)];
-}
-
-function getPromptTemplate(config, weatherCategory) {
-  const categoryTemplates = config.categoryPromptTemplates?.[weatherCategory];
-
-  if (Array.isArray(categoryTemplates) && categoryTemplates.length > 0) {
-    return getRandomTemplate(categoryTemplates);
-  }
-
-  return getRandomTemplate(config.promptTemplates);
-}
-
-function getDogAction(time, weather) {
-  if (time.id === "night") {
-    return "sleeping curled up peacefully, eyes closed, tucked paws, cozy and calm";
-  }
-
-  return weather.actionExpressionAccessory;
-}
-
-function buildPrompt(template, style, time, weather) {
-  const weatherDescription = `${weather.name} weather, ${time.lighting}`;
-  const prompt = template
-    .replace("[STYLE]", style)
-    .replace("[WEATHER DESCRIPTION]", weatherDescription)
-    .replace(
-      /\[(JACKRUSSEL|DOG) ACTION \+ EXPRESSION \+ ACCESSORY\]/g,
-      getDogAction(time, weather),
-    );
-
-  const finalPrompt = `${prompt}\n\n${SUBJECT_DIRECTION}\n\n${AESTHETIC_DIRECTION}`;
-
-  if (finalPrompt.length > MAX_PROMPT_LENGTH) {
-    throw new Error(
-      `Prompt length ${finalPrompt.length} exceeds max ${MAX_PROMPT_LENGTH}`,
-    );
-  }
-
-  return finalPrompt;
-}
-
-function ensureDir(dirPath) {
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
-  }
-}
-
 function colorize(color, value) {
   return `${color}${value}${ANSI.reset}`;
 }
@@ -150,78 +40,179 @@ function formatLabel(label, color = ANSI.cyan) {
   return colorize(color, `${ANSI.bold}${label}${ANSI.reset}`);
 }
 
-function printGenerationBlock({
-  combinationLabel,
-  fileName,
-  variationNumber,
-  styleIndex,
-  selectedStyle,
-  seed,
-  prompt,
-}) {
-  const divider = colorize(ANSI.blue, `${"=".repeat(72)}`);
-  const promptDivider = colorize(ANSI.dim, `${"-".repeat(72)}`);
+function parseArgs(args) {
+  const options = {
+    check: false,
+    dryRun: false,
+    imageLimit: null,
+    syncInventory: false,
+    themeId: null,
+  };
 
-  console.log(`\n${divider}`);
-  console.log(
-    `${formatLabel("GENERATING", ANSI.magenta)} ${colorize(ANSI.bold, fileName)}`,
-  );
-  console.log(`${formatLabel("COMBINATION")} ${combinationLabel}`);
-  console.log(`${formatLabel("VARIATION")} ${variationNumber}`);
-  console.log(`${formatLabel("SEED")} ${seed}`);
-  console.log(
-    `${formatLabel("STYLE")} ${styleIndex + 1}/${STYLES.length} ${selectedStyle}`,
-  );
-  console.log(promptDivider);
-  console.log(`${formatLabel("PROMPT", ANSI.yellow)}\n${prompt}`);
-  console.log(divider);
-}
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
 
-function getWeatherCategory(weatherId) {
-  if (WEATHER_TO_CATEGORY[weatherId]) {
-    return WEATHER_TO_CATEGORY[weatherId];
+    if (arg === "--") {
+      continue;
+    }
+    if (arg === "--check") {
+      options.check = true;
+      continue;
+    }
+    if (arg === "--dry-run") {
+      options.dryRun = true;
+      continue;
+    }
+    if (arg === "--sync-inventory") {
+      options.syncInventory = true;
+      continue;
+    }
+    if (arg === "--limit" || arg === "-n") {
+      const value = args[index + 1];
+      if (!value) {
+        throw new Error(`${arg} requires a non-negative integer.`);
+      }
+      const limit = Number(value);
+      if (!Number.isInteger(limit) || limit < 0) {
+        throw new Error(`${arg} must be a non-negative integer.`);
+      }
+      options.imageLimit = limit;
+      index += 1;
+      continue;
+    }
+    if (arg === "--theme") {
+      const themeId = args[index + 1];
+      if (!themeId) {
+        throw new Error("--theme requires a configured theme id.");
+      }
+      options.themeId = themeId;
+      index += 1;
+      continue;
+    }
+    if (arg === "--help" || arg === "-h") {
+      console.log(`Usage: pnpm generate -- [options]
+
+Options:
+  --check             Validate config and generated inventory without API calls.
+  --dry-run           List the generation plan without API calls.
+  --sync-inventory    Rebuild the runtime variant inventory without API calls.
+  --limit, -n <count> Cap API attempts, including failed requests.
+  --theme <id>        Generate one configured theme instead of every theme.
+`);
+      process.exit(0);
+    }
+
+    throw new Error(`Unknown option: ${arg}`);
   }
 
-  if (weatherId.includes("snow")) return "snow";
-  if (
-    weatherId.includes("rain") ||
-    weatherId.includes("drizzle") ||
-    weatherId.includes("showers")
-  )
-    return "rain";
-  if (
-    weatherId.includes("storm") ||
-    weatherId.includes("thunder") ||
-    weatherId.includes("hail")
-  )
-    return "storm";
-  if (weatherId.includes("sunny") || weatherId.includes("clear"))
-    return "clear";
-  return "cloudy";
+  const noApiModes = [options.check, options.dryRun, options.syncInventory].filter(
+    Boolean,
+  ).length;
+  if (noApiModes > 1) {
+    throw new Error("Use only one of --check, --dry-run, or --sync-inventory.");
+  }
+
+  return options;
 }
 
-function getRandomSeed() {
-  return Math.floor(Math.random() * 999999998) + 1;
+function loadConfig() {
+  return JSON.parse(fs.readFileSync(CONFIG_PATH, "utf-8"));
 }
 
-function getExistingVariationIndexes(outputBaseName, totalVariations) {
+function validateConfig(config) {
+  const errors = [];
+  const { output, categories, constraints, themes, times } = config;
+
+  if (!output || !Number.isInteger(output.width) || !Number.isInteger(output.height)) {
+    errors.push("output.width and output.height must be integers.");
+  }
+  if (!output?.extension || !Number.isInteger(output.variations) || output.variations < 1) {
+    errors.push("output.extension and a positive output.variations are required.");
+  }
+  if (!Array.isArray(constraints) || constraints.length === 0) {
+    errors.push("At least one global illustration constraint is required.");
+  }
+  if (!Array.isArray(times) || times.length === 0) {
+    errors.push("At least one time definition is required.");
+  }
+  if (!categories || Object.keys(categories).length === 0) {
+    errors.push("At least one weather category is required.");
+  }
+  if (!themes || Object.keys(themes).length === 0) {
+    errors.push("At least one theme prompt definition is required.");
+  }
+
+  for (const time of times || []) {
+    if (!time.id || !time.lighting) {
+      errors.push("Every time definition needs id and lighting.");
+    }
+  }
+
+  for (const [categoryId, category] of Object.entries(categories || {})) {
+    if (!category.weather) {
+      errors.push(`Category "${categoryId}" needs a weather description.`);
+    }
+  }
+
+  for (const [themeId, theme] of Object.entries(themes || {})) {
+    if (!theme.backgroundSet || !theme.subject) {
+      errors.push(`Theme "${themeId}" needs backgroundSet and subject.`);
+    }
+    for (const key of ["artDirections", "compositions"]) {
+      if (!Array.isArray(theme[key]) || theme[key].length === 0) {
+        errors.push(`Theme "${themeId}" needs at least one ${key} entry.`);
+      }
+    }
+    for (const categoryId of Object.keys(categories || {})) {
+      if (!Array.isArray(theme.scenes?.[categoryId]) || theme.scenes[categoryId].length === 0) {
+        errors.push(
+          `Theme "${themeId}" needs at least one ${categoryId} scene prompt.`,
+        );
+      }
+    }
+  }
+
+  if (errors.length > 0) {
+    throw new Error(`Invalid config:\n- ${errors.join("\n- ")}`);
+  }
+}
+
+function validateEnvironment() {
+  if (!Number.isInteger(MAX_PROMPT_LENGTH) || MAX_PROMPT_LENGTH < 1) {
+    throw new Error("MAX_PROMPT_LENGTH must be a positive integer.");
+  }
+}
+
+function ensureDir(dirPath) {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+}
+
+function getOutputDir(backgroundSet) {
+  return path.join(BACKGROUNDS_DIR, backgroundSet);
+}
+
+function getExistingVariationIndexes(outputDir, outputBaseName, output) {
   const existingIndexes = new Set();
 
-  if (!fs.existsSync(OUTPUT_DIR)) {
+  if (!fs.existsSync(outputDir)) {
     return existingIndexes;
   }
 
   const escapedBaseName = outputBaseName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const filePattern = new RegExp(`^${escapedBaseName}-(\\d+)\\.${OUTPUT_EXT}$`);
+  const filePattern = new RegExp(
+    `^${escapedBaseName}-(\\d+)\\.${output.extension}$`,
+  );
 
-  for (const fileName of fs.readdirSync(OUTPUT_DIR)) {
+  for (const fileName of fs.readdirSync(outputDir)) {
     const match = fileName.match(filePattern);
     if (!match) {
       continue;
     }
 
-    const variationNumber = parseInt(match[1], 10);
-    if (variationNumber >= 1 && variationNumber <= totalVariations) {
+    const variationNumber = Number.parseInt(match[1], 10);
+    if (variationNumber >= 1 && variationNumber <= output.variations) {
       existingIndexes.add(variationNumber);
     }
   }
@@ -229,27 +220,159 @@ function getExistingVariationIndexes(outputBaseName, totalVariations) {
   return existingIndexes;
 }
 
-function getMissingVariationIndexes(outputBaseName, totalVariations) {
+function getMissingVariationIndexes(outputDir, outputBaseName, output) {
   const existingIndexes = getExistingVariationIndexes(
+    outputDir,
     outputBaseName,
-    totalVariations,
+    output,
   );
   const missingIndexes = [];
 
-  for (
-    let variationNumber = 1;
-    variationNumber <= totalVariations;
-    variationNumber++
-  ) {
-    if (!existingIndexes.has(variationNumber)) {
-      missingIndexes.push(variationNumber);
+  for (let variation = 1; variation <= output.variations; variation += 1) {
+    if (!existingIndexes.has(variation)) {
+      missingIndexes.push(variation);
     }
   }
 
   return missingIndexes;
 }
 
-async function generateImage(prompt, width, height, seed) {
+function pick(values, variationNumber) {
+  return values[(variationNumber - 1) % values.length];
+}
+
+function buildPrompt({ config, themeId, theme, categoryId, time, variationNumber }) {
+  const category = config.categories[categoryId];
+  const artDirection = pick(theme.artDirections, variationNumber);
+  const composition = pick(theme.compositions, variationNumber);
+  const scene = pick(theme.scenes[categoryId], variationNumber);
+  const prompt = [
+    "Create a vertical 9:16 weather cover illustration.",
+    `Theme: ${themeId}. ${artDirection}.`,
+    `Subject: ${theme.subject}.`,
+    `Composition: ${composition}.`,
+    `Scene: ${scene}.`,
+    `Weather: ${category.weather}.`,
+    `Lighting: ${time.lighting}.`,
+    `Required constraints: ${config.constraints.join(". ")}.`,
+  ].join("\n\n");
+
+  if (prompt.length > MAX_PROMPT_LENGTH) {
+    throw new Error(
+      `Prompt length ${prompt.length} exceeds MAX_PROMPT_LENGTH ${MAX_PROMPT_LENGTH}.`,
+    );
+  }
+
+  return { artDirection, prompt };
+}
+
+function getDeterministicSeed(job) {
+  const key = `${job.themeId}:${job.categoryId}:${job.time.id}:${job.variationNumber}`;
+  let hash = 2166136261;
+
+  for (let index = 0; index < key.length; index += 1) {
+    hash ^= key.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return (hash >>> 0) % 999999998 + 1;
+}
+
+function buildJobs(config, selectedThemes) {
+  const jobs = [];
+  let existingImages = 0;
+
+  for (const [themeId, theme] of selectedThemes) {
+    const outputDir = getOutputDir(theme.backgroundSet);
+
+    for (const time of config.times) {
+      for (const categoryId of Object.keys(config.categories)) {
+        const outputBaseName = `${categoryId}-${time.id}`;
+        const missingVariations = getMissingVariationIndexes(
+          outputDir,
+          outputBaseName,
+          config.output,
+        );
+        existingImages += config.output.variations - missingVariations.length;
+
+        for (const variationNumber of missingVariations) {
+          jobs.push({
+            categoryId,
+            outputBaseName,
+            outputDir,
+            theme,
+            themeId,
+            time,
+            variationNumber,
+          });
+        }
+      }
+    }
+  }
+
+  return { existingImages, jobs };
+}
+
+function renderInventorySource(config) {
+  const inventory = {};
+  const categories = Object.keys(config.categories).join(" | ");
+  const times = config.times.map((time) => time.id).join(" | ");
+
+  for (const theme of Object.values(config.themes)) {
+    const outputDir = getOutputDir(theme.backgroundSet);
+    const variants = {};
+    const filenamePattern = new RegExp(
+      `^(${Object.keys(config.categories).join("|")})-(${config.times
+        .map((time) => time.id)
+        .join("|")})-(\\d+)\\.${config.output.extension}$`,
+    );
+
+    if (fs.existsSync(outputDir)) {
+      for (const fileName of fs.readdirSync(outputDir)) {
+        const match = fileName.match(filenamePattern);
+        if (!match) {
+          continue;
+        }
+
+        const variant = Number.parseInt(match[3], 10);
+        if (variant < 1) {
+          continue;
+        }
+        const key = `${match[1]}-${match[2]}`;
+        variants[key] ??= [];
+        variants[key].push(variant);
+      }
+    }
+
+    for (const values of Object.values(variants)) {
+      values.sort((first, second) => first - second);
+    }
+    inventory[theme.backgroundSet] = variants;
+  }
+
+  return `type WeatherCategory = "${categories.replaceAll(" | ", '" | "')}";\ntype TimeOfDay = "${times.replaceAll(" | ", '" | "')}";\ntype BackgroundKey = \`${"${WeatherCategory}"}-${"${TimeOfDay}"}\`;\n\n// Generated by scripts/cover-generator/generate.js. Do not edit manually.\nexport const availableVariantsBySet: Record<\n  string,\n  Partial<Record<BackgroundKey, number[]>>\n> = ${JSON.stringify(inventory, null, 2)};\n`;
+}
+
+function syncInventory(config, checkOnly = false) {
+  const expected = renderInventorySource(config);
+  const existing = fs.existsSync(INVENTORY_PATH)
+    ? fs.readFileSync(INVENTORY_PATH, "utf-8")
+    : null;
+
+  if (existing === expected) {
+    return false;
+  }
+  if (checkOnly) {
+    throw new Error(
+      "Background inventory is stale. Run pnpm generate -- --sync-inventory or generate images to refresh it.",
+    );
+  }
+
+  fs.writeFileSync(INVENTORY_PATH, expected);
+  return true;
+}
+
+async function generateImage(prompt, output, seed) {
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {
@@ -258,21 +381,20 @@ async function generateImage(prompt, width, height, seed) {
     },
     body: JSON.stringify({
       model: MODEL,
-      prompt: prompt,
-      width: width,
-      height: height,
-      format: OUTPUT_EXT,
+      prompt,
+      width: output.width,
+      height: output.height,
+      format: output.extension,
       variants: 1,
-      // style_preset: "Pixel Art",
       hide_watermark: true,
-      seed: seed,
       safe_mode: false,
+      seed,
     }),
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(`API Error: ${response.status} - ${JSON.stringify(error)}`);
+    const error = await response.text();
+    throw new Error(`API Error: ${response.status} - ${error}`);
   }
 
   const data = await response.json();
@@ -280,183 +402,169 @@ async function generateImage(prompt, width, height, seed) {
 }
 
 function saveImage(base64Data, filePath) {
-  const buffer = Buffer.from(base64Data, "base64");
-  fs.writeFileSync(filePath, buffer);
+  fs.writeFileSync(filePath, Buffer.from(base64Data, "base64"));
 }
 
-async function delay(ms) {
+function printGenerationBlock({ job, seed, artDirection, prompt, fileName }) {
+  const divider = colorize(ANSI.blue, "=".repeat(72));
+
+  console.log(`\n${divider}`);
+  console.log(
+    `${formatLabel("GENERATING", ANSI.magenta)} ${colorize(ANSI.bold, fileName)}`,
+  );
+  console.log(`${formatLabel("THEME")} ${job.themeId}`);
+  console.log(`${formatLabel("COMBINATION")} ${job.outputBaseName}`);
+  console.log(`${formatLabel("VARIATION")} ${job.variationNumber}`);
+  console.log(`${formatLabel("SEED")} ${seed}`);
+  console.log(`${formatLabel("ART DIRECTION")} ${artDirection}`);
+  console.log(colorize(ANSI.dim, "-".repeat(72)));
+  console.log(`${formatLabel("PROMPT", ANSI.yellow)}\n${prompt}`);
+  console.log(divider);
+}
+
+function printPlan({ config, selectedThemes, existingImages, jobs, imageLimit }) {
+  const targetImages =
+    selectedThemes.length *
+    config.times.length *
+    Object.keys(config.categories).length *
+    config.output.variations;
+  const jobsByTheme = Object.fromEntries(
+    selectedThemes.map(([themeId]) => [themeId, 0]),
+  );
+
+  for (const job of jobs) {
+    jobsByTheme[job.themeId] += 1;
+  }
+
+  console.log(`Using model: ${MODEL}`);
+  console.log(`Themes: ${selectedThemes.map(([themeId]) => themeId).join(", ")}`);
+  console.log(`Target images: ${targetImages}`);
+  console.log(`Existing images: ${existingImages}`);
+  console.log(`Missing images: ${jobs.length}`);
+  console.log(
+    `Missing by theme: ${Object.entries(jobsByTheme)
+      .map(([themeId, count]) => `${themeId}=${count}`)
+      .join(", ")}`,
+  );
+  if (imageLimit !== null) {
+    console.log(`API attempt limit: ${imageLimit}`);
+  }
+}
+
+function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function main() {
-  console.log(`Using model: ${MODEL}`);
-  if (imageLimit) {
-    console.log(`Image limit: ${imageLimit}`);
-  }
-  console.log("Loading config...");
-
+  const options = parseArgs(process.argv.slice(2));
+  validateEnvironment();
   const config = loadConfig();
-  const { width, height, variations, times, weathers } = config;
+  validateConfig(config);
 
-  ensureDir(OUTPUT_DIR);
+  const configuredThemes = Object.entries(config.themes);
+  const selectedThemes = options.themeId
+    ? configuredThemes.filter(([themeId]) => themeId === options.themeId)
+    : configuredThemes;
 
-  let totalGenerated = 0;
-  let totalFailed = 0;
-  const uniqueCategories = new Set(
-    weathers.map((weather) => getWeatherCategory(weather.id)),
-  );
-  const totalCombinations = times.length * uniqueCategories.size;
-  let current = 0;
-
-  const representativeWeatherByCategory = new Map();
-  for (const weather of weathers) {
-    const category = getWeatherCategory(weather.id);
-    if (!representativeWeatherByCategory.has(category)) {
-      representativeWeatherByCategory.set(category, weather);
-    }
+  if (selectedThemes.length === 0) {
+    throw new Error(`Unknown configured theme: ${options.themeId}`);
   }
 
-  let totalMissingImages = 0;
-  let combinationsWithGaps = 0;
-  for (const time of times) {
-    for (const category of uniqueCategories) {
-      const outputBaseName = `${category}-${time.id}`;
-      const missingIndexes = getMissingVariationIndexes(
-        outputBaseName,
-        variations,
-      );
-      if (missingIndexes.length > 0) {
-        combinationsWithGaps++;
-        totalMissingImages += missingIndexes.length;
-      }
-    }
-  }
+  const { existingImages, jobs } = buildJobs(config, selectedThemes);
+  printPlan({
+    config,
+    selectedThemes,
+    existingImages,
+    imageLimit: options.imageLimit,
+    jobs,
+  });
 
-  if (totalMissingImages === 0) {
-    console.log(
-      "\nAll combinations already have the required variations. Nothing to generate.",
-    );
+  if (options.check) {
+    syncInventory(config, true);
+    console.log("Configuration and background inventory are valid.");
     return;
   }
 
-  const effectiveLimit =
-    imageLimit !== null && imageLimit < totalMissingImages
-      ? imageLimit
-      : totalMissingImages;
-  console.log(
-    `\nFilling ${effectiveLimit} missing images across ${combinationsWithGaps}/${totalCombinations} combinations (${variations} variations target)\n`,
-  );
-
-  for (const time of times) {
-    const generatedCategoryForTime = new Set();
-
-    for (const weather of weathers) {
-      if (imageLimit !== null && totalGenerated >= imageLimit) {
-        console.log(`\nReached image limit of ${imageLimit}. Stopping.`);
-        break;
-      }
-
-      const weatherCategory = getWeatherCategory(weather.id);
-      if (generatedCategoryForTime.has(weatherCategory)) {
-        continue;
-      }
-
-      current++;
-      const outputBaseName = `${weatherCategory}-${time.id}`;
-      const missingVariationIndexes = getMissingVariationIndexes(
-        outputBaseName,
-        variations,
-      );
-
-      if (missingVariationIndexes.length === 0) {
-        generatedCategoryForTime.add(weatherCategory);
-        console.log(
-          `[${current}/${totalCombinations}] Skipping ${outputBaseName} (already complete)`,
-        );
-        continue;
-      }
-
-      const representativeWeather =
-        representativeWeatherByCategory.get(weatherCategory) || weather;
-
-      console.log(
-        `[${current}/${totalCombinations}] Generating ${outputBaseName} (missing: ${missingVariationIndexes.join(", ")})...`,
-      );
-
-      try {
-        let savedForCombination = 0;
-
-        for (const variationNumber of missingVariationIndexes) {
-          if (imageLimit !== null && totalGenerated >= imageLimit) {
-            break;
-          }
-
-          const styleIndex = (variationNumber - 1) % STYLES.length;
-          const selectedStyle = STYLES[styleIndex];
-
-          const prompt = buildPrompt(
-            getPromptTemplate(config, weatherCategory),
-            selectedStyle,
-            time,
-            representativeWeather,
-          );
-
-          const seed = getRandomSeed();
-          const fileName = `${outputBaseName}-${variationNumber}.${OUTPUT_EXT}`;
-          const filePath = path.join(OUTPUT_DIR, fileName);
-
-          try {
-            printGenerationBlock({
-              combinationLabel: outputBaseName,
-              fileName,
-              variationNumber,
-              styleIndex,
-              selectedStyle,
-              seed,
-              prompt,
-            });
-
-            const images = await generateImage(prompt, width, height, seed);
-
-            if (!images || images.length === 0) {
-              throw new Error("No image returned by API");
-            }
-
-            saveImage(images[0], filePath);
-            totalGenerated++;
-            savedForCombination++;
-            console.log(
-              `${formatLabel("SAVED", ANSI.green)} ${fileName} ${colorize(ANSI.dim, `(${filePath})`)}`,
-            );
-          } catch (error) {
-            totalFailed++;
-            console.error(
-              `${formatLabel("FAILED", ANSI.red)} ${fileName} ${colorize(ANSI.dim, `(seed ${seed})`)}: ${error.message}`,
-            );
-          }
-
-          await delay(200);
-        }
-
-        generatedCategoryForTime.add(weatherCategory);
-
-        console.log(
-          `  -> Saved ${savedForCombination}/${missingVariationIndexes.length} missing images for ${outputBaseName}`,
-        );
-      } catch (error) {
-        console.error(`  -> FAILED: ${error.message}`);
-        totalFailed += missingVariationIndexes.length;
-      }
-
-      await delay(500);
+  if (options.dryRun) {
+    const previewJobs = jobs.slice(0, 5);
+    for (const job of previewJobs) {
+      const { prompt } = buildPrompt({ config, ...job });
+      console.log(`\n${job.themeId}/${job.outputBaseName}-${job.variationNumber}`);
+      console.log(prompt);
     }
-
-    if (imageLimit !== null && totalGenerated >= imageLimit) {
-      break;
+    if (jobs.length > previewJobs.length) {
+      console.log(`\n... ${jobs.length - previewJobs.length} additional jobs not shown.`);
     }
+    return;
   }
 
-  console.log(`\nDone! Generated: ${totalGenerated}, Failed: ${totalFailed}`);
+  if (options.syncInventory) {
+    const updated = syncInventory(config);
+    console.log(updated ? "Updated src/config/background-assets.ts." : "Background inventory is current.");
+    return;
+  }
+
+  const plannedJobs =
+    options.imageLimit === null ? jobs : jobs.slice(0, options.imageLimit);
+  if (plannedJobs.length === 0) {
+    const inventoryUpdated = syncInventory(config);
+    console.log("No API calls needed.");
+    if (inventoryUpdated) {
+      console.log("Updated src/config/background-assets.ts.");
+    }
+    return;
+  }
+  if (!API_KEY) {
+    throw new Error("VENICE_API_KEY is not set in .env.");
+  }
+
+  let attempted = 0;
+  let generated = 0;
+  let failed = 0;
+
+  for (const job of plannedJobs) {
+    ensureDir(job.outputDir);
+    const fileName = `${job.outputBaseName}-${job.variationNumber}.${config.output.extension}`;
+    const filePath = path.join(job.outputDir, fileName);
+    const { artDirection, prompt } = buildPrompt({ config, ...job });
+    const seed = getDeterministicSeed(job);
+    attempted += 1;
+
+    try {
+      printGenerationBlock({ job, seed, artDirection, prompt, fileName });
+      const images = await generateImage(prompt, config.output, seed);
+      if (!images?.[0]) {
+        throw new Error("No image returned by API.");
+      }
+
+      saveImage(images[0], filePath);
+      generated += 1;
+      console.log(
+        `${formatLabel("SAVED", ANSI.green)} ${fileName} ${colorize(ANSI.dim, `(${filePath})`)}`,
+      );
+    } catch (error) {
+      failed += 1;
+      console.error(
+        `${formatLabel("FAILED", ANSI.red)} ${fileName}: ${error.message}`,
+      );
+    }
+
+    await delay(200);
+  }
+
+  const inventoryUpdated = syncInventory(config);
+  console.log(
+    `\nDone. Attempted: ${attempted}, saved: ${generated}, failed: ${failed}, remaining: ${jobs.length - attempted}.`,
+  );
+  if (inventoryUpdated) {
+    console.log("Updated src/config/background-assets.ts.");
+  }
+  if (failed > 0) {
+    process.exitCode = 1;
+  }
 }
 
-main().catch(console.error);
+main().catch((error) => {
+  console.error(error.message);
+  process.exitCode = 1;
+});

@@ -1,7 +1,7 @@
 {
   "name": "venice-image-generator",
   "version": "1.0.0",
-  "description": "Generate weather dog images using Venice.ai",
+  "description": "Generate abstract illustrated weather covers for every JackCast theme using Venice.ai",
   "main": "generate.js",
   "type": "module",
   "scripts": {

@@ -1,215 +1,180 @@
 {
-  "promptTemplates": [
-    "[STYLE], small Jack Russell Terrier as a soft watercolor terrier, alert triangular ears, consistent white fur with warm brown patches, expressive with softened imperfect edges. Wide vertical weather-cover composition from a gentle 45-degree top-down angle, dog modest in frame, vast surreal landscape filling the scene with loose abstract forms and painterly haze.\n\nThe Jack Russell stands on a dreamlike hill where flowing grass becomes ribbons of color, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. The background dissolves into glowing cloud shapes, soft sky gradients, and imperfect brush textures like a half-remembered childhood painting.\n\nNostalgic watercolor cover art, softly out of focus edges, abstract scenery, handmade watercolor texture",
-
-    "[STYLE], energetic Jack Russell Terrier as a charming watercolor silhouette with consistent white fur and warm brown patches, bright simple eyes, and gently blurred edges. Medium-wide vertical scene, small centered dog, expansive abstract landscape built from broad handmade brush shapes.\n\nThe Jack Russell stands in an open meadow where the grass bends into waves and painted symbols, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Luminous weather-light drifts through the scene as color fields, ink marks, and soft grain in a symbolic watercolor style.\n\nBalanced nostalgic composition, dreamy abstract backdrop, imperfect watercolor drawing",
-
-    "[STYLE], lively Jack Russell Terrier in a soft nostalgic watercolor style, compact body with white fur and warm brown patches suggested by loose shapes and painterly anatomy. Wide environmental cover, dog modest in frame, abstract forest textures forming the full background.\n\nThe Jack Russell sits on a mossy forest floor made of thick painted patches, scattered leaves, and tree roots that curl like decorative lines, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Muted glow filters through trees as misty bands of color, with dreamy depth and gently unfocused edges.\n\nSpacious surreal woodland cover, hand-painted softness, hazy watercolor clarity",
-
-    "[STYLE], alert Jack Russell Terrier as a small expressive watercolor figure, soft white-and-warm-brown coat shapes, bright eyes hinted with simple marks. Broad vertical scene from a gentle top-down angle, abstract ground textures and puddle reflections forming the full background.\n\nThe Jack Russell stands beside a luminous puddle on damp painted earth, ripples spreading into surreal rings and color smudges, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Reflections glow like memory fragments, with visible brush grain and softened outlines.\n\nMoody watercolor weather cover, abstract terrain, nostalgic blur, painterly softness",
-
-    "[STYLE], spirited Jack Russell Terrier drawn as a cozy small watercolor dog with loose white-and-warm-brown markings, soft outline, and warm expression. Wide vertical snowy cover, dog small inside a large abstract winter field where shapes melt gently into one another.\n\nThe Jack Russell stands in an open snowy clearing with snowdrifts painted as broad soft strokes and powdery blue-white haze, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Snow sparkles appear as surreal floating marks, with dreamy depth and a nostalgic winter-card feeling.\n\nSoft watercolor snow scene, atmospheric blur, abstract hand-painted background",
-
-    "[STYLE], playful Jack Russell Terrier in a loose watercolor style, small white body and warm brown markings suggested by soft shapes with painterly anatomy. Medium-wide autumn cover from a gentle top-down angle, dog nestled modestly among abstract leaves.\n\nSmall Jack Russell rests among fallen leaves that scatter outward as orange, red, and gold brush swirls, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Warm tones glow through a soft analog haze, with shadows diffused into decorative shapes.\n\nNostalgic seasonal watercolor, painterly blur, environment-first composition",
-
-    "[STYLE], alert Jack Russell Terrier dog as a charming soft-edged illustration, simple compact white body, distinctive warm brown markings hinted with painterly patches. Wide vertical field scene, dog small amid open grass painted as flowing abstract strokes.\n\nThe Jack Russell stands in a field where waving grass becomes soft ribbons and floating marks, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Light and weather are shown as glowing color washes, grain, and gentle atmospheric blur.\n\nMinimal spacious illustrated cover, abstract grassland, nostalgic not-quite-in-focus mood",
-
-    "[STYLE], energetic Jack Russell Terrier with eager simple eyes, compact illustrated body, and soft white-and-warm-brown markings. Broad natural cover scene from a gentle 45-degree top-down perspective, dog small on a rounded rock inside an abstract landscape.\n\nSmall Jack Russell stands confidently on a smooth painted rock while terrain and distant scenery spread outward as handmade color blocks, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Forms are expressive and slightly melted, with nostalgic haze and visible brush texture.\n\nSurreal illustrated landscape, soft focus, balanced cover composition"
-  ],
-  "categoryPromptTemplates": {
-    "clear": [
-      "[STYLE], cheerful Jack Russell Terrier as a soft watercolor dog with loose white fur and warm brown patches, small in a broad vertical scene. A sweeping sunlit hilltop turns into ribbons of color, abstract wildflowers, and hazy sky shapes.\n\nThe Jack Russell stands on a warm grassy ridge above a luminous valley, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Sunlight appears as translucent washes and grainy glow, nostalgic and slightly out of focus with softened handmade edges.\n\nSurreal clear-weather cover, watercolor brush texture, dreamy image quality",
-      "[STYLE], lively Jack Russell Terrier drawn with soft edges and loose white-and-warm-brown markings, centered small on a winding garden path. The garden fills the frame as abstract plant shapes, glowing color patches, and imperfect hand-painted lines.\n\nThe Jack Russell pauses among tall golden grasses and blooming plants, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Warm light and botanical shapes blur together like an old watercolor plate.\n\nNostalgic garden watercolor, dreamy softness, hand-painted only",
-      "[STYLE], spirited Jack Russell Terrier in a surreal watercolor courtyard, compact white form with warm brown ear and eye patches suggested by rounded painterly shapes. Sun-warmed tiles, abstract trees, and reflected sky colors fill the vertical frame.\n\nThe Jack Russell rests beside a shallow terracotta water bowl that reflects the sky as a soft symbolic glow, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Leaf shadows become decorative brush marks, with relaxed nostalgic haze.\n\nSoft-focus weather cover, abstract cheerful atmosphere, handmade watercolor style"
-    ],
-    "cloudy": [
-      "[STYLE], curious Jack Russell Terrier as a softly painted white-and-warm-brown dog, small in a misty park made from muted shapes and layered washes. Paths and foliage are suggestive, abstract, and gently blurred.\n\nThe Jack Russell stands on a pale path winding through gray-green grasses, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Cloud cover becomes silver-blue veils and soft paper grain, quiet and nostalgic.\n\nSurreal cloudy watercolor, gentle mystery, painterly softness",
-      "[STYLE], watchful Jack Russell Terrier with simple bright eye marks and loose white-and-warm-brown coat patches, small on an abstract stone terrace. Huge cloudy sky shapes dominate the vertical composition.\n\nThe Jack Russell stands beside weathered stones and wind-combed grass overlooking a soft gray horizon, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Clouds are layered as painted curtains with hazy luminous breaks, calm and memory-like.\n\nSoft illustrated weather cover, expressive sky design, handmade sky texture",
-      "[STYLE], lively Jack Russell Terrier in a fog-softened woodland lane, small and loosely drawn with a white body and warm brown face patches. Pale trunks, moss, and drifting mist surround the dog as abstract bands and smudges.\n\nThe Jack Russell pads along a narrow trail with dewy leaves and moss painted in broad strokes, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Veiled light and muted greens create a dreamy not-completely-in-focus atmosphere.\n\nNostalgic mist illustration, soft depth, symbolic handmade forms"
-    ],
-    "rain": [
-      "[STYLE], playful Jack Russell Terrier with soft bright eye marks and loose rain-darkened white fur with warm brown patches, small in a wide city-garden scene. Puddles and wet paths are painted as luminous abstract mirrors.\n\nThe Jack Russell stands on a rain-glossed path beside puddles reflecting blurred sky color, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Ripples spread as surreal rings, droplets become floating paint specks, and the whole scene feels like a remembered rainy afternoon.\n\nSoft rainy watercolor, saturated washes, painterly watercolor finish",
-      "[STYLE], energetic Jack Russell Terrier drawn as a small white-and-warm-brown watercolor figure on a lush fern trail. Wet foliage fills the frame as oversized soft shapes and emerald smudges.\n\nThe Jack Russell trots between ferns and mossy stones, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Rain beads and tiny streams are suggested with glowing marks and painterly motion, cozy and dreamlike.\n\nAbstract rain cover, nostalgic blur, watercolor texture",
-      "[STYLE], spirited Jack Russell Terrier with perked warm brown ears and loose white-and-warm-brown markings, small in a rainy flower market lane. Colorful awnings, wet cobbles, and reflected light dissolve into soft jewel-toned shapes.\n\nThe Jack Russell pauses under dripping awnings near scattered petals and glowing puddle reflections, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Rain streaks are decorative lines, the market is surreal and slightly out of focus.\n\nWatercolor rainy cover, expressive atmosphere, soft painterly abstraction"
-    ],
-    "snow": [
-      "[STYLE], joyful Jack Russell Terrier as a cozy loose white-and-warm-brown watercolor, small against a wide winter lane. Snow-covered paths and frosted hedges fill the frame as soft blue-white blocks and powdery grain.\n\nThe Jack Russell stands on a winding snowy lane with pawprints trailing behind, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Drifts and icy grasses sweep through the composition as dreamy abstract shapes.\n\nNostalgic snow cover, gentle blur, watercolor softness",
-      "[STYLE], energetic Jack Russell Terrier with curious soft eyes and loose warm brown patches on white fur, small in a frosted pine clearing. Snow-laden branches and powdery ground textures are surreal and softly blended.\n\nThe Jack Russell looks up between dark evergreen shapes and soft white drifts, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Frost crystals become tiny glowing symbols in a cold watercolor haze.\n\nSoft winter watercolor, abstract scenery, hazy watercolor clarity",
-      "[STYLE], brave Jack Russell Terrier drawn with rounded hand-painted white fur and warm brown patches, small in an open snowfield. Wind-carved snow and the distant horizon dissolve into sweeping pale ribbons.\n\nThe Jack Russell stands beside a small snow mound shaped by the wind, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Flakes and powder trails move across the scene like drifting paper texture.\n\nSurreal snowfield watercolor, atmospheric softness, pure painting style"
-    ],
-    "storm": [
-      "[STYLE], courageous Jack Russell Terrier as a small soft-edged white-and-warm-brown watercolor dog in a broad stormy field. Wind-swept grass and clouds fill the frame as dramatic abstract waves and symbolic shapes.\n\nThe Jack Russell braces on a dark grassy rise with curved grass blades flowing around it, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Electric sky glow and distant lightning are symbolic painted marks in a hazy surreal atmosphere.\n\nNostalgic storm watercolor, energetic motion, softened handmade edges",
-      "[STYLE], alert Jack Russell Terrier with perked warm brown ears and loose white-and-warm-brown painted markings, small near a rocky storm overlook. Rocks, rain streaks, and turbulent clouds form a soft abstract weather theater.\n\nThe Jack Russell stands beside smooth dark stones as wind and storm light swirl through the landscape, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Purple-gray clouds blur into luminous shapes with handmade texture.\n\nSurreal storm cover art, soft dramatic sky, hand-painted only",
-      "[STYLE], spirited Jack Russell Terrier with brave soft expression, compact white shape, and soft warm brown patches, centered small on a storm-lit meadow path. Bending reeds and scattered leaves spiral as decorative abstract marks.\n\nThe Jack Russell faces a gust of wind on a winding path, [WEATHER DESCRIPTION], [DOG ACTION + EXPRESSION + ACCESSORY]. Flashes of light behind heavy clouds appear as glowing shapes, moody colors, and nostalgic painterly haze.\n\nWatercolor storm cover, powerful weather mood, soft painterly abstraction"
-    ]
+  "output": {
+    "extension": "jpeg",
+    "width": 720,
+    "height": 1280,
+    "variations": 4
   },
-  "style": "Surreal nostalgic watercolor painting, aetherial haze, soft-focus edges, abstract weather shapes, visible paper texture, luminous pigment washes, dreamlike atmosphere",
-  "aspectRatio": "9:16",
-  "width": 720,
-  "height": 1280,
-  "variations": 12,
+  "constraints": [
+    "abstract illustrated weather cover, not a photograph",
+    "simplified symbolic forms, deliberate negative space, and visible hand-made or graphic texture",
+    "no photorealism, no real-life scene, no realistic skin or fur, no camera artifacts",
+    "no 3D, CGI, render, glossy product shot, text, logo, watermark, interface, or border"
+  ],
   "times": [
     {
       "id": "morning",
-      "name": "Morning",
-      "lighting": "soft golden sunrise glow, warm gentle light, fresh warm highlights, subtle long shadows"
+      "lighting": "a pale sunrise glow, long soft shadows, and fresh warm highlights"
     },
     {
       "id": "afternoon",
-      "name": "Afternoon",
-      "lighting": "hazy neutral daylight, soft overhead glow, gently faded natural colors, muted short shadows"
+      "lighting": "diffused daylight, a quiet overhead glow, and balanced muted contrast"
     },
     {
       "id": "evening",
-      "name": "Evening",
-      "lighting": "warm golden hour sunset glow, soft orange and pink washes, long blurred shadows, nostalgic warmth"
+      "lighting": "low vermilion and amber light, long graphic shadows, and a fading luminous horizon"
     },
     {
       "id": "night",
-      "name": "Night",
-      "lighting": "true nighttime, deep navy sky, moonlit blue shadows, faint stars, low sleepy glow"
+      "lighting": "deep indigo darkness, sparse moonlit highlights, and a restrained nocturnal glow"
     }
   ],
-  "weathers": [
-    {
-      "id": "clear-sky",
-      "name": "Clear Sky",
-      "actionExpressionAccessory": "happily basking with ears perked up, eyes squinting in bliss, sunbeams around, tail wagging gently"
+  "categories": {
+    "clear": {
+      "weather": "clear, calm weather represented with open air and spacious light"
     },
-    {
-      "id": "mainly-clear",
-      "name": "Mainly Clear",
-      "actionExpressionAccessory": "smiling while looking up at the sun, relaxed sitting pose, tongue slightly out"
+    "cloudy": {
+      "weather": "overcast or misty weather represented with layered veils and softened contrast"
     },
-    {
-      "id": "partly-cloudy",
-      "name": "Partly Cloudy",
-      "actionExpressionAccessory": "curiously tilting head at fluffy clouds, gentle alert expression, ears forward"
+    "rain": {
+      "weather": "rain represented with rhythmic lines, reflective shapes, and saturated pools of color"
     },
-    {
-      "id": "overcast",
-      "name": "Overcast",
-      "actionExpressionAccessory": "slightly squinting happily at the gray sky, calm content expression, tail gently wagging"
+    "snow": {
+      "weather": "snow represented with drifting marks, pale fields, and crystalline negative space"
     },
-    {
-      "id": "fog",
-      "name": "Fog",
-      "actionExpressionAccessory": "mysteriously alert in soft fog, bright eyes shining through mist, nose twitching curiously"
-    },
-    {
-      "id": "depositing-rime-fog",
-      "name": "Depositing Rime Fog",
-      "actionExpressionAccessory": "cozy in frosty mist with tiny ice crystals on fur, breath visible in cold air"
-    },
-    {
-      "id": "light-drizzle",
-      "name": "Light Drizzle",
-      "actionExpressionAccessory": "shaking off tiny raindrops playfully, delighted grin, water droplets flying from coat"
-    },
-    {
-      "id": "moderate-drizzle",
-      "name": "Moderate Drizzle",
-      "actionExpressionAccessory": "happily trotting through rain with tail up, wet but joyful, splashing in tiny puddles"
-    },
-    {
-      "id": "dense-drizzle",
-      "name": "Dense Drizzle",
-      "actionExpressionAccessory": "tucked under a wide leaf while thick drizzles fall, cheerful alert eyes, nose peeking out"
-    },
-    {
-      "id": "light-freezing-drizzle",
-      "name": "Light Freezing Drizzle",
-      "actionExpressionAccessory": "carefully stepping on lightly glazed ground, bundled with a tiny scarf, determined expression"
-    },
-    {
-      "id": "dense-freezing-drizzle",
-      "name": "Dense Freezing Drizzle",
-      "actionExpressionAccessory": "snuggled under a mushroom cap as icy droplets sparkle, brave alert smile, ears perked"
-    },
-    {
-      "id": "slight-rain",
-      "name": "Slight Rain",
-      "actionExpressionAccessory": "shaking off tiny raindrops playfully, delighted grin, water droplets flying from coat"
-    },
-    {
-      "id": "moderate-rain",
-      "name": "Moderate Rain",
-      "actionExpressionAccessory": "happily trotting through rain with tail up, wet but joyful, splashing in tiny puddles"
-    },
-    {
-      "id": "heavy-rain",
-      "name": "Heavy Rain",
-      "actionExpressionAccessory": "tucked under a large mushroom or leaf, peeking out with big excited eyes, tail wagging"
-    },
-    {
-      "id": "light-freezing-rain",
-      "name": "Light Freezing Rain",
-      "actionExpressionAccessory": "walking carefully over softly glazed ice patches, rosy cheeks and determined grin, paws careful"
-    },
-    {
-      "id": "heavy-freezing-rain",
-      "name": "Heavy Freezing Rain",
-      "actionExpressionAccessory": "huddled warmly beneath a sturdy umbrella, icy raindrops sparkling around, brave expression"
-    },
-    {
-      "id": "slight-rain-showers",
-      "name": "Slight Rain Showers",
-      "actionExpressionAccessory": "jumping between sun patches and raindrops, playful hop, ears flopping joyfully"
-    },
-    {
-      "id": "moderate-rain-showers",
-      "name": "Moderate Rain Showers",
-      "actionExpressionAccessory": "spinning happily in passing showers, paws stretched wide, shaking water from coat"
-    },
-    {
-      "id": "violent-rain-showers",
-      "name": "Violent Rain Showers",
-      "actionExpressionAccessory": "bracing playfully against sudden downpours, eyes bright with excitement, tail high"
-    },
-    {
-      "id": "slight-snow-fall",
-      "name": "Slight Snow Fall",
-      "actionExpressionAccessory": "catching snowflakes on nose, wearing tiny scarf, joyful wonder, tail wagging"
-    },
-    {
-      "id": "moderate-snow-fall",
-      "name": "Moderate Snow Fall",
-      "actionExpressionAccessory": "rolling happily in snow, building mini snow pile or just frolicking, ears perked up"
-    },
-    {
-      "id": "heavy-snow-fall",
-      "name": "Heavy Snow Fall",
-      "actionExpressionAccessory": "bundled cozy (tiny scarf and hat), snow piling on fur, bright happy eyes"
-    },
-    {
-      "id": "snow-grains",
-      "name": "Snow Grains",
-      "actionExpressionAccessory": "peering curiously at tiny icy pellets, playful and fascinated, head tilted"
-    },
-    {
-      "id": "slight-snow-showers",
-      "name": "Slight Snow Showers",
-      "actionExpressionAccessory": "hopping through short snowy bursts, scarf fluttering, joyful energetic bounce"
-    },
-    {
-      "id": "heavy-snow-showers",
-      "name": "Heavy Snow Showers",
-      "actionExpressionAccessory": "ducking into fluffy drifts between intense snowy bursts, still smiling, tail wagging"
-    },
-    {
-      "id": "thunderstorm",
-      "name": "Thunderstorm",
-      "actionExpressionAccessory": "slightly alert but still smiling bravely, ears perked forward, tiny lightning in background"
-    },
-    {
-      "id": "thunderstorm-with-slight-hail",
-      "name": "Thunderstorm with Slight Hail",
-      "actionExpressionAccessory": "wearing tiny goggles while little hail taps around, bold grin, standing firm"
-    },
-    {
-      "id": "thunderstorm-with-heavy-hail",
-      "name": "Thunderstorm with Heavy Hail",
-      "actionExpressionAccessory": "sheltering under a sturdy leaf as bigger hail bounces nearby, courageous alert smile"
+    "storm": {
+      "weather": "storm weather represented with directional brushwork, charged clouds, and symbolic flashes of light"
     }
-  ]
+  },
+  "themes": {
+    "jack-russell": {
+      "backgroundSet": "jack-russell",
+      "subject": "a small energetic Jack Russell Terrier, rendered as a loose white and warm-brown painted silhouette with simple expressive marks, never realistic fur",
+      "artDirections": [
+        "nostalgic watercolor and gouache illustration, bleeding pigment, paper grain, softened ink contours, and painterly color washes",
+        "editorial storybook illustration, broad handmade brush shapes, imperfect linework, and a limited earthy palette",
+        "soft ink-and-watercolor cover art, translucent layered washes, decorative marks, and dreamlike atmospheric depth",
+        "abstract children's-book illustration, tactile paper texture, loose cut-paper-like forms, and gentle pigment blooms"
+      ],
+      "compositions": [
+        "vertical 9:16 composition with the small dog modestly placed in the lower third and a large abstract sky above",
+        "vertical 9:16 composition from a gentle top-down angle, with a winding symbolic path carrying the eye through the frame",
+        "vertical 9:16 composition with a centered dog and a broad landscape built from overlapping soft color fields",
+        "vertical 9:16 composition with the dog at an edge of the frame, generous negative space, and sweeping weather shapes"
+      ],
+      "scenes": {
+        "clear": [
+          "a sunlit hill becomes ribbons of grass, wildflower dots, and luminous sky washes",
+          "an abstract garden path winds between warm terracotta shapes and floating botanical marks",
+          "a quiet courtyard dissolves into golden tiles, leaf shadows, and translucent light"
+        ],
+        "cloudy": [
+          "a misty woodland lane is reduced to pale trunks, mossy blocks, and silver-blue cloud curtains",
+          "a windswept stone terrace overlooks a horizon made from layered gray-green paper washes",
+          "a quiet park becomes soft paths, blurred foliage, and drifting cool veils"
+        ],
+        "rain": [
+          "a rain-glossed garden path holds luminous puddles and decorative ripple rings",
+          "a fern trail becomes oversized emerald smudges, tiny streams, and wet ink lines",
+          "a flower-market lane breaks into jewel-toned awnings, reflected color, and playful rain marks"
+        ],
+        "snow": [
+          "a winter lane is built from powdery blue-white blocks, spare pawprint marks, and dark hedge silhouettes",
+          "a pine clearing dissolves into frosted brush shapes, soft drifts, and floating crystal symbols",
+          "an open snowfield stretches as pale ribbons with a few wind-carved sculptural forms"
+        ],
+        "storm": [
+          "a grassy rise bends into dark waves beneath expressive cloud masses and a symbolic lightning mark",
+          "a rocky overlook becomes layered charcoal forms, rain strokes, and a charged violet-gray sky",
+          "a meadow path is surrounded by spiraling reeds, scattered leaves, and a distant electric glow"
+        ]
+      }
+    },
+    "samurai-zen": {
+      "backgroundSet": "samurai-zen",
+      "subject": "a solitary simplified samurai silhouette with a sheathed sword and flowing robe, rendered as an ink figure or cut-paper shape, never a realistic person",
+      "artDirections": [
+        "abstract sumi-e and woodblock-inspired illustration, dry-brush ink, warm handmade paper, indigo wash, and a restrained vermilion accent",
+        "minimal Japanese-inspired ink illustration, asymmetrical empty space, torn-paper texture, charcoal marks, and a single red sun-like disc",
+        "quiet editorial ink-and-gouache artwork, mineral pigments, broad brush pressure, subtle grain, and balanced negative space",
+        "meditative abstract printmaking style, flat carved shapes, faded black ink, parchment tones, and sparse cinnabar details"
+      ],
+      "compositions": [
+        "vertical 9:16 composition with the small figure low in frame, an oversized empty sky, and one dominant circular accent",
+        "vertical 9:16 composition organized around a diagonal mountain or wave gesture, with the figure as a quiet counterweight",
+        "vertical 9:16 composition with a torii-like geometric silhouette near the lower third and broad breathing room above",
+        "vertical 9:16 composition with layered foreground ink shapes, a distant horizon, and intentional areas of untouched paper"
+      ],
+      "scenes": {
+        "clear": [
+          "a calm ridge, a vermilion sun disc, and a few wind-swept grass strokes",
+          "a shallow reflective pond reduced to pale bands, stones, and one quiet red seal-like circle",
+          "a mountain pass suggested by dry brush arcs and a luminous open sky"
+        ],
+        "cloudy": [
+          "mist rolling between abstract mountains as soft gray ink blooms and erased paper space",
+          "a weathered terrace beneath stacked cloud bands and a barely visible far horizon",
+          "a bamboo grove implied by vertical brush marks, pale fog, and muted blue-gray washes"
+        ],
+        "rain": [
+          "rain falling as precise vertical ink strokes over rippling black water and vermilion reflections",
+          "a narrow bridge implied by one dark shape over layered rain pools and drifting mist",
+          "a sheltering roofline as a bold graphic wedge against rhythmic rain marks"
+        ],
+        "snow": [
+          "a quiet temple path made of pale paper fields, sparse dark branches, and drifting ink flecks",
+          "a frozen lake with a single reed cluster, powdery white space, and muted blue shadow bands",
+          "a mountain shrine suggested by black brush forms emerging from a nearly blank snow field"
+        ],
+        "storm": [
+          "dark indigo cloud masses cut by one vermilion flash and sweeping calligraphic wind strokes",
+          "a cliff edge composed of charcoal blocks, turbulent rain marks, and a charged empty horizon",
+          "a torii-like silhouette facing rolling ink waves and symbolic lightning in the far distance"
+        ]
+      }
+    },
+    "nothing-os": {
+      "backgroundSet": "nothing-os",
+      "subject": "an abstract weather instrument made from monochrome discs, dot-matrix fields, thin signal lines, and one small red indicator, with no device, brand, text, or logo",
+      "artDirections": [
+        "minimal monochrome graphic illustration, black field, precise white dot grid, thin technical lines, subtle grain, and one signal-red accent",
+        "high-contrast abstract editorial graphic, soft black gradients, tiny halftone dots, modular circles, and restrained red illumination",
+        "brutally simple weather diagram illustration, near-black paper texture, white micro-mark geometry, and a single red orbital form",
+        "minimalist kinetic-poster aesthetic, grayscale dot clusters, cropped circles, faint scanline texture, and one controlled red pulse"
+      ],
+      "compositions": [
+        "vertical 9:16 composition with a large cropped circular system in the upper half and a quiet data-like field below",
+        "vertical 9:16 composition with an off-center red signal point, expansive black negative space, and carefully spaced dot clusters",
+        "vertical 9:16 composition built from stacked geometric weather layers and a sparse horizon line",
+        "vertical 9:16 composition with a central circular weather core, thin radiating paths, and asymmetrical micro-dot texture"
+      ],
+      "scenes": {
+        "clear": [
+          "an open field of sparse dots around a bright circular core and a clean, lifted horizon line",
+          "concentric sun-like rings drifting through a mostly empty black field with a small red signal",
+          "a soft grayscale halo expanding across a quiet modular grid"
+        ],
+        "cloudy": [
+          "layered translucent gray discs and compressed dot clouds moving across a dark field",
+          "a low band of dense halftone fog interrupted by a small red location-like pulse",
+          "overlapping soft-edged monochrome modules obscuring a thin horizon line"
+        ],
+        "rain": [
+          "repeating vertical dot trails and thin reflective arcs flowing into a dark circular basin",
+          "a dense field of downward signal lines broken by concentric ripple rings and one red point",
+          "modular rain bands passing over a grayscale grid with subtle reflected highlights"
+        ],
+        "snow": [
+          "scattered white micro-dots suspended in a near-black void around a cold pale ring",
+          "a wide field of crystalline pixel-like marks with sparse circular frost halos",
+          "slowly drifting clusters of white points crossing quiet black geometric planes"
+        ],
+        "storm": [
+          "jagged white signal paths crossing dense dark dot clouds with a pulsing red warning point",
+          "compressed circular pressure fields, sharp broken lines, and a single vivid red storm core",
+          "high-energy grayscale arcs colliding around a dark center with controlled red interference"
+        ]
+      }
+    }
+  }
 }

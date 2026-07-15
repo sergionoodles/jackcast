@@ -15,7 +15,10 @@ import {
   CloudRain,
   CloudSnow,
   CircleHelp,
+  Check,
+  Palette,
 } from "lucide-react";
+import { THEMES, type ThemeId } from "../config/themes";
 import { searchLocations } from "../services/weather";
 import { Location, WeatherData } from "../types";
 
@@ -23,6 +26,8 @@ interface LocationSearchProps {
   favorites: Location[];
   currentLocation: Location | null;
   weatherByLocation: Record<string, WeatherData>;
+  selectedTheme: ThemeId;
+  onThemeChange: (themeId: ThemeId) => void;
   onSelect: (location: Location) => void;
   onSelectCurrentLocation: () => void;
   onRemove: (locationId: number) => void;
@@ -35,41 +40,43 @@ const getLocationCacheKey = (
 
 const getWeatherIcon = (code?: number, isDay = true) => {
   if (typeof code !== "number") {
-    return <CircleHelp className="h-9 w-9 text-white/70" />;
+    return <CircleHelp className="drawer-muted h-9 w-9" />;
   }
   if (code <= 1) {
     return isDay ? (
-      <Sun className="h-9 w-9 text-amber-300" />
+      <Sun className="drawer-weather-icon h-9 w-9 text-amber-300" />
     ) : (
-      <Moon className="h-9 w-9 text-sky-200" />
+      <Moon className="drawer-weather-icon h-9 w-9 text-sky-200" />
     );
   }
   if (code === 2) {
-    return <Cloud className="h-9 w-9 text-slate-200" />;
+    return <Cloud className="drawer-weather-icon h-9 w-9 text-slate-200" />;
   }
   if (code === 3 || code === 45 || code === 48) {
-    return <CloudFog className="h-9 w-9 text-slate-300" />;
+    return <CloudFog className="drawer-weather-icon h-9 w-9 text-slate-300" />;
   }
   if (code >= 51 && code <= 57) {
-    return <CloudDrizzle className="h-9 w-9 text-cyan-200" />;
+    return <CloudDrizzle className="drawer-weather-icon h-9 w-9 text-cyan-200" />;
   }
   if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82)) {
-    return <CloudRain className="h-9 w-9 text-sky-300" />;
+    return <CloudRain className="drawer-weather-icon h-9 w-9 text-sky-300" />;
   }
   if ((code >= 71 && code <= 77) || code === 85 || code === 86) {
-    return <CloudSnow className="h-9 w-9 text-white" />;
+    return <CloudSnow className="drawer-weather-icon drawer-snow-icon h-9 w-9" />;
   }
   if (code >= 95) {
-    return <CloudLightning className="h-9 w-9 text-yellow-200" />;
+    return <CloudLightning className="drawer-weather-icon h-9 w-9 text-yellow-200" />;
   }
 
-  return <Sun className="h-9 w-9 text-amber-300" />;
+  return <Sun className="drawer-weather-icon h-9 w-9 text-amber-300" />;
 };
 
 const LocationSearch: React.FC<LocationSearchProps> = ({
   favorites,
   currentLocation,
   weatherByLocation,
+  selectedTheme,
+  onThemeChange,
   onSelect,
   onSelectCurrentLocation,
   onRemove,
@@ -113,25 +120,25 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 bg-mist-900/35 backdrop-blur-sm flex justify-end"
+      className="location-backdrop fixed inset-0 z-50 backdrop-blur-sm flex justify-end"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="bg-mist-900/60 backdrop-blur-2xl w-full max-w-md h-full shadow-2xl flex flex-col border-l border-white/10"
+        className="location-drawer backdrop-blur-2xl w-full max-w-md h-full shadow-2xl flex flex-col border-l"
         initial={{ x: "100%" }}
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
       >
-        <div className="app-safe-header app-no-pull-refresh px-4 pb-4 flex items-center border-b border-white/10 shrink-0">
-          <Search className="w-6 h-6 text-white/50 mr-3 shrink-0" />
+        <div className="drawer-divider app-safe-header app-no-pull-refresh px-4 pb-4 flex items-center border-b shrink-0">
+          <Search className="drawer-muted w-6 h-6 mr-3 shrink-0" />
           <input
             autoFocus={favorites.length === 0}
             type="text"
             placeholder="Search for a city..."
-            className="h-10 flex-1 bg-transparent border-none outline-none text-white text-lg placeholder-white/50"
+            className="drawer-search-input h-10 flex-1 bg-transparent border-none outline-none text-lg"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -139,9 +146,9 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
             onClick={onClose}
             type="button"
             aria-label="Close location search"
-            className="p-2 rounded-full hover:bg-white/10 transition-colors"
+            className="drawer-action drawer-muted p-2 rounded-full transition-colors"
           >
-            <X className="w-6 h-6 text-white/50" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
@@ -151,23 +158,23 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
               <button
                 type="button"
                 onClick={onSelectCurrentLocation}
-                className="w-full bg-white/10 rounded-2xl p-4 flex items-center shadow-sm border border-white/10 hover:bg-white/20 transition-colors mb-4"
+                className="drawer-card w-full p-4 flex items-center shadow-sm border transition-colors mb-4"
               >
-                <div className="bg-white/20 p-2 rounded-full mr-4 text-white">
+                <div className="drawer-card-icon p-2 mr-4">
                   <Navigation className="w-5 h-5" />
                 </div>
                 <div className="text-left">
-                  <h4 className="text-white font-medium text-lg">
+                  <h4 className="drawer-text font-medium text-lg">
                     Current Location
                   </h4>
-                  <p className="text-white/60 text-sm">
+                  <p className="drawer-muted text-sm">
                     Use your device&apos;s GPS
                   </p>
                 </div>
               </button>
 
               {favorites.length === 0 ? (
-                <div className="text-center text-white/50 mt-10">
+                <div className="drawer-muted text-center mt-10">
                   <p className="text-lg">No saved locations yet.</p>
                   <p className="text-sm mt-2">
                     Search for a city and tap the heart icon to save it.
@@ -199,10 +206,10 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                       return (
                         <motion.div
                           key={location.id}
-                          className={`group relative overflow-hidden rounded-2xl border p-4 shadow-lg transition-colors ${
+                          className={`drawer-card group relative overflow-hidden border p-4 shadow-lg transition-colors ${
                             isSelected
-                              ? "border-white/30 bg-white/18"
-                              : "border-white/10 bg-white/8 hover:bg-white/12"
+                              ? "drawer-card-selected"
+                              : ""
                           }`}
                           initial={{ opacity: 0, y: 18, scale: 0.94 }}
                           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -215,17 +222,17 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                             className="relative flex w-full flex-col items-start text-left"
                             onClick={() => onSelect(location)}
                           >
-                            <div className="mb-2 flex h-16 w-16 items-center justify-center rounded-2xl bg-black/10">
+                            <div className="drawer-card-icon mb-2 flex h-16 w-16 items-center justify-center">
                               {getWeatherIcon(
                                 weather?.current.weatherCode,
                                 weather?.current.isDay ?? true,
                               )}
                             </div>
                             <div className="min-w-0">
-                              <h4 className="truncate text-lg font-semibold text-white">
+                              <h4 className="drawer-text truncate text-lg font-semibold">
                                 {location.name}
                               </h4>
-                              <p className="mt-1 line-clamp-2 text-sm leading-4 text-white/58">
+                              <p className="drawer-muted mt-1 line-clamp-2 text-sm leading-4">
                                 {location.admin1 ? `${location.admin1}, ` : ""}
                                 {location.country}
                               </p>
@@ -238,7 +245,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                               e.stopPropagation();
                               onRemove(location.id);
                             }}
-                            className="absolute right-2 top-2 rounded-full p-2 text-white/50 transition-colors hover:bg-white/12 hover:text-red-300"
+                            className="drawer-action drawer-muted absolute right-2 top-2 rounded-full p-2 transition-colors hover:text-red-500"
                           >
                             <Trash2 className="h-4.5 w-4.5" />
                           </button>
@@ -248,15 +255,80 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                   </AnimatePresence>
                 </motion.div>
               )}
+
+              <section className="drawer-divider mt-8 border-t pt-6 pb-3">
+                <div className="mb-4 flex items-start gap-3 px-1">
+                  <div className="theme-settings-icon rounded-full p-2">
+                    <Palette className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <h2 className="drawer-text text-base font-semibold">
+                      Settings
+                    </h2>
+                    <p className="drawer-muted mt-0.5 text-sm">
+                      Choose a theme for the interface and weather artwork.
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  className="grid grid-cols-1 gap-2.5"
+                  role="radiogroup"
+                  aria-label="App theme"
+                >
+                  {THEMES.map((theme) => {
+                    const isSelected = selectedTheme === theme.id;
+
+                    return (
+                      <label
+                        key={theme.id}
+                        className={`theme-option flex w-full cursor-pointer items-center gap-3 border p-2.5 text-left transition-all ${
+                          isSelected ? "theme-option-selected" : ""
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="app-theme"
+                          value={theme.id}
+                          checked={isSelected}
+                          onChange={() => onThemeChange(theme.id)}
+                          className="sr-only"
+                        />
+                        <span
+                          className={`${theme.previewClassName} theme-preview relative h-14 w-20 shrink-0 overflow-hidden rounded-xl border border-white/15`}
+                          aria-hidden="true"
+                        />
+                        <span className="min-w-0 flex-1">
+                          <span className="drawer-text block font-semibold">
+                            {theme.name}
+                          </span>
+                          <span className="drawer-muted mt-0.5 block text-xs leading-4">
+                            {theme.description}
+                          </span>
+                        </span>
+                        <span
+                          className={`theme-selection-indicator flex h-6 w-6 shrink-0 items-center justify-center border transition-colors ${
+                            isSelected
+                              ? "theme-selection-check border-transparent"
+                              : "text-transparent"
+                          }`}
+                        >
+                          <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </section>
             </>
           )}
 
           {isSearchMode && isSearching && (
-            <div className="text-center text-white/50 mt-10">Searching...</div>
+            <div className="drawer-muted text-center mt-10">Searching...</div>
           )}
 
           {isSearchMode && !isSearching && results.length === 0 && (
-            <div className="text-center text-white/50 mt-10">
+            <div className="drawer-muted text-center mt-10">
               <p className="text-lg">No locations found.</p>
             </div>
           )}
@@ -267,21 +339,21 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                 <motion.button
                   key={location.id}
                   type="button"
-                  className="w-full text-left p-4 flex items-center bg-white/5 rounded-2xl shadow-sm border border-white/10 hover:bg-white/10 transition-colors"
+                  className="drawer-card w-full text-left p-4 flex items-center shadow-sm border transition-colors"
                   onClick={() => onSelect(location)}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   layout
                 >
-                  <div className="bg-white/10 p-2 rounded-full mr-4">
-                    <MapPin className="w-5 h-5 text-white" />
+                  <div className="drawer-card-icon p-2 mr-4">
+                    <MapPin className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-white font-medium text-lg">
+                    <h4 className="drawer-text font-medium text-lg">
                       {location.name}
                     </h4>
-                    <p className="text-white/60 text-sm">
+                    <p className="drawer-muted text-sm">
                       {location.admin1 ? `${location.admin1}, ` : ""}
                       {location.country}
                     </p>

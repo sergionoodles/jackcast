@@ -102,16 +102,16 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({
         {getWeatherDescription(weather.weatherCode)}
       </p>
       <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-sm font-semibold text-white/90 weather-hero-text">
-        <span className="inline-flex items-center gap-1 rounded-full bg-mist-900/40 shadow-lg border border-white/10 px-2 py-1">
-          <Wind className="h-4 w-4 text-white/90" />
+        <span className="weather-chip inline-flex items-center gap-1 rounded-full shadow-lg border border-white/10 px-2 py-1">
+          <Wind className="h-4 w-4" />
           {Math.round(weather.windSpeed)} km/h
         </span>
-        <span className="inline-flex items-center gap-1 rounded-full bg-mist-900/40 shadow-lg border border-white/10 px-2 py-1">
-          <Droplets className="h-4 w-4 text-white/90" />
+        <span className="weather-chip inline-flex items-center gap-1 rounded-full shadow-lg border border-white/10 px-2 py-1">
+          <Droplets className="h-4 w-4" />
           {Math.round(weather.humidity)}%
         </span>
         {typeof weather.aqi === "number" && (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-mist-900/40 shadow-lg border border-white/10 px-2.5 py-1">
+          <span className="weather-chip inline-flex items-center gap-1.5 rounded-full shadow-lg border border-white/10 px-2.5 py-1">
             <span
               className={`h-2.5 w-2.5 rounded-full ${getAqiColor(weather.aqi)} shadow-sm`}
             />
@@ -122,14 +122,14 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({
       {sunrise || sunset ? (
         <div className="mt-1.5 flex flex-wrap items-center justify-center gap-2 text-sm font-semibold text-white/90 weather-hero-text">
           {sunrise && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-mist-900/40 shadow-lg border border-white/10 px-2.5 py-1">
-              <span className="text-white/65">Sunrise</span>
+            <span className="weather-chip inline-flex items-center gap-1.5 rounded-full shadow-lg border border-white/10 px-2.5 py-1">
+              <span className="weather-chip-label">Sunrise</span>
               {sunrise}
             </span>
           )}
           {sunset && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-mist-900/40 shadow-lg border border-white/10 px-2.5 py-1">
-              <span className="text-white/65">Sunset</span>
+            <span className="weather-chip inline-flex items-center gap-1.5 rounded-full shadow-lg border border-white/10 px-2.5 py-1">
+              <span className="weather-chip-label">Sunset</span>
               {sunset}
             </span>
           )}

@@ -22,21 +22,25 @@ interface HourlyForecastProps {
 const getWeatherIcon = (code: number, isDay: boolean) => {
   if (code <= 1)
     return isDay ? (
-      <Sun className="w-6 h-6 text-yellow-400" />
+      <Sun className="forecast-weather-icon w-6 h-6 text-yellow-400" />
     ) : (
-      <Moon className="w-6 h-6 text-blue-200" />
+      <Moon className="forecast-weather-icon w-6 h-6 text-blue-200" />
     );
-  if (code === 2) return <Cloud className="w-6 h-6 text-gray-300" />;
+  if (code === 2)
+    return <Cloud className="forecast-weather-icon w-6 h-6 text-gray-300" />;
   if (code === 3 || code === 45 || code === 48)
-    return <CloudFog className="w-6 h-6 text-gray-400" />;
+    return <CloudFog className="forecast-weather-icon w-6 h-6 text-gray-400" />;
   if (code >= 51 && code <= 57)
-    return <CloudDrizzle className="w-6 h-6 text-blue-300" />;
+    return <CloudDrizzle className="forecast-weather-icon w-6 h-6 text-blue-300" />;
   if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82))
-    return <CloudRain className="w-6 h-6 text-blue-400" />;
+    return <CloudRain className="forecast-weather-icon w-6 h-6 text-blue-400" />;
   if ((code >= 71 && code <= 77) || code === 85 || code === 86)
-    return <CloudSnow className="w-6 h-6 text-white" />;
-  if (code >= 95) return <CloudLightning className="w-6 h-6 text-yellow-300" />;
-  return <Sun className="w-6 h-6 text-yellow-400" />;
+    return <CloudSnow className="forecast-weather-icon w-6 h-6 text-white" />;
+  if (code >= 95)
+    return (
+      <CloudLightning className="forecast-weather-icon w-6 h-6 text-yellow-300" />
+    );
+  return <Sun className="forecast-weather-icon w-6 h-6 text-yellow-400" />;
 };
 
 const formatTime = (timeStr: string) => {
@@ -81,23 +85,23 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
     >
-      <div className="forecast-glass rounded-3xl p-4">
+      <div className="forecast-glass p-4">
         <div className="mb-4 flex items-start justify-between gap-3">
-          <h3 className="text-white/90 text-sm font-medium uppercase tracking-wider">
+          <h3 className="forecast-muted text-sm font-medium uppercase tracking-wider">
             Today
           </h3>
-          <div className="flex flex-wrap justify-end gap-1.5 text-[11px] font-medium text-white/85">
-            <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5">
+          <div className="flex flex-wrap justify-end gap-1.5 text-[11px] font-medium">
+            <span className="forecast-badge inline-flex items-center gap-1 px-2 py-0.5">
               <Wind className="h-3.5 w-3.5" />
               {averageWind} km/h
             </span>
-            <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5">
+            <span className="forecast-badge inline-flex items-center gap-1 px-2 py-0.5">
               <Droplets className="h-3.5 w-3.5" />
               {averageHumidity}%
             </span>
             {averageRain > 0 && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5">
-                <CloudRain className="h-3.5 w-3.5 text-blue-300" />
+              <span className="forecast-badge inline-flex items-center gap-1 px-2 py-0.5">
+                <CloudRain className="forecast-weather-icon h-3.5 w-3.5 text-blue-300" />
                 {averageRain}%
               </span>
             )}
@@ -118,11 +122,11 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
                 key={time}
                 className="flex flex-col items-center flex-shrink-0 space-y-3"
               >
-                <span className="text-white font-medium text-sm">
+                <span className="forecast-panel-text font-medium text-sm">
                   {index === 0 ? "Now" : formatTime(time)}
                 </span>
                 {getWeatherIcon(code, isDay)}
-                <span className="text-white font-semibold text-lg">
+                <span className="forecast-panel-text font-semibold text-lg">
                   {Math.round(temperature)}°
                 </span>
               </div>
