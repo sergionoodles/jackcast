@@ -5,7 +5,6 @@ export interface AppTheme {
   name: string;
   description: string;
   className: string;
-  previewClassName: string;
   backgroundSet: string;
   fallbackBackground: string;
   themeColor: string;
@@ -20,10 +19,8 @@ export const THEMES: readonly AppTheme[] = [
     name: "Jack Russells",
     description: "Dreamy watercolor adventures",
     className: "theme-jack-russell",
-    previewClassName: "theme-preview-jack-russell",
     backgroundSet: "jack-russell",
-    fallbackBackground:
-      "/backgrounds/jack-russell/clear-afternoon-1.jpeg",
+    fallbackBackground: "/backgrounds/jack-russell/clear-afternoon-1.jpeg",
     themeColor: "#161b1d",
   },
   {
@@ -31,9 +28,8 @@ export const THEMES: readonly AppTheme[] = [
     name: "Samurai Zen",
     description: "Ink, vermilion, and quiet skies",
     className: "theme-samurai-zen",
-    previewClassName: "theme-preview-samurai-zen",
     backgroundSet: "samurai-zen",
-    fallbackBackground: "/backgrounds/samurai-zen/default.svg",
+    fallbackBackground: "/backgrounds/samurai-zen/clear-afternoon-1.jpeg",
     themeColor: "#171512",
   },
   {
@@ -41,9 +37,8 @@ export const THEMES: readonly AppTheme[] = [
     name: "Nothing OS",
     description: "Monochrome dots with a red signal",
     className: "theme-nothing-os",
-    previewClassName: "theme-preview-nothing-os",
     backgroundSet: "nothing-os",
-    fallbackBackground: "/backgrounds/nothing-os/default.svg",
+    fallbackBackground: "/backgrounds/nothing-os/clear-evening-4.jpeg",
     themeColor: "#080808",
   },
 ];

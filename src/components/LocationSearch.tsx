@@ -154,7 +154,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 
         <div className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-3">
           {!isSearchMode && (
-            <>
+            <div className="flex min-h-full flex-col">
               <button
                 type="button"
                 onClick={onSelectCurrentLocation}
@@ -256,7 +256,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                 </motion.div>
               )}
 
-              <section className="drawer-divider mt-8 border-t pt-6 pb-3">
+              <section className="drawer-divider mt-auto border-t pt-6 pb-3">
                 <div className="mb-4 flex items-start gap-3 px-1">
                   <div className="theme-settings-icon rounded-full p-2">
                     <Palette className="h-5 w-5" aria-hidden="true" />
@@ -266,13 +266,13 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                       Settings
                     </h2>
                     <p className="drawer-muted mt-0.5 text-sm">
-                      Choose a theme for the interface and weather artwork.
+                      Choose a theme for the app interface.
                     </p>
                   </div>
                 </div>
 
                 <div
-                  className="grid grid-cols-1 gap-2.5"
+                  className="grid grid-cols-3 gap-2.5"
                   role="radiogroup"
                   aria-label="App theme"
                 >
@@ -282,7 +282,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                     return (
                       <label
                         key={theme.id}
-                        className={`theme-option flex w-full cursor-pointer items-center gap-3 border p-2.5 text-left transition-all ${
+                        className={`theme-option relative flex w-full cursor-pointer flex-col gap-2 border p-2 text-left transition-all ${
                           isSelected ? "theme-option-selected" : ""
                         }`}
                       >
@@ -295,19 +295,25 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                           className="sr-only"
                         />
                         <span
-                          className={`${theme.previewClassName} theme-preview relative h-14 w-20 shrink-0 overflow-hidden rounded-xl border border-white/15`}
+                          className="theme-preview relative aspect-[3/4] w-full overflow-hidden"
                           aria-hidden="true"
-                        />
-                        <span className="min-w-0 flex-1">
-                          <span className="drawer-text block font-semibold">
+                        >
+                          <img
+                            src={theme.fallbackBackground}
+                            alt=""
+                            className="h-full w-full object-cover"
+                          />
+                        </span>
+                        <span className="min-w-0 w-full">
+                          <span className="drawer-text block text-sm font-semibold leading-tight">
                             {theme.name}
                           </span>
-                          <span className="drawer-muted mt-0.5 block text-xs leading-4">
+                          <span className="drawer-muted mt-1 block text-xs leading-tight">
                             {theme.description}
                           </span>
                         </span>
                         <span
-                          className={`theme-selection-indicator flex h-6 w-6 shrink-0 items-center justify-center border transition-colors ${
+                          className={`theme-selection-indicator absolute right-3 top-3 flex h-6 w-6 items-center justify-center border transition-colors ${
                             isSelected
                               ? "theme-selection-check border-transparent"
                               : "text-transparent"
@@ -320,7 +326,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                   })}
                 </div>
               </section>
-            </>
+            </div>
           )}
 
           {isSearchMode && isSearching && (

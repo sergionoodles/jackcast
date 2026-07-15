@@ -90,6 +90,7 @@
     --theme-canvas:
       radial-gradient(circle at 50% 15%, rgb(91 119 107 / 0.28), transparent 36%),
       #161b1d;
+    font-family: "Noto Sans", sans-serif;
   }
 
   .theme-samurai-zen {
@@ -99,9 +100,9 @@
     --theme-shell: #171512;
     --theme-header: linear-gradient(
       to bottom,
-      rgb(23 21 18 / 0.98),
-      rgb(23 21 18 / 0.78) 68%,
-      rgb(23 21 18 / 0.25)
+      rgb(47 38 28 / 0.84),
+      rgb(47 38 28 / 0.52) 68%,
+      rgb(47 38 28 / 0.16)
     );
     --theme-overlay: linear-gradient(
       to bottom,
@@ -113,11 +114,11 @@
     --theme-backdrop: rgb(10 8 6 / 0.58);
     --theme-card: rgb(255 251 240 / 0.62);
     --theme-card-selected: rgb(183 69 43 / 0.22);
-    --theme-chip: rgb(238 228 207 / 0.9);
+    --theme-chip: rgb(238 228 207 / 0.76);
     --theme-accent: #d85d3d;
     --theme-image-filter: saturate(0.78) contrast(1.08) sepia(0.12);
     --theme-image-blend: normal;
-    --theme-glass: rgb(238 228 207 / 0.9);
+    --theme-glass: rgb(238 228 207 / 0.76);
     --theme-glass-border: rgb(70 51 35 / 0.24);
     --theme-glass-filter: blur(14px) brightness(1.04) sepia(0.08);
     --theme-panel-text: #2c2118;
@@ -145,9 +146,9 @@
     --theme-shell: #080808;
     --theme-header: linear-gradient(
       to bottom,
-      rgb(3 3 3 / 0.98),
-      rgb(3 3 3 / 0.8) 72%,
-      rgb(3 3 3 / 0.2)
+      rgb(20 20 20 / 0.82),
+      rgb(20 20 20 / 0.48) 72%,
+      rgb(20 20 20 / 0.14)
     );
     --theme-overlay: linear-gradient(
       to bottom,
@@ -180,10 +181,6 @@
     --theme-drawer-card-selected: rgb(226 41 34 / 0.14);
     --theme-drawer-icon: rgb(255 255 255 / 0.08);
     font-family: "Courier New", Courier, monospace;
-  }
-
-  .weather-shell {
-    background-color: var(--theme-shell);
   }
 
   .weather-header {
@@ -274,6 +271,10 @@
     background-color: var(--theme-drawer-card-selected);
   }
 
+  .theme-jack-russell .drawer-card-selected {
+    border-color: rgb(255 255 255 / 0.3);
+  }
+
   .drawer-action:hover {
     background-color: var(--theme-drawer-icon);
   }
@@ -308,9 +309,10 @@
   }
 
   .theme-option {
+    --theme-option-radius: min(var(--theme-card-radius), 0.625rem);
     background-color: var(--theme-card);
     border-color: var(--theme-drawer-border);
-    border-radius: var(--theme-card-radius);
+    border-radius: var(--theme-option-radius);
   }
 
   .theme-option:hover,
@@ -320,6 +322,10 @@
 
   .theme-option-selected {
     border-color: color-mix(in srgb, var(--theme-accent) 54%, transparent);
+  }
+
+  .theme-jack-russell .theme-option-selected {
+    border-color: rgb(255 255 255 / 0.3);
   }
 
   .theme-option:has(input:focus-visible) {
@@ -342,52 +348,9 @@
     border-color: transparent;
   }
 
-  .theme-preview::after {
-    position: absolute;
-    inset: 0;
-    content: "";
-  }
-
   .theme-preview {
     border-color: var(--theme-drawer-border);
-    border-radius: var(--theme-card-radius);
-  }
-
-  .theme-preview-jack-russell {
-    background:
-      radial-gradient(ellipse at 58% 60%, #f5ead4 0 12%, transparent 13%),
-      radial-gradient(ellipse at 61% 55%, #a85f32 0 6%, transparent 7%),
-      linear-gradient(155deg, #8eb7b1 0 42%, #d2a86d 43% 67%, #465c43 68%);
-  }
-
-  .theme-preview-jack-russell::after {
-    background: linear-gradient(110deg, transparent, rgb(255 255 255 / 0.18), transparent);
-    filter: blur(4px);
-  }
-
-  .theme-preview-samurai-zen {
-    background:
-      radial-gradient(circle at 72% 28%, #bd4c32 0 14%, transparent 15%),
-      linear-gradient(158deg, transparent 48%, #25201b 49% 52%, transparent 53%),
-      #d9ceb6;
-  }
-
-  .theme-preview-samurai-zen::after {
-    background: linear-gradient(25deg, transparent 48%, rgb(28 24 20 / 0.18) 49% 51%, transparent 52%);
-  }
-
-  .theme-preview-nothing-os {
-    background-color: #080808;
-    background-image: radial-gradient(circle, rgb(255 255 255 / 0.5) 1px, transparent 1.5px);
-    background-size: 8px 8px;
-  }
-
-  .theme-preview-nothing-os::after {
-    inset: 30% 12% auto auto;
-    width: 22px;
-    height: 22px;
-    border: 4px solid #e22922;
-    border-radius: 50%;
+    border-radius: calc(var(--theme-option-radius) - 0.125rem);
   }
 
   .theme-samurai-zen .forecast-glass {
