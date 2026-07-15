@@ -28,21 +28,25 @@ interface DailyForecastProps {
 const getWeatherIcon = (code: number, isDay = true) => {
   if (code <= 1)
     return isDay ? (
-      <Sun className="w-6 h-6 text-yellow-400" />
+      <Sun className="forecast-weather-icon w-6 h-6 text-yellow-400" />
     ) : (
-      <Moon className="w-6 h-6 text-blue-200" />
+      <Moon className="forecast-weather-icon w-6 h-6 text-blue-200" />
     );
-  if (code === 2) return <Cloud className="w-6 h-6 text-gray-300" />;
+  if (code === 2)
+    return <Cloud className="forecast-weather-icon w-6 h-6 text-gray-300" />;
   if (code === 3 || code === 45 || code === 48)
-    return <CloudFog className="w-6 h-6 text-gray-400" />;
+    return <CloudFog className="forecast-weather-icon w-6 h-6 text-gray-400" />;
   if (code >= 51 && code <= 57)
-    return <CloudDrizzle className="w-6 h-6 text-blue-300" />;
+    return <CloudDrizzle className="forecast-weather-icon w-6 h-6 text-blue-300" />;
   if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82))
-    return <CloudRain className="w-6 h-6 text-blue-400" />;
+    return <CloudRain className="forecast-weather-icon w-6 h-6 text-blue-400" />;
   if ((code >= 71 && code <= 77) || code === 85 || code === 86)
-    return <CloudSnow className="w-6 h-6 text-white" />;
-  if (code >= 95) return <CloudLightning className="w-6 h-6 text-yellow-300" />;
-  return <Sun className="w-6 h-6 text-yellow-400" />;
+    return <CloudSnow className="forecast-weather-icon w-6 h-6 text-white" />;
+  if (code >= 95)
+    return (
+      <CloudLightning className="forecast-weather-icon w-6 h-6 text-yellow-300" />
+    );
+  return <Sun className="forecast-weather-icon w-6 h-6 text-yellow-400" />;
 };
 
 const formatDay = (dateStr: string) => {
@@ -146,11 +150,11 @@ const DailyForecast: React.FC<DailyForecastProps> = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4 }}
     >
-      <div className="forecast-glass rounded-3xl p-4">
-        <h3 className="text-white/90 text-sm font-medium mb-4 uppercase tracking-wider">
+      <div className="forecast-glass p-4">
+        <h3 className="forecast-muted text-sm font-medium mb-4 uppercase tracking-wider">
           7-Day Forecast
         </h3>
-        <div className="flex flex-col divide-y divide-white/10">
+        <div className="forecast-list flex flex-col divide-y">
           {dailyRows.map(
             ({
               day,
@@ -175,7 +179,7 @@ const DailyForecast: React.FC<DailyForecastProps> = ({
                     }
                     className="w-full text-left"
                   >
-                    <div className="flex items-center justify-between gap-2 text-white">
+                    <div className="forecast-panel-text flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2 min-w-0">
                         <span className="w-24 font-medium text-base">
                           {index === 0 ? "Today" : formatDay(day)}
@@ -192,28 +196,28 @@ const DailyForecast: React.FC<DailyForecastProps> = ({
                           </span>
                         </div>
                         <ChevronDown
-                          className={`w-4 h-4 text-white/70 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                          className={`forecast-muted w-4 h-4 transition-transform ${isExpanded ? "rotate-180" : ""}`}
                         />
                       </div>
                     </div>
-                    <div className="mt-1 flex flex-wrap gap-2 text-[11px] text-white/85 font-medium">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5">
+                    <div className="mt-1 flex flex-wrap gap-2 text-[11px] font-medium">
+                      <span className="forecast-badge inline-flex items-center gap-1 px-2 py-0.5">
                         <Wind className="h-3.5 w-3.5" />
                         {Math.round(dailyWindMax)} km/h
                       </span>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5">
+                      <span className="forecast-badge inline-flex items-center gap-1 px-2 py-0.5">
                         <Droplets className="h-3.5 w-3.5" />
                         {Math.round(dailyHumidityAvg)}%
                       </span>
                       {dailyRainChanceAvg >= 5 && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5">
-                          <CloudRain className="h-3.5 w-3.5 text-blue-300" />
+                        <span className="forecast-badge inline-flex items-center gap-1 px-2 py-0.5">
+                          <CloudRain className="forecast-weather-icon h-3.5 w-3.5 text-blue-300" />
                           {Math.round(dailyRainChanceAvg)}%
                         </span>
                       )}
                       {typeof dailyAqiAvg === "number" && (
                         <span
-                          className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5"
+                          className="forecast-badge inline-flex items-center gap-1 px-2 py-0.5"
                           title={`Avg AQI ${Math.round(dailyAqiAvg)}`}
                         >
                           <span
@@ -237,7 +241,7 @@ const DailyForecast: React.FC<DailyForecastProps> = ({
                       >
                         <div className="pt-3">
                           {hourlyIndexes.length === 0 ? (
-                            <div className="text-white/70 text-sm">
+                            <div className="forecast-muted text-sm">
                               No hourly data available.
                             </div>
                           ) : (
@@ -267,19 +271,19 @@ const DailyForecast: React.FC<DailyForecastProps> = ({
                                 return (
                                   <div
                                     key={time}
-                                    className="flex min-w-[94px] flex-col items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-2 py-2 text-white"
+                                    className="forecast-hour-card flex min-w-[94px] flex-col items-center gap-1.5 border px-2 py-2"
                                   >
-                                    <span className="text-xs font-medium text-white/90">
+                                    <span className="text-xs font-medium">
                                       {formatTime(time)}
                                     </span>
                                     {getWeatherIcon(code, isDay)}
                                     <span className="text-sm font-semibold">
                                       {Math.round(temperature)}°
                                     </span>
-                                    <span className="flex min-h-4 items-center gap-1.5 text-[11px] text-white/80">
+                                    <span className="forecast-muted flex min-h-4 items-center gap-1.5 text-[11px]">
                                       {hasRainIndicator && (
                                         <span className="flex items-center gap-1 whitespace-nowrap">
-                                          <CloudRain className="h-3.5 w-3.5 text-blue-300" />
+                                          <CloudRain className="forecast-weather-icon h-3.5 w-3.5 text-blue-300" />
                                           {Math.round(
                                             hourly.precipitationProbability[
                                               hourIndex

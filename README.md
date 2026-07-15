@@ -35,13 +35,13 @@ Whether it's a golden sunrise over rolling hills, a cozy snowfall under moonligh
 
 ## The Art Pipeline
 
-The soul of JackCast lives in `scripts/cover-generator/`. This is a fully automated image generation pipeline that:
+The art pipeline in `scripts/cover-generator/` fills every configured theme in one pass:
 
-1. **Maps 28 weather codes** (from Open-Meteo WMO codes) into 5 visual categories: `clear`, `cloudy`, `rain`, `snow`, and `storm`.
-2. **Combines 4 times of day** (morning, afternoon, evening, night) with category-specific lighting prompts.
-3. **Generates up to 12 artistic variations per weather category × time-of-day** (e.g. `clear-afternoon-7.jpeg`), cycling through watercolor style presets in `scripts/cover-generator/generate.js` (`STYLES`).
-4. **Fills only missing slots** — re-run `pnpm generate` to repair gaps up to variant 12 without redoing existing files.
-5. **Produces up to 240 unique category/time scenes** (5 categories × 4 times × 12 variants) featuring a small Jack Russell Terrier reacting charmingly to each condition — basking in sun, trotting through drizzle, catching snowflakes, or bravely weathering a thunderstorm.
+1. **Combines 5 weather categories** (`clear`, `cloudy`, `rain`, `snow`, `storm`) with 4 times of day.
+2. **Generates up to 12 variations** per category/time combination for each theme, saving to `public/backgrounds/<theme>/`.
+3. **Uses theme-specific prompt blocks** in `config.json` for subject, visual language, composition, and weather scenes.
+4. **Requires abstract illustration** in every prompt and explicitly excludes photography, realistic subjects, 3D, devices, logos, and text.
+5. **Fills only missing slots** and updates `src/config/background-assets.ts` so newly generated covers are selectable by the app.
 
 Run the generator with:
 
@@ -49,8 +49,10 @@ Run the generator with:
 cd scripts/cover-generator
 # Ensure VENICE_API_KEY is set in your environment
 pnpm install
-pnpm generate
-pnpm generate -- --limit 10   # optional: cap images per run
+pnpm generate -- --dry-run                # review the all-theme plan and prompts
+pnpm generate -- --limit 10               # generate at most 10 API attempts
+pnpm generate -- --theme samurai-zen      # generate one theme only
+pnpm generate -- --check                  # validate config and asset inventory
 
 ```
 
@@ -105,7 +107,10 @@ This builds the project and deploys it to Cloudflare Workers using Wrangler.
 ```
 jackcast/
 ├── public/
-│   ├── backgrounds/          # Generated weather art assets
+│   ├── backgrounds/          # Theme-specific weather art sets
+│   │   ├── jack-russell/     # Generated watercolor covers
+│   │   ├── samurai-zen/      # Samurai/Zen covers and fallback
+│   │   └── nothing-os/       # Nothing OS-inspired covers and fallback
 │   ├── manifest.json         # PWA manifest
 │   └── sw.js                 # Service worker
 ├── scripts/
@@ -115,7 +120,8 @@ jackcast/
 ├── src/
 │   ├── components/           # React UI components
 │   ├── config/
-│   │   └── backgrounds.ts    # Background asset resolution logic
+│   │   ├── backgrounds.ts    # Background asset resolution logic
+│   │   └── themes.ts         # Theme registry and metadata
 │   ├── services/
 │   │   └── weather.ts        # Open-Meteo API client
 │   ├── App.tsx               # Main application shell

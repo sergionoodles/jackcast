@@ -1,5 +1,7 @@
 import { getWeatherCategory as getWeatherCategoryFromCode } from "../services/weather";
 import type { Location } from "../types";
+import { availableVariantsBySet } from "./background-assets";
+import { getTheme, type ThemeId } from "./themes";
 
 export type TimeOfDay = "morning" | "afternoon" | "evening" | "night";
 export type WeatherCategory = "clear" | "cloudy" | "rain" | "snow" | "storm";
@@ -7,41 +9,14 @@ type BackgroundLocation = Pick<
   Location,
   "name" | "latitude" | "longitude"
 >;
-const BASE_URL = "/backgrounds";
-const DEFAULT_IMAGE = "/backgrounds/default.png";
-
-const availableBackgrounds = import.meta.glob("/public/backgrounds/*.jpeg", {
-  eager: true,
-});
-const availablePaths = new Set(
-  Object.keys(availableBackgrounds).map((p) =>
-    p.replace("/public/backgrounds/", ""),
-  ),
-);
-
-
 function getAvailableVariants(
+  backgroundSet: string,
   category: WeatherCategory,
   timeOfDay: TimeOfDay,
 ): number[] {
-  const prefix = `${category}-${timeOfDay}-`;
-  const variants: number[] = [];
-
-  for (const fileName of availablePaths) {
-    if (!fileName.startsWith(prefix) || !fileName.endsWith(".jpeg")) {
-      continue;
-    }
-
-    const suffix = fileName.slice(prefix.length, -".jpeg".length);
-    const variant = Number.parseInt(suffix, 10);
-    if (Number.isFinite(variant) && variant >= 1) {
-      variants.push(variant);
-    }
-  }
-
-  return variants.sort((a, b) => a - b);
+  const backgroundKey = `${category}-${timeOfDay}`;
+  return availableVariantsBySet[backgroundSet]?.[backgroundKey] ?? [];
 }
-
 
 function getDayOfYear(): number {
   const now = new Date();
@@ -85,13 +60,19 @@ function getDayBasedVariant(
 }
 
 export function getBackgroundImageUrl(
+  themeId: ThemeId,
   category: WeatherCategory,
   timeOfDay: TimeOfDay,
   location?: BackgroundLocation,
 ): string {
-  const availableVariants = getAvailableVariants(category, timeOfDay);
+  const theme = getTheme(themeId);
+  const availableVariants = getAvailableVariants(
+    theme.backgroundSet,
+    category,
+    timeOfDay,
+  );
   if (availableVariants.length === 0) {
-    return DEFAULT_IMAGE;
+    return theme.fallbackBackground;
   }
   const variant = getDayBasedVariant(
     category,
@@ -99,7 +80,7 @@ export function getBackgroundImageUrl(
     availableVariants,
     location,
   );
-  return `${BASE_URL}/${category}-${timeOfDay}-${variant}.jpeg`;
+  return `/backgrounds/${theme.backgroundSet}/${category}-${timeOfDay}-${variant}.jpeg`;
 }
 
 export const getWeatherCategory = (code: number): WeatherCategory => {
