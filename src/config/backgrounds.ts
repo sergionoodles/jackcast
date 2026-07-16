@@ -10,7 +10,7 @@ type BackgroundLocation = Pick<
 >;
 
 const backgroundAssets = import.meta.glob(
-  "../assets/backgrounds/**/*.{jpeg,jpg,png,webp}",
+  "../assets/themes/*/covers/*.{jpeg,jpg,png,webp}",
   {
     eager: true,
     import: "default",
@@ -29,7 +29,7 @@ const backgroundAssetsBySet = Object.entries(backgroundAssets).reduce<
   Record<string, BackgroundAsset[]>
 >((assetsBySet, [path, url]) => {
   const match = path.match(
-    /\/backgrounds\/([^/]+)\/(clear|cloudy|rain|snow|storm)-(morning|afternoon|evening|night)-(\d+)\.(?:jpeg|jpg|png|webp)$/,
+    /\/themes\/([^/]+)\/covers\/(clear|cloudy|rain|snow|storm)-(morning|afternoon|evening|night)-(\d+)\.(?:jpeg|jpg|png|webp)$/,
   );
   if (!match) {
     return assetsBySet;

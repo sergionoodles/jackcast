@@ -1,0 +1,70 @@
+@layer base {
+  html[data-theme="samurai-zen"] {
+    --theme-body: #171512;
+  }
+}
+
+@layer utilities {
+  .weather-app.theme-samurai-zen {
+    --theme-canvas:
+      radial-gradient(circle at 50% 12%, rgb(176 67 42 / 0.2), transparent 32%),
+      linear-gradient(145deg, #211d18, #0d0c0b 72%);
+    --theme-shell: #171512;
+    --theme-header: linear-gradient(
+      to bottom,
+      rgb(47 38 28 / 0.84),
+      rgb(47 38 28 / 0.52) 68%,
+      rgb(47 38 28 / 0.16)
+    );
+    --theme-overlay: linear-gradient(
+      to bottom,
+      rgb(22 16 12 / 0.76),
+      rgb(22 16 12 / 0.4) 27%,
+      transparent 46%
+    );
+    --theme-drawer: rgb(232 222 200 / 0.96);
+    --theme-backdrop: rgb(10 8 6 / 0.58);
+    --theme-card: rgb(255 251 240 / 0.62);
+    --theme-card-selected: rgb(183 69 43 / 0.22);
+    --theme-chip: rgb(238 228 207 / 0.76);
+    --theme-accent: #d85d3d;
+    --theme-image-filter: saturate(0.78) contrast(1.08) sepia(0.12);
+    --theme-image-blend: normal;
+    --theme-glass: rgb(238 228 207 / 0.76);
+    --theme-glass-border: rgb(70 51 35 / 0.24);
+    --theme-glass-filter: blur(14px) brightness(1.04) sepia(0.08);
+    --theme-panel-text: #2c2118;
+    --theme-panel-muted: rgb(44 33 24 / 0.76);
+    --theme-panel-badge: rgb(74 48 29 / 0.09);
+    --theme-panel-card: rgb(255 250 237 / 0.54);
+    --theme-panel-divider: rgb(70 51 35 / 0.16);
+    --theme-panel-radius: 0.75rem;
+    --theme-card-radius: 0.4rem;
+    --theme-badge-radius: 0.25rem;
+    --theme-drawer-text: #2c2118;
+    --theme-drawer-muted: rgb(44 33 24 / 0.74);
+    --theme-drawer-border: rgb(70 51 35 / 0.18);
+    --theme-drawer-card: rgb(255 251 240 / 0.6);
+    --theme-drawer-card-hover: rgb(255 252 244 / 0.86);
+    --theme-drawer-card-selected: rgb(183 69 43 / 0.14);
+    --theme-drawer-icon: rgb(74 48 29 / 0.1);
+    font-family: Georgia, "Times New Roman", serif;
+  }
+
+  .theme-samurai-zen .header-search {
+    border-color: rgb(255 255 255 / 0.1);
+    background-color: rgb(255 255 255 / 0.04);
+  }
+
+  .theme-samurai-zen .weather-chip {
+    border-radius: 0.5rem;
+  }
+
+  .theme-samurai-zen :is(.drawer-weather-icon, .forecast-weather-icon) {
+    color: #465e68;
+  }
+
+  .theme-samurai-zen .forecast-glass {
+    box-shadow: 0 14px 34px rgb(37 24 16 / 0.2);
+  }
+}

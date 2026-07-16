@@ -1,0 +1,57 @@
+@layer base {
+  html[data-theme="pocket-clay"] {
+    --theme-body: #46675d;
+  }
+}
+
+@layer utilities {
+  .weather-app.theme-pocket-clay {
+    --theme-canvas:
+      radial-gradient(
+        circle at 78% 14%,
+        rgb(255 218 122 / 0.44),
+        transparent 27%
+      ),
+      linear-gradient(160deg, #7b9b80, #46675d 72%);
+    --theme-shell: #46675d;
+    --theme-header: linear-gradient(
+      to bottom,
+      rgb(59 92 79 / 0.9),
+      rgb(59 92 79 / 0.4) 68%,
+      transparent
+    );
+    --theme-overlay: linear-gradient(
+      to bottom,
+      rgb(39 69 58 / 0.7),
+      rgb(39 69 58 / 0.3) 30%,
+      transparent 52%
+    );
+    --theme-drawer: rgb(222 232 181 / 0.97);
+    --theme-backdrop: rgb(36 62 53 / 0.56);
+    --theme-card: rgb(215 228 163 / 0.58);
+    --theme-card-selected: rgb(203 220 145 / 0.38);
+    --theme-chip: rgb(207 222 151 / 0.7);
+    --theme-accent: #ed7650;
+    --theme-image-filter: saturate(1.16) contrast(1.03);
+    --theme-image-blend: normal;
+    --theme-glass: rgb(218 230 170 / 0.64);
+    --theme-glass-border: rgb(142 93 57 / 0.28);
+    --theme-glass-filter: blur(14px) brightness(1.02) saturate(1.05);
+    --theme-panel-text: #384e44;
+    --theme-panel-muted: rgb(56 78 68 / 0.72);
+    --theme-panel-badge: rgb(205 220 152 / 0.34);
+    --theme-panel-card: rgb(220 232 173 / 0.58);
+    --theme-panel-divider: rgb(142 93 57 / 0.2);
+    --theme-panel-radius: 1.2rem;
+    --theme-card-radius: 0.85rem;
+    --theme-badge-radius: 999px;
+    --theme-drawer-text: #384e44;
+    --theme-drawer-muted: rgb(56 78 68 / 0.7);
+    --theme-drawer-border: rgb(142 93 57 / 0.2);
+    --theme-drawer-card: rgb(213 226 160 / 0.72);
+    --theme-drawer-card-hover: rgb(229 238 194 / 0.94);
+    --theme-drawer-card-selected: rgb(203 220 145 / 0.38);
+    --theme-drawer-icon: rgb(86 128 105 / 0.18);
+    font-family: "Noto Sans", sans-serif;
+  }
+}

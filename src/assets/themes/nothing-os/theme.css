@@ -1,0 +1,83 @@
+@layer base {
+  html[data-theme="nothing-os"] {
+    --theme-body: #080808;
+  }
+}
+
+@layer utilities {
+  .weather-app.theme-nothing-os {
+    --theme-canvas:
+      radial-gradient(circle at 50% 0%, rgb(226 41 34 / 0.18), transparent 22%),
+      #080808;
+    --theme-shell: #080808;
+    --theme-header: linear-gradient(
+      to bottom,
+      rgb(20 20 20 / 0.82),
+      rgb(20 20 20 / 0.48) 72%,
+      rgb(20 20 20 / 0.14)
+    );
+    --theme-overlay: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0.84),
+      rgb(0 0 0 / 0.48) 28%,
+      transparent 48%
+    );
+    --theme-drawer: rgb(8 8 8 / 0.9);
+    --theme-backdrop: rgb(0 0 0 / 0.68);
+    --theme-card: rgb(255 255 255 / 0.055);
+    --theme-card-selected: rgb(226 41 34 / 0.16);
+    --theme-chip: rgb(0 0 0 / 0.62);
+    --theme-accent: #e22922;
+    --theme-image-filter: grayscale(1) contrast(1.18);
+    --theme-image-blend: normal;
+    --theme-glass: rgb(0 0 0 / 0.48);
+    --theme-glass-border: rgb(255 255 255 / 0.18);
+    --theme-glass-filter: blur(8px) brightness(0.42) grayscale(1);
+    --theme-panel-text: #f5f5f5;
+    --theme-panel-muted: rgb(255 255 255 / 0.62);
+    --theme-panel-badge: rgb(255 255 255 / 0.08);
+    --theme-panel-card: rgb(255 255 255 / 0.035);
+    --theme-panel-divider: rgb(255 255 255 / 0.16);
+    --theme-panel-radius: 0.35rem;
+    --theme-card-radius: 0.15rem;
+    --theme-badge-radius: 0.1rem;
+    --theme-drawer-border: rgb(255 255 255 / 0.18);
+    --theme-drawer-card: rgb(255 255 255 / 0.045);
+    --theme-drawer-card-hover: rgb(255 255 255 / 0.09);
+    --theme-drawer-card-selected: rgb(226 41 34 / 0.14);
+    --theme-drawer-icon: rgb(255 255 255 / 0.08);
+    font-family: "Noto Sans", sans-serif;
+  }
+
+  .theme-nothing-os .header-search {
+    border-color: rgb(255 255 255 / 0.1);
+    background-color: rgb(255 255 255 / 0.04);
+  }
+
+  .theme-nothing-os .weather-header {
+    font-family: "Space Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+
+  .theme-nothing-os .weather-bg-image {
+    filter: var(--theme-image-filter) blur(2px);
+    transform: scale(1.02);
+  }
+
+  .theme-nothing-os .forecast-glass {
+    background-image: radial-gradient(
+      circle,
+      rgb(255 255 255 / 0.055) 1px,
+      transparent 1.5px
+    );
+    background-size: 9px 9px;
+  }
+
+  .theme-nothing-os :is(
+      .forecast-glass,
+      .drawer-card,
+      .theme-option,
+      .weather-chip
+    ) {
+    box-shadow: none;
+  }
+}

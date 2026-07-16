@@ -1,0 +1,64 @@
+@layer base {
+  html[data-theme="nordic-paper"] {
+    --theme-body: #668b99;
+  }
+}
+
+@layer utilities {
+  .weather-app.theme-nordic-paper {
+    --theme-canvas:
+      linear-gradient(
+        145deg,
+        transparent 0 48%,
+        rgb(255 250 230 / 0.15) 48% 51%,
+        transparent 51%
+      ),
+      linear-gradient(160deg, #9ebbc2, #668b99 70%);
+    --theme-shell: #668b99;
+    --theme-header: linear-gradient(
+      to bottom,
+      rgb(94 137 148 / 0.9),
+      rgb(94 137 148 / 0.38) 68%,
+      transparent
+    );
+    --theme-overlay: linear-gradient(
+      to bottom,
+      rgb(72 111 126 / 0.76),
+      rgb(72 111 126 / 0.3) 32%,
+      transparent 53%
+    );
+    --theme-drawer: rgb(255 250 233 / 0.97);
+    --theme-backdrop: rgb(60 94 107 / 0.62);
+    --theme-card: rgb(250 236 201 / 0.72);
+    --theme-card-selected: rgb(226 143 119 / 0.28);
+    --theme-chip: rgb(220 237 241 / 0.78);
+    --theme-accent: #d97a68;
+    --theme-image-filter: saturate(0.82) contrast(1.02);
+    --theme-image-blend: normal;
+    --theme-glass: rgb(220 237 241 / 0.78);
+    --theme-glass-border: rgb(91 122 129 / 0.28);
+    --theme-glass-filter: blur(14px) brightness(1.04) saturate(0.92);
+    --theme-panel-text: #405e67;
+    --theme-panel-muted: rgb(64 94 103 / 0.72);
+    --theme-panel-badge: rgb(220 237 241 / 0.66);
+    --theme-panel-card: rgb(231 242 244 / 0.7);
+    --theme-panel-divider: rgb(91 122 129 / 0.2);
+    --theme-panel-radius: 0.2rem 1rem 0.2rem 1rem;
+    --theme-card-radius: 0.15rem 0.7rem 0.15rem 0.7rem;
+    --theme-badge-radius: 0.1rem 0.45rem 0.1rem 0.45rem;
+    --theme-drawer-text: #405e67;
+    --theme-drawer-muted: rgb(64 94 103 / 0.7);
+    --theme-drawer-border: rgb(91 122 129 / 0.22);
+    --theme-drawer-card: rgb(255 250 232 / 0.72);
+    --theme-drawer-card-hover: rgb(255 253 241 / 0.94);
+    --theme-drawer-card-selected: rgb(226 143 119 / 0.22);
+    --theme-drawer-icon: rgb(103 143 151 / 0.18);
+    font-family: "Noto Sans", sans-serif;
+  }
+
+  .theme-nordic-paper .forecast-glass {
+    box-shadow:
+      8px 9px 0 rgb(73 109 116 / 0.12),
+      0 12px 26px rgb(56 86 93 / 0.14);
+  }
+}

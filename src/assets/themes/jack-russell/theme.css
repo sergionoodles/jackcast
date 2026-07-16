@@ -1,0 +1,31 @@
+@layer base {
+  html[data-theme="jack-russell"] {
+    --theme-body: #161b1d;
+  }
+}
+
+@layer utilities {
+  .weather-app.theme-jack-russell {
+    --theme-canvas:
+      radial-gradient(
+        circle at 50% 15%,
+        rgb(91 119 107 / 0.28),
+        transparent 36%
+      ),
+      #161b1d;
+    font-family: "Noto Sans", sans-serif;
+  }
+
+  .theme-jack-russell .header-search {
+    border-color: rgb(255 255 255 / 0.1);
+    background-color: rgb(255 255 255 / 0.04);
+  }
+
+  .theme-jack-russell :is(
+      .drawer-card-selected,
+      .preference-option-selected,
+      .theme-option-selected
+    ) {
+    border-color: rgb(255 255 255 / 0.3);
+  }
+}
