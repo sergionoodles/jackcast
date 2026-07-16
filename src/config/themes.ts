@@ -51,7 +51,6 @@ export const THEMES: readonly AppTheme[] = [
     className: "theme-arcade-fighter",
     backgroundSet: "arcade-fighter",
     themeColor: "#090b17",
-    isBeta: true,
   },
   {
     id: "pocket-clay",
