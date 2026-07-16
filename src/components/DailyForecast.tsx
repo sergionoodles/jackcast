@@ -5,6 +5,12 @@ import {
   HourlyForecast as HourlyForecastType,
 } from "../types";
 import { getAqiColor } from "../utils/aqi";
+import type { ClockFormat, UnitSystem } from "../config/preferences";
+import {
+  formatClockTime,
+  formatTemperature,
+  formatWindSpeed,
+} from "../utils/weatherFormat";
 import {
   ChevronDown,
   Cloud,
@@ -23,6 +29,8 @@ interface DailyForecastProps {
   daily: DailyForecastType;
   hourly: HourlyForecastType;
   currentTime: string;
+  unitSystem: UnitSystem;
+  clockFormat: ClockFormat;
 }
 
 const getWeatherIcon = (code: number, isDay = true) => {
@@ -54,15 +62,12 @@ const formatDay = (dateStr: string) => {
   return date.toLocaleDateString("en-US", { weekday: "long" });
 };
 
-const formatTime = (timeStr: string) => {
-  const date = new Date(timeStr);
-  return date.toLocaleTimeString([], { hour: "numeric" });
-};
-
 const DailyForecast: React.FC<DailyForecastProps> = ({
   daily,
   hourly,
   currentTime,
+  unitSystem,
+  clockFormat,
 }) => {
   const [expandedDayIndex, setExpandedDayIndex] = useState<number | null>(0);
   const now = new Date(currentTime);
@@ -181,18 +186,24 @@ const DailyForecast: React.FC<DailyForecastProps> = ({
                   >
                     <div className="forecast-panel-text flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className="w-24 font-medium text-base">
+                        <span className="w-20 text-base font-medium min-[360px]:w-24">
                           {index === 0 ? "Today" : formatDay(day)}
                         </span>
                         {getWeatherIcon(daily.weatherCode[index] ?? 0)}
                       </div>
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center space-x-3 w-24 justify-end font-semibold text-lg">
+                      <div className="flex items-center gap-1.5 min-[360px]:gap-3">
+                        <div className="flex w-24 items-center justify-end space-x-2 text-lg font-semibold min-[360px]:w-28 min-[360px]:space-x-3">
                           <span className="opacity-70">
-                            {Math.round(daily.temperatureMin[index] ?? 0)}°
+                            {formatTemperature(
+                              daily.temperatureMin[index] ?? 0,
+                              unitSystem,
+                            )}
                           </span>
                           <span>
-                            {Math.round(daily.temperatureMax[index] ?? 0)}°
+                            {formatTemperature(
+                              daily.temperatureMax[index] ?? 0,
+                              unitSystem,
+                            )}
                           </span>
                         </div>
                         <ChevronDown
@@ -203,7 +214,7 @@ const DailyForecast: React.FC<DailyForecastProps> = ({
                     <div className="mt-1 flex flex-wrap gap-2 text-[11px] font-medium">
                       <span className="forecast-badge inline-flex items-center gap-1 px-2 py-0.5">
                         <Wind className="h-3.5 w-3.5" />
-                        {Math.round(dailyWindMax)} km/h
+                        {formatWindSpeed(dailyWindMax, unitSystem)}
                       </span>
                       <span className="forecast-badge inline-flex items-center gap-1 px-2 py-0.5">
                         <Droplets className="h-3.5 w-3.5" />
@@ -274,11 +285,14 @@ const DailyForecast: React.FC<DailyForecastProps> = ({
                                     className="forecast-hour-card flex min-w-[94px] flex-col items-center gap-1.5 border px-2 py-2"
                                   >
                                     <span className="text-xs font-medium">
-                                      {formatTime(time)}
+                                      {formatClockTime(time, clockFormat) ?? ""}
                                     </span>
                                     {getWeatherIcon(code, isDay)}
                                     <span className="text-sm font-semibold">
-                                      {Math.round(temperature)}°
+                                      {formatTemperature(
+                                        temperature,
+                                        unitSystem,
+                                      )}
                                     </span>
                                     <span className="forecast-muted flex min-h-4 items-center gap-1.5 text-[11px]">
                                       {hasRainIndicator && (

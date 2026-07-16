@@ -88,7 +88,7 @@ export const getWeatherData = async (lat: number, lon: number): Promise<WeatherD
     ].join(',');
 
     const [weatherRes, aqiRes] = await Promise.all([
-      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=${currentFields}&hourly=${hourlyFields}&daily=${dailyFields}&timezone=auto`),
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=${currentFields}&hourly=${hourlyFields}&daily=${dailyFields}&timezone=auto&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm`),
       fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi&hourly=us_aqi&timezone=auto`).catch(() => null)
     ]);
 

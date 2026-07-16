@@ -13,10 +13,18 @@ import {
   Sun,
   Wind,
 } from "lucide-react";
+import type { ClockFormat, UnitSystem } from "../config/preferences";
+import {
+  formatClockTime,
+  formatTemperature,
+  formatWindSpeed,
+} from "../utils/weatherFormat";
 
 interface HourlyForecastProps {
   hourly: HourlyForecastType;
   currentTime: string;
+  unitSystem: UnitSystem;
+  clockFormat: ClockFormat;
 }
 
 const getWeatherIcon = (code: number, isDay: boolean) => {
@@ -43,14 +51,11 @@ const getWeatherIcon = (code: number, isDay: boolean) => {
   return <Sun className="forecast-weather-icon w-6 h-6 text-yellow-400" />;
 };
 
-const formatTime = (timeStr: string) => {
-  const date = new Date(timeStr);
-  return date.toLocaleTimeString([], { hour: "numeric" });
-};
-
 const HourlyForecast: React.FC<HourlyForecastProps> = ({
   hourly,
   currentTime,
+  unitSystem,
+  clockFormat,
 }) => {
   const now = new Date(currentTime);
   const currentHourStart = new Date(now);
@@ -68,15 +73,13 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
     startIndex,
     startIndex + 24,
   );
-  const avg = (values: number[]) =>
+  const average = (values: number[]) =>
     values.length === 0
       ? 0
-      : Math.round(
-          values.reduce((sum, value) => sum + value, 0) / values.length,
-        );
-  const averageWind = avg(next24Wind);
-  const averageHumidity = avg(next24Humidity);
-  const averageRain = avg(next24Rain);
+      : values.reduce((sum, value) => sum + value, 0) / values.length;
+  const averageWind = average(next24Wind);
+  const averageHumidity = Math.round(average(next24Humidity));
+  const averageRain = Math.round(average(next24Rain));
 
   return (
     <motion.div
@@ -93,7 +96,7 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
           <div className="flex flex-wrap justify-end gap-1.5 text-[11px] font-medium">
             <span className="forecast-badge inline-flex items-center gap-1 px-2 py-0.5">
               <Wind className="h-3.5 w-3.5" />
-              {averageWind} km/h
+              {formatWindSpeed(averageWind, unitSystem)}
             </span>
             <span className="forecast-badge inline-flex items-center gap-1 px-2 py-0.5">
               <Droplets className="h-3.5 w-3.5" />
@@ -123,11 +126,13 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
                 className="flex flex-col items-center flex-shrink-0 space-y-3"
               >
                 <span className="forecast-panel-text font-medium text-sm">
-                  {index === 0 ? "Now" : formatTime(time)}
+                  {index === 0
+                    ? "Now"
+                    : (formatClockTime(time, clockFormat) ?? "")}
                 </span>
                 {getWeatherIcon(code, isDay)}
                 <span className="forecast-panel-text font-semibold text-lg">
-                  {Math.round(temperature)}°
+                  {formatTemperature(temperature, unitSystem)}
                 </span>
               </div>
             );

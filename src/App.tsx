@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { AnimatePresence, animate, motion, useMotionValue } from "motion/react";
-import { Search, MapPin, Heart, Loader2 } from "lucide-react";
+import {
+  Search,
+  MapPin,
+  Heart,
+  Loader2,
+  Settings as SettingsIcon,
+} from "lucide-react";
 import { Location, WeatherData } from "./types";
 import { reverseGeocodeLocation, getWeatherData } from "./services/weather";
 import WeatherBackground from "./components/WeatherBackground";
@@ -8,6 +14,7 @@ import CurrentWeather from "./components/CurrentWeather";
 import HourlyForecast from "./components/HourlyForecast";
 import DailyForecast from "./components/DailyForecast";
 import LocationSearch from "./components/LocationSearch";
+import SettingsDrawer from "./components/SettingsDrawer";
 import InstallPrompt from "./components/InstallPrompt";
 import {
   DEFAULT_THEME_ID,
@@ -16,6 +23,16 @@ import {
   THEME_STORAGE_KEY,
   type ThemeId,
 } from "./config/themes";
+import {
+  CLOCK_FORMAT_STORAGE_KEY,
+  DEFAULT_UNIT_SYSTEM,
+  getDefaultClockFormat,
+  isClockFormat,
+  isUnitSystem,
+  UNIT_SYSTEM_STORAGE_KEY,
+  type ClockFormat,
+  type UnitSystem,
+} from "./config/preferences";
 
 const REFRESH_INTERVAL_MS = 15 * 60 * 1000;
 const SWIPE_MIN_DISTANCE_PX = 72;
@@ -59,6 +76,7 @@ export default function App() {
     }
   });
   const [isSearching, setIsSearching] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [loadingPhase, setLoadingPhase] = useState<LoadingPhase>("location");
   const [isGpsLocation, setIsGpsLocation] = useState(true);
   const [isMinimal, setIsMinimal] = useState(false);
@@ -70,6 +88,27 @@ export default function App() {
       return DEFAULT_THEME_ID;
     }
   });
+  const [unitSystem, setUnitSystem] = useState<UnitSystem>(() => {
+    try {
+      const storedUnitSystem = localStorage.getItem(UNIT_SYSTEM_STORAGE_KEY);
+      return isUnitSystem(storedUnitSystem)
+        ? storedUnitSystem
+        : DEFAULT_UNIT_SYSTEM;
+    } catch {
+      return DEFAULT_UNIT_SYSTEM;
+    }
+  });
+  const [clockFormat, setClockFormat] = useState<ClockFormat>(() => {
+    try {
+      const storedClockFormat = localStorage.getItem(CLOCK_FORMAT_STORAGE_KEY);
+      return isClockFormat(storedClockFormat)
+        ? storedClockFormat
+        : getDefaultClockFormat();
+    } catch {
+      return getDefaultClockFormat();
+    }
+  });
+  const isDrawerOpen = isSearching || isSettingsOpen;
   const mainRef = useRef<HTMLDivElement | null>(null);
   const lastSuccessfulRefreshAtRef = useRef<number | null>(null);
   const refreshInFlightRef = useRef(false);
@@ -95,6 +134,22 @@ export default function App() {
       .querySelector('meta[name="theme-color"]')
       ?.setAttribute("content", theme.themeColor);
   }, [themeId]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(UNIT_SYSTEM_STORAGE_KEY, unitSystem);
+    } catch {
+      // The preference still applies for this session when storage is blocked.
+    }
+  }, [unitSystem]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(CLOCK_FORMAT_STORAGE_KEY, clockFormat);
+    } catch {
+      // The preference still applies for this session when storage is blocked.
+    }
+  }, [clockFormat]);
 
   const storeWeatherForLocation = useCallback(
     (
@@ -560,7 +615,7 @@ export default function App() {
 
   const handleTouchStart = useCallback(
     (event: React.TouchEvent<HTMLElement>) => {
-      if (isSearching) {
+      if (isDrawerOpen) {
         return;
       }
 
@@ -571,13 +626,13 @@ export default function App() {
 
       touchStartRef.current = { x: touch.clientX, y: touch.clientY };
     },
-    [isSearching],
+    [isDrawerOpen],
   );
 
   const handleTouchMove = useCallback(
     (event: React.TouchEvent<HTMLElement>) => {
       const touchStart = touchStartRef.current;
-      if (!touchStart || isSearching) {
+      if (!touchStart || isDrawerOpen) {
         return;
       }
 
@@ -602,7 +657,7 @@ export default function App() {
       swipeX.set(resistedX);
       swipeOpacity.set(opacity);
     },
-    [isSearching, swipeOpacity, swipeX],
+    [isDrawerOpen, swipeOpacity, swipeX],
   );
 
   const handleTouchEnd = useCallback(
@@ -610,7 +665,7 @@ export default function App() {
       const touchStart = touchStartRef.current;
       touchStartRef.current = null;
 
-      if (!touchStart || isSearching) {
+      if (!touchStart || isDrawerOpen) {
         return;
       }
 
@@ -633,7 +688,7 @@ export default function App() {
 
       void handleSwipeNavigation(deltaX < 0 ? "next" : "previous");
     },
-    [handleSwipeNavigation, isSearching, resetSwipeFeedback],
+    [handleSwipeNavigation, isDrawerOpen, resetSwipeFeedback],
   );
 
   const displayLocation =
@@ -661,33 +716,40 @@ export default function App() {
       showImage={isForecastReady}
       hideGradient={isMinimal}
     >
-      {!isMinimal && <InstallPrompt />}
+      {!isMinimal && !isDrawerOpen && <InstallPrompt />}
       {/* Header */}
       <motion.header
-        className="weather-header app-safe-header app-no-pull-refresh flex justify-between items-center gap-3 px-4 pb-3.5 text-white z-20 backdrop-blur-md shadow-lg ring ring-white/10"
+        inert={isDrawerOpen}
+        className="weather-header app-safe-header app-no-pull-refresh z-20 grid grid-cols-[5.5rem_minmax(0,1fr)_5.5rem] items-center px-4 pb-3.5 text-white shadow-lg ring ring-white/10 backdrop-blur-md"
         animate={{ y: isMinimal ? -80 : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.8 }}
       >
-        <div className="flex items-center min-w-0 flex-1">
-          <div className="min-w-0 flex items-center gap-2">
+        <div className="flex justify-start">
+          <button
+            onClick={() => setIsSearching(true)}
+            type="button"
+            aria-label="Search for a city"
+            className="header-search rounded-full p-2 transition-colors hover:bg-white/20 backdrop-blur-sm"
+          >
+            <Search className="h-6 w-6" />
+          </button>
+        </div>
+
+        <div className="flex min-w-0 justify-center px-7">
+          <div className="relative min-w-0 max-w-full">
             {(isGpsLocation || loadingPhase === "location") && (
-              <MapPin className="w-5 h-5 shrink-0" />
+              <MapPin className="absolute right-full top-1/2 mr-1.5 h-5 w-5 -translate-y-1/2" />
             )}
-            <h1 className="min-w-0">
-              <button
-                type="button"
-                onClick={() => setIsSearching(true)}
-                className="block truncate text-left text-2xl font-medium tracking-wide weather-hero-text cursor-pointer"
-                title={displayLocation.name}
-                aria-label="Open location search panel"
-              >
-                {displayLocation.name}
-              </button>
+            <h1
+              className="weather-hero-text truncate text-center text-2xl font-medium tracking-wide"
+              title={displayLocation.name}
+            >
+              {displayLocation.name}
             </h1>
           </div>
         </div>
 
-        <div className="flex items-center space-x-2 shrink-0">
+        <div className="flex items-center justify-end space-x-2">
           {!isGpsLocation && isForecastReady && (
             <button
               onClick={toggleFavorite}
@@ -705,18 +767,19 @@ export default function App() {
             </button>
           )}
           <button
-            onClick={() => setIsSearching(true)}
+            onClick={() => setIsSettingsOpen(true)}
             type="button"
-            aria-label="Search for a city"
-            className="header-search p-2 rounded-full hover:bg-white/20 transition-colors backdrop-blur-sm"
+            aria-label="Open settings"
+            className="header-search rounded-full p-2 transition-colors hover:bg-white/20 backdrop-blur-sm"
           >
-            <Search className="w-6 h-6" />
+            <SettingsIcon className="h-6 w-6" />
           </button>
         </div>
       </motion.header>
 
       {/* Main Content Scrollable Area */}
       <main
+        inert={isDrawerOpen}
         ref={mainRef}
         className={`relative flex-1 min-h-0 z-10 flex flex-col scroll-touch${isMinimal ? " overflow-hidden" : " overflow-y-auto scrollbar-hide"}`}
       >
@@ -761,6 +824,8 @@ export default function App() {
                       weather={weatherData.current}
                       sunrise={weatherData.daily.sunrise[0]}
                       sunset={weatherData.daily.sunset[0]}
+                      unitSystem={unitSystem}
+                      clockFormat={clockFormat}
                     />
                   </motion.div>
                 </div>
@@ -794,6 +859,8 @@ export default function App() {
                 <HourlyForecast
                   hourly={weatherData.hourly}
                   currentTime={currentTime}
+                  unitSystem={unitSystem}
+                  clockFormat={clockFormat}
                 />
               </motion.div>
 
@@ -811,6 +878,8 @@ export default function App() {
                   daily={weatherData.daily}
                   hourly={weatherData.hourly}
                   currentTime={currentTime}
+                  unitSystem={unitSystem}
+                  clockFormat={clockFormat}
                 />
 
                 {/* Footer */}
@@ -818,23 +887,9 @@ export default function App() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/0 pointer-events-none" />
                   <p className="relative z-10 font-medium text-center"></p>
                   <div className="relative z-10 mt-2 px-1">
-                    <div className="flex flex-wrap items-center justify-center gap-1">
-                      <p>&copy; {new Date().getFullYear()} Coding Noodles</p>
-                      <span className="text-white/35">//</span>
-                      <a
-                        href="/privacy/"
-                        className="underline hover:text-white font-semibold transition-colors"
-                      >
-                        Privacy
-                      </a>
-                      <span className="text-white/35">//</span>
-                      <a
-                        href="/terms/"
-                        className="underline hover:text-white font-semibold transition-colors"
-                      >
-                        Terms
-                      </a>
-                    </div>
+                    <p className="text-center">
+                      &copy; {new Date().getFullYear()} Coding Noodles
+                    </p>
 
                     <div className="mt-1 text-center">
                       Weather data provided by{" "}
@@ -862,12 +917,21 @@ export default function App() {
             favorites={favorites}
             currentLocation={currentLocation}
             weatherByLocation={weatherByLocation}
-            selectedTheme={themeId}
-            onThemeChange={setThemeId}
             onSelect={handleSelectLocation}
             onSelectCurrentLocation={handleSelectCurrentLocation}
             onRemove={removeFavorite}
             onClose={() => setIsSearching(false)}
+          />
+        )}
+        {isSettingsOpen && (
+          <SettingsDrawer
+            selectedTheme={themeId}
+            onThemeChange={setThemeId}
+            selectedUnitSystem={unitSystem}
+            onUnitSystemChange={setUnitSystem}
+            selectedClockFormat={clockFormat}
+            onClockFormatChange={setClockFormat}
+            onClose={() => setIsSettingsOpen(false)}
           />
         )}
       </AnimatePresence>

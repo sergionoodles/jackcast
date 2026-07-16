@@ -15,11 +15,7 @@ import {
   CloudRain,
   CloudSnow,
   CircleHelp,
-  Check,
-  Palette,
 } from "lucide-react";
-import { AVAILABLE_THEMES, type ThemeId } from "../config/themes";
-import { getThemePreviewImageUrl } from "../config/backgrounds";
 import { searchLocations } from "../services/weather";
 import { Location, WeatherData } from "../types";
 
@@ -27,8 +23,6 @@ interface LocationSearchProps {
   favorites: Location[];
   currentLocation: Location | null;
   weatherByLocation: Record<string, WeatherData>;
-  selectedTheme: ThemeId;
-  onThemeChange: (themeId: ThemeId) => void;
   onSelect: (location: Location) => void;
   onSelectCurrentLocation: () => void;
   onRemove: (locationId: number) => void;
@@ -82,8 +76,6 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
   favorites,
   currentLocation,
   weatherByLocation,
-  selectedTheme,
-  onThemeChange,
   onSelect,
   onSelectCurrentLocation,
   onRemove,
@@ -127,22 +119,30 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 
   return (
     <motion.div
-      className="location-backdrop fixed inset-0 z-50 backdrop-blur-sm flex justify-end"
+      className="location-backdrop fixed inset-0 z-50 flex justify-start backdrop-blur-sm"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <motion.div
-        className="location-drawer backdrop-blur-2xl w-full max-w-md h-full shadow-2xl flex flex-col border-l"
-        initial={{ x: "100%" }}
+      <motion.aside
+        role="dialog"
+        aria-modal="true"
+        aria-label="Location search"
+        onKeyDown={(event) => {
+          if (event.key === "Escape") {
+            onClose();
+          }
+        }}
+        className="location-drawer flex h-full w-full max-w-md flex-col border-r shadow-2xl backdrop-blur-2xl"
+        initial={{ x: "-100%" }}
         animate={{ x: 0 }}
-        exit={{ x: "100%" }}
+        exit={{ x: "-100%" }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
       >
         <div className="drawer-divider app-safe-header app-no-pull-refresh px-4 pb-3.5 flex items-center border-b shrink-0">
           <Search className="drawer-muted w-6 h-6 mr-3 shrink-0" />
           <input
-            autoFocus={favorites.length === 0}
+            autoFocus
             type="text"
             placeholder="Search for a city..."
             className="drawer-search-input h-10 flex-1 bg-transparent border-none outline-none text-lg"
@@ -161,7 +161,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
 
         <div className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-3">
           {!isSearchMode && (
-            <div className="flex min-h-full flex-col gap-3">
+            <div className="flex flex-col gap-3">
               <button
                 type="button"
                 onClick={onSelectCurrentLocation}
@@ -261,79 +261,6 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                 </motion.div>
               )}
 
-              <section className="drawer-divider mt-auto border-t pt-3">
-                <div className="mb-4 flex items-start gap-3 px-1">
-                  <div className="theme-settings-icon rounded-full p-2">
-                    <Palette className="h-5 w-5" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <h2 className="drawer-text text-base font-semibold">
-                      Settings
-                    </h2>
-                    <p className="drawer-muted mt-0.5 text-sm">
-                      Choose a theme for the app interface.
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  className="grid grid-cols-3 gap-2.5"
-                  role="radiogroup"
-                  aria-label="App theme"
-                >
-                  {AVAILABLE_THEMES.map((theme) => {
-                    const isSelected = selectedTheme === theme.id;
-                    const previewImageUrl = getThemePreviewImageUrl(theme.id);
-
-                    return (
-                      <label
-                        key={theme.id}
-                        className={`theme-option relative flex w-full cursor-pointer flex-col gap-1.5 border pt-1 px-1 pb-1.5 text-left transition-all ${
-                          isSelected ? "theme-option-selected" : ""
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          name="app-theme"
-                          value={theme.id}
-                          checked={isSelected}
-                          onChange={() => onThemeChange(theme.id)}
-                          className="sr-only"
-                        />
-                        <span
-                          className="theme-preview relative aspect-[3/4] w-full overflow-hidden"
-                          aria-hidden="true"
-                        >
-                          {previewImageUrl && (
-                            <img
-                              src={previewImageUrl}
-                              alt=""
-                              className="h-full w-full object-cover"
-                            />
-                          )}
-                        </span>
-                        <span className="min-w-0 w-full px-1">
-                          <span className="drawer-text block text-sm font-semibold leading-tight">
-                            {theme.name}
-                          </span>
-                          <span className="drawer-muted mt-1 block text-xs leading-tight">
-                            {theme.description}
-                          </span>
-                        </span>
-                        <span
-                          className={`theme-selection-indicator absolute right-3 top-3 flex h-6 w-6 items-center justify-center border transition-colors ${
-                            isSelected
-                              ? "theme-selection-check border-transparent"
-                              : "text-transparent"
-                          }`}
-                        >
-                          <Check className="h-3.5 w-3.5" aria-hidden="true" />
-                        </span>
-                      </label>
-                    );
-                  })}
-                </div>
-              </section>
             </div>
           )}
 
@@ -377,7 +304,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
             </AnimatePresence>
           )}
         </div>
-      </motion.div>
+      </motion.aside>
     </motion.div>
   );
 };

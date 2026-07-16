@@ -17,30 +17,21 @@ import {
   Wind,
 } from "lucide-react";
 import { getAqiColor } from "../utils/aqi";
+import type { ClockFormat, UnitSystem } from "../config/preferences";
+import {
+  convertTemperature,
+  formatClockTime,
+  formatWindSpeed,
+  getTemperatureUnit,
+} from "../utils/weatherFormat";
 
 interface CurrentWeatherProps {
   weather: CurrentWeatherType;
   sunrise?: string;
   sunset?: string;
+  unitSystem: UnitSystem;
+  clockFormat: ClockFormat;
 }
-
-const formatSunTime = (value?: string) => {
-  const match = value?.match(/(?:T|^)(\d{2}):(\d{2})/);
-  if (!match) {
-    return null;
-  }
-
-  const hour = Number(match[1]);
-  const minute = Number(match[2]);
-  if (hour > 23 || minute > 59) {
-    return null;
-  }
-
-  return new Intl.DateTimeFormat(undefined, {
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(new Date(2000, 0, 1, hour, minute));
-};
 
 const getWeatherIcon = (code: number, isDay: boolean) => {
   if (code <= 1) {
@@ -78,9 +69,15 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({
   weather,
   sunrise: sunriseTime,
   sunset: sunsetTime,
+  unitSystem,
+  clockFormat,
 }) => {
-  const sunrise = formatSunTime(sunriseTime);
-  const sunset = formatSunTime(sunsetTime);
+  const sunrise = sunriseTime
+    ? formatClockTime(sunriseTime, clockFormat, true)
+    : null;
+  const sunset = sunsetTime
+    ? formatClockTime(sunsetTime, clockFormat, true)
+    : null;
 
   return (
     <motion.div
@@ -91,10 +88,10 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({
     >
       <div className="relative mt-2">
         <span className="text-8xl font-bold weather-temp-text">
-          {Math.round(weather.temperature)}
+          {Math.round(convertTemperature(weather.temperature, unitSystem))}
         </span>
-        <span className="absolute left-full top-1 ml-1 text-5xl font-bold weather-hero-text">
-          °
+        <span className="absolute left-full top-2 ml-1 whitespace-nowrap text-3xl font-bold weather-hero-text">
+          {getTemperatureUnit(unitSystem)}
         </span>
       </div>
       <p className="mt-1 flex items-center gap-2 text-2xl font-bold weather-hero-text capitalize">
@@ -104,7 +101,7 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({
       <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-sm font-semibold text-white/90 weather-hero-text">
         <span className="weather-chip inline-flex items-center gap-1 rounded-full shadow-lg border border-white/10 px-2 py-1">
           <Wind className="h-4 w-4" />
-          {Math.round(weather.windSpeed)} km/h
+          {formatWindSpeed(weather.windSpeed, unitSystem)}
         </span>
         <span className="weather-chip inline-flex items-center gap-1 rounded-full shadow-lg border border-white/10 px-2 py-1">
           <Droplets className="h-4 w-4" />
