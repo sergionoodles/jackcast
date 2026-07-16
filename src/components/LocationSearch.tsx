@@ -165,7 +165,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
               <button
                 type="button"
                 onClick={onSelectCurrentLocation}
-                className="drawer-card w-full p-4 flex items-center shadow-sm border transition-colors mb-4"
+                className="drawer-card w-full p-4 flex items-center shadow-sm border transition-colors"
               >
                 <div className="drawer-card-icon p-2 mr-4">
                   <Navigation className="w-5 h-5" />
@@ -260,7 +260,6 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                   </AnimatePresence>
                 </motion.div>
               )}
-
             </div>
           )}
 
