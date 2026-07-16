@@ -120,6 +120,26 @@ export default function App() {
   const swipeX = useMotionValue(0);
   const swipeOpacity = useMotionValue(1);
 
+  const closeDrawers = useCallback(() => {
+    setIsSearching(false);
+    setIsSettingsOpen(false);
+  }, []);
+
+  useEffect(() => {
+    if (!isDrawerOpen) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeDrawers();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [closeDrawers, isDrawerOpen]);
+
   // Save favorites to local storage
   useEffect(() => {
     favoritesRef.current = favorites;
@@ -746,26 +766,26 @@ export default function App() {
             >
               {displayLocation.name}
             </h1>
+            {!isGpsLocation && isForecastReady && (
+              <button
+                onClick={toggleFavorite}
+                type="button"
+                aria-label={
+                  isFavorite
+                    ? "Remove current location from favorites"
+                    : "Save current location to favorites"
+                }
+                className="absolute left-full top-1/2 ml-1 -translate-y-1/2 rounded-full p-2 transition-colors hover:bg-white/20 backdrop-blur-sm"
+              >
+                <Heart
+                  className={`h-6 w-6 ${isFavorite ? "fill-red-500 text-red-500" : "text-white"}`}
+                />
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="flex items-center justify-end space-x-2">
-          {!isGpsLocation && isForecastReady && (
-            <button
-              onClick={toggleFavorite}
-              type="button"
-              aria-label={
-                isFavorite
-                  ? "Remove current location from favorites"
-                  : "Save current location to favorites"
-              }
-              className="p-2 rounded-full hover:bg-white/20 transition-colors backdrop-blur-sm"
-            >
-              <Heart
-                className={`w-6 h-6 ${isFavorite ? "fill-red-500 text-red-500" : "text-white"}`}
-              />
-            </button>
-          )}
+        <div className="flex items-center justify-end">
           <button
             onClick={() => setIsSettingsOpen(true)}
             type="button"
@@ -920,7 +940,7 @@ export default function App() {
             onSelect={handleSelectLocation}
             onSelectCurrentLocation={handleSelectCurrentLocation}
             onRemove={removeFavorite}
-            onClose={() => setIsSearching(false)}
+            onClose={closeDrawers}
           />
         )}
         {isSettingsOpen && (
@@ -931,7 +951,7 @@ export default function App() {
             onUnitSystemChange={setUnitSystem}
             selectedClockFormat={clockFormat}
             onClockFormatChange={setClockFormat}
-            onClose={() => setIsSettingsOpen(false)}
+            onClose={closeDrawers}
           />
         )}
       </AnimatePresence>
