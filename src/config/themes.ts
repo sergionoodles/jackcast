@@ -60,7 +60,6 @@ export const THEMES: readonly AppTheme[] = [
     className: "theme-pocket-clay",
     backgroundSet: "pocket-clay",
     themeColor: "#354c47",
-    isBeta: true,
   },
   {
     id: "nordic-paper",
@@ -69,7 +68,6 @@ export const THEMES: readonly AppTheme[] = [
     className: "theme-nordic-paper",
     backgroundSet: "nordic-paper",
     themeColor: "#203a52",
-    isBeta: true,
   },
 ];
 

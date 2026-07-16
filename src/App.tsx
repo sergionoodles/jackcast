@@ -664,7 +664,7 @@ export default function App() {
       {!isMinimal && <InstallPrompt />}
       {/* Header */}
       <motion.header
-        className="weather-header app-safe-header app-no-pull-refresh flex justify-between items-center gap-3 px-4 pb-3 text-white z-20 backdrop-blur-md shadow-lg ring ring-white/10"
+        className="weather-header app-safe-header app-no-pull-refresh flex justify-between items-center gap-3 px-4 pb-3.5 text-white z-20 backdrop-blur-md shadow-lg ring ring-white/10"
         animate={{ y: isMinimal ? -80 : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.8 }}
       >
@@ -708,7 +708,7 @@ export default function App() {
             onClick={() => setIsSearching(true)}
             type="button"
             aria-label="Search for a city"
-            className="p-2 rounded-full hover:bg-white/20 transition-colors backdrop-blur-sm"
+            className="header-search p-2 rounded-full hover:bg-white/20 transition-colors backdrop-blur-sm"
           >
             <Search className="w-6 h-6" />
           </button>
