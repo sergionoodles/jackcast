@@ -40,8 +40,9 @@ const FALLBACK_LOCATION: Location = {
   country: "Italy",
 };
 
-const getLocationCacheKey = (location: Pick<Location, "latitude" | "longitude">) =>
-  `${location.latitude.toFixed(4)},${location.longitude.toFixed(4)}`;
+const getLocationCacheKey = (
+  location: Pick<Location, "latitude" | "longitude">,
+) => `${location.latitude.toFixed(4)},${location.longitude.toFixed(4)}`;
 
 export default function App() {
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
@@ -96,7 +97,10 @@ export default function App() {
   }, [themeId]);
 
   const storeWeatherForLocation = useCallback(
-    (location: Pick<Location, "latitude" | "longitude">, weather: WeatherData) => {
+    (
+      location: Pick<Location, "latitude" | "longitude">,
+      weather: WeatherData,
+    ) => {
       const cacheKey = getLocationCacheKey(location);
       weatherCacheRef.current.set(cacheKey, weather);
       setWeatherByLocation((previous) => {
@@ -256,11 +260,7 @@ export default function App() {
     } else {
       await applyLocationFallback();
     }
-  }, [
-    beginTrackedRequest,
-    fetchWeatherForCoords,
-    isTrackedRequestActive,
-  ]);
+  }, [beginTrackedRequest, fetchWeatherForCoords, isTrackedRequestActive]);
 
   // Initial load - try geolocation, fallback to first saved favorite or Milan
   useEffect(() => {
@@ -664,7 +664,7 @@ export default function App() {
       {!isMinimal && <InstallPrompt />}
       {/* Header */}
       <motion.header
-        className="weather-header app-safe-header app-no-pull-refresh flex justify-between items-center gap-3 px-4 pb-4 text-white z-20 backdrop-blur-md shadow-lg ring ring-white/10"
+        className="weather-header app-safe-header app-no-pull-refresh flex justify-between items-center gap-3 px-4 pb-3 text-white z-20 backdrop-blur-md shadow-lg ring ring-white/10"
         animate={{ y: isMinimal ? -80 : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.8 }}
       >

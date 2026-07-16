@@ -100,7 +100,11 @@
 
   .theme-jack-russell {
     --theme-canvas:
-      radial-gradient(circle at 50% 15%, rgb(91 119 107 / 0.28), transparent 36%),
+      radial-gradient(
+        circle at 50% 15%,
+        rgb(91 119 107 / 0.28),
+        transparent 36%
+      ),
       #161b1d;
     font-family: "Noto Sans", sans-serif;
   }
@@ -198,7 +202,11 @@
   .theme-arcade-fighter {
     --theme-canvas:
       radial-gradient(circle at 82% 8%, rgb(255 74 28 / 0.38), transparent 28%),
-      radial-gradient(circle at 12% 76%, rgb(190 38 22 / 0.26), transparent 34%),
+      radial-gradient(
+        circle at 12% 76%,
+        rgb(190 38 22 / 0.26),
+        transparent 34%
+      ),
       #1a0b09;
     --theme-shell: #1a0b09;
     --theme-header: linear-gradient(
@@ -247,11 +255,25 @@
 
   .theme-pocket-clay {
     --theme-canvas:
-      radial-gradient(circle at 78% 14%, rgb(255 218 122 / 0.44), transparent 27%),
+      radial-gradient(
+        circle at 78% 14%,
+        rgb(255 218 122 / 0.44),
+        transparent 27%
+      ),
       linear-gradient(160deg, #7b9b80, #46675d 72%);
     --theme-shell: #46675d;
-    --theme-header: linear-gradient(to bottom, rgb(59 92 79 / 0.9), rgb(59 92 79 / 0.4) 68%, transparent);
-    --theme-overlay: linear-gradient(to bottom, rgb(39 69 58 / 0.7), rgb(39 69 58 / 0.3) 30%, transparent 52%);
+    --theme-header: linear-gradient(
+      to bottom,
+      rgb(59 92 79 / 0.9),
+      rgb(59 92 79 / 0.4) 68%,
+      transparent
+    );
+    --theme-overlay: linear-gradient(
+      to bottom,
+      rgb(39 69 58 / 0.7),
+      rgb(39 69 58 / 0.3) 30%,
+      transparent 52%
+    );
     --theme-drawer: rgb(255 239 199 / 0.97);
     --theme-backdrop: rgb(36 62 53 / 0.56);
     --theme-card: rgb(255 229 171 / 0.7);
@@ -283,11 +305,26 @@
 
   .theme-nordic-paper {
     --theme-canvas:
-      linear-gradient(145deg, transparent 0 48%, rgb(255 250 230 / 0.15) 48% 51%, transparent 51%),
+      linear-gradient(
+        145deg,
+        transparent 0 48%,
+        rgb(255 250 230 / 0.15) 48% 51%,
+        transparent 51%
+      ),
       linear-gradient(160deg, #9ebbc2, #668b99 70%);
     --theme-shell: #668b99;
-    --theme-header: linear-gradient(to bottom, rgb(94 137 148 / 0.9), rgb(94 137 148 / 0.38) 68%, transparent);
-    --theme-overlay: linear-gradient(to bottom, rgb(72 111 126 / 0.76), rgb(72 111 126 / 0.3) 32%, transparent 53%);
+    --theme-header: linear-gradient(
+      to bottom,
+      rgb(94 137 148 / 0.9),
+      rgb(94 137 148 / 0.38) 68%,
+      transparent
+    );
+    --theme-overlay: linear-gradient(
+      to bottom,
+      rgb(72 111 126 / 0.76),
+      rgb(72 111 126 / 0.3) 32%,
+      transparent 53%
+    );
     --theme-drawer: rgb(255 250 233 / 0.97);
     --theme-backdrop: rgb(60 94 107 / 0.62);
     --theme-card: rgb(250 236 201 / 0.72);
@@ -504,7 +541,8 @@
     background-size: 9px 9px;
   }
 
-  .theme-nothing-os :is(.forecast-glass, .drawer-card, .theme-option, .weather-chip) {
+  .theme-nothing-os
+    :is(.forecast-glass, .drawer-card, .theme-option, .weather-chip) {
     box-shadow: none;
   }
 
@@ -554,9 +592,19 @@
 
   .theme-pocket-clay .forecast-glass {
     background-image:
-      radial-gradient(circle at 18% 16%, rgb(255 255 255 / 0.26) 0 1px, transparent 1.5px),
-      radial-gradient(circle at 78% 72%, rgb(131 80 47 / 0.1) 0 1px, transparent 1.5px);
-    background-size: 17px 17px, 23px 23px;
+      radial-gradient(
+        circle at 18% 16%,
+        rgb(255 255 255 / 0.26) 0 1px,
+        transparent 1.5px
+      ),
+      radial-gradient(
+        circle at 78% 72%,
+        rgb(131 80 47 / 0.1) 0 1px,
+        transparent 1.5px
+      );
+    background-size:
+      17px 17px,
+      23px 23px;
     box-shadow:
       0 12px 26px rgb(29 47 40 / 0.2),
       inset 0 2px 0 rgb(255 255 255 / 0.54),
@@ -583,7 +631,7 @@
   }
 
   .app-safe-header {
-    padding-top: calc(var(--app-safe-top) + 1rem);
+    padding-top: calc(var(--app-safe-top) + 0.6rem);
   }
 
   .app-safe-shell {
@@ -628,7 +676,9 @@
     box-shadow: 0 12px 28px rgb(0 0 0 / 0.2);
   }
 
-  @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  @supports (
+    (-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))
+  ) {
     .forecast-glass {
       background-color: var(--theme-glass);
       -webkit-backdrop-filter: var(--theme-glass-filter);

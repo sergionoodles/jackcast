@@ -139,7 +139,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
         exit={{ x: "100%" }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
       >
-        <div className="drawer-divider app-safe-header app-no-pull-refresh px-4 pb-4 flex items-center border-b shrink-0">
+        <div className="drawer-divider app-safe-header app-no-pull-refresh px-4 pb-3 flex items-center border-b shrink-0">
           <Search className="drawer-muted w-6 h-6 mr-3 shrink-0" />
           <input
             autoFocus={favorites.length === 0}
