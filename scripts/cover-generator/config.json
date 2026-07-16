@@ -178,12 +178,12 @@
     },
     "arcade-fighter": {
       "backgroundSet": "arcade-fighter",
-      "subject": "one or two original fictional martial-arts challengers, rendered as small dynamic cel-painted silhouettes in generic training clothes, with no recognizable character, costume, franchise, logo, or real person",
+      "subject": "one or two original fictional arcade brawlers, rendered as small dynamic cel-painted silhouettes in contemporary streetwear or generic fight gear, with no recognizable character, costume, franchise, logo, or real person",
       "artDirections": [
         "hand-painted 1990s arcade fighting-game stage illustration, muscular brushwork, chunky cel shading, saturated color ramps, atmospheric depth, and subtle CRT grain",
         "original arcade cabinet key art aesthetic, bold ink contours, screen-printed halftone shadows, electric rim light, and dramatic but uncluttered color blocking",
         "retro tournament-stage animation background, expressive painted scenery, sharp speed-line accents, deep parallax layers, and controlled neon highlights",
-        "high-energy martial-arts arcade illustration, angular cel-painted forms, limited jewel-tone palette, pixel-dither texture, and cinematic environmental lighting"
+        "high-energy arcade brawler illustration, angular cel-painted forms, limited jewel-tone palette, pixel-dither texture, and cinematic environmental lighting"
       ],
       "compositions": [
         "vertical 9:16 composition with a small challenger in the lower corner, a sweeping arena stage, and broad readable sky space above",
@@ -193,29 +193,29 @@
       ],
       "scenes": {
         "clear": [
-          "a sunlit rooftop training arena above a colorful coastal city, with banners reduced to abstract wind shapes",
-          "an open mountain tournament terrace beneath a huge radiant sky and crisp distant peaks",
-          "a lively harbor-side practice stage with bright awnings, sparkling water, and long graphic shadows"
+          "a sunlit city rooftop arena above colorful low-rise blocks, with billboard-like abstract shapes and long graphic shadows",
+          "an elevated overpass tournament stage beneath a huge radiant sky, distant towers, and bold concrete geometry",
+          "a lively boardwalk practice stage with bright awnings, sparkling water, and long graphic shadows"
         ],
         "cloudy": [
-          "a misty hilltop arena surrounded by layered pagoda-like rooftops and soft rolling cloud banks",
+          "a misty elevated rail-yard arena surrounded by layered rooftops, power lines, and soft rolling cloud banks",
           "an industrial waterfront stage under broad steel-blue clouds, with distant cranes as abstract silhouettes",
-          "a quiet old-city courtyard where low fog softens tiled roofs and stacked urban shapes"
+          "a quiet backstreet arena where low fog softens brick facades, fire escapes, and stacked urban shapes"
         ],
         "rain": [
           "a neon market alley arena with rhythmic rain streaks, luminous puddles, and saturated reflections",
           "a rain-lashed harbor platform with wind-bent ropes, blue reflections, and distant city lights",
-          "a temple courtyard stage transformed by silver rain lines, rippling stone pools, and warm lantern-like glows without fixtures or text"
+          "a rain-soaked underpass stage transformed by silver rain lines, rippling concrete puddles, and warm sodium-vapor glows"
         ],
         "snow": [
-          "a high mountain training stage with sculpted drifts, dark pines, and wind-driven snow arcs",
-          "a frozen lakeside arena beneath pale cliffs, crystalline air, and strong cobalt shadows",
-          "a snow-covered old-town plaza with bold roof silhouettes, powdery flurries, and warm window-like color blocks"
+          "a snow-dusted rooftop stage with sculpted drifts, dark water towers, and wind-driven snow arcs",
+          "a frozen transit plaza beneath pale overpasses, crystalline air, and strong cobalt shadows",
+          "a snow-covered neighborhood court with bold brick silhouettes, powdery flurries, and warm window-like color blocks"
         ],
         "storm": [
           "a cliffside final-round arena beneath towering charged clouds, diagonal rain, and a single explosive lightning shape",
           "an industrial dock stage filled with wind-whipped spray, electric blue shadows, and a fierce orange horizon",
-          "a ruined hilltop courtyard surrounded by spiraling cloud bands, flying leaves, and sharp violet-white flashes"
+          "a battered downtown intersection surrounded by spiraling cloud bands, flying posters, and sharp violet-white flashes"
         ]
       }
     },

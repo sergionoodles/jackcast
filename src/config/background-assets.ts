@@ -410,7 +410,224 @@ export const availableVariantsBySet: Record<
       1
     ]
   },
-  "arcade-fighter": {},
-  "pocket-clay": {},
-  "nordic-paper": {}
+  "arcade-fighter": {
+    "clear-afternoon": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "clear-morning": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "cloudy-afternoon": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "cloudy-morning": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "rain-morning": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "snow-morning": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "storm-morning": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "pocket-clay": {
+    "clear-afternoon": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "clear-evening": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "clear-morning": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "cloudy-afternoon": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "cloudy-evening": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "cloudy-morning": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "rain-afternoon": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "rain-evening": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "rain-morning": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "snow-afternoon": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "snow-evening": [
+      1,
+      2,
+      3
+    ],
+    "snow-morning": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "storm-afternoon": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "storm-morning": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "nordic-paper": {
+    "clear-afternoon": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "clear-evening": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "clear-morning": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "cloudy-afternoon": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "cloudy-evening": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "cloudy-morning": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "rain-afternoon": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "rain-evening": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "rain-morning": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "snow-afternoon": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "snow-evening": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "snow-morning": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "storm-afternoon": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "storm-evening": [
+      1,
+      2,
+      3
+    ],
+    "storm-morning": [
+      1,
+      2,
+      3,
+      4
+    ]
+  }
 };

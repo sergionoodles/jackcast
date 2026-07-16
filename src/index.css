@@ -40,15 +40,15 @@
   }
 
   html[data-theme="arcade-fighter"] {
-    --theme-body: #090b17;
+    --theme-body: #1a0b09;
   }
 
   html[data-theme="pocket-clay"] {
-    --theme-body: #354c47;
+    --theme-body: #46675d;
   }
 
   html[data-theme="nordic-paper"] {
-    --theme-body: #203a52;
+    --theme-body: #668b99;
   }
 }
 
@@ -192,131 +192,137 @@
     --theme-drawer-card-hover: rgb(255 255 255 / 0.09);
     --theme-drawer-card-selected: rgb(226 41 34 / 0.14);
     --theme-drawer-icon: rgb(255 255 255 / 0.08);
-    font-family: "Courier New", Courier, monospace;
+    font-family: "Noto Sans", sans-serif;
   }
 
   .theme-arcade-fighter {
     --theme-canvas:
-      radial-gradient(circle at 82% 8%, rgb(255 61 36 / 0.32), transparent 28%),
-      radial-gradient(circle at 12% 76%, rgb(19 103 255 / 0.24), transparent 34%),
-      #090b17;
-    --theme-shell: #090b17;
+      radial-gradient(circle at 82% 8%, rgb(255 74 28 / 0.38), transparent 28%),
+      radial-gradient(circle at 12% 76%, rgb(190 38 22 / 0.26), transparent 34%),
+      #1a0b09;
+    --theme-shell: #1a0b09;
     --theme-header: linear-gradient(
       to bottom,
-      rgb(8 10 22 / 0.94),
-      rgb(8 10 22 / 0.62) 68%,
-      rgb(8 10 22 / 0.14)
+      rgb(46 13 8 / 0.94),
+      rgb(46 13 8 / 0.62) 68%,
+      rgb(46 13 8 / 0.14)
     );
     --theme-overlay: linear-gradient(
       to bottom,
-      rgb(4 6 18 / 0.78),
-      rgb(4 6 18 / 0.35) 30%,
+      rgb(39 10 7 / 0.78),
+      rgb(39 10 7 / 0.35) 30%,
       transparent 49%,
-      rgb(4 6 18 / 0.2) 76%,
-      rgb(4 6 18 / 0.66)
+      rgb(39 10 7 / 0.2) 76%,
+      rgb(39 10 7 / 0.66)
     );
-    --theme-drawer: rgb(10 13 31 / 0.97);
-    --theme-backdrop: rgb(2 3 12 / 0.7);
-    --theme-card: rgb(38 50 91 / 0.42);
-    --theme-card-selected: rgb(255 190 35 / 0.16);
-    --theme-chip: rgb(9 13 35 / 0.68);
-    --theme-accent: #ffbe23;
+    --theme-drawer: rgb(44 14 8 / 0.97);
+    --theme-backdrop: rgb(28 6 4 / 0.7);
+    --theme-card: rgb(183 64 18 / 0.7);
+    --theme-card-selected: rgb(255 179 36 / 0.24);
+    --theme-chip: rgb(164 55 15 / 0.82);
+    --theme-accent: #ffba25;
     --theme-image-filter: saturate(1.18) contrast(1.08);
     --theme-image-blend: normal;
-    --theme-glass: rgb(8 12 33 / 0.58);
-    --theme-glass-border: rgb(93 176 255 / 0.38);
+    --theme-glass: rgb(170 57 14 / 0.8);
+    --theme-glass-border: #e2301d;
     --theme-glass-filter: blur(9px) brightness(0.64) saturate(1.25);
     --theme-panel-text: #fff8dc;
     --theme-panel-muted: rgb(222 234 255 / 0.72);
-    --theme-panel-badge: rgb(255 190 35 / 0.14);
-    --theme-panel-card: rgb(32 50 100 / 0.3);
-    --theme-panel-divider: rgb(92 173 255 / 0.24);
+    --theme-panel-badge: rgb(213 69 16 / 0.88);
+    --theme-panel-card: rgb(184 62 14 / 0.78);
+    --theme-panel-divider: #e2301d;
     --theme-panel-radius: 0.45rem;
     --theme-card-radius: 0.25rem;
     --theme-badge-radius: 0.2rem;
     --theme-drawer-text: #fff8dc;
     --theme-drawer-muted: rgb(211 225 255 / 0.68);
-    --theme-drawer-border: rgb(94 174 255 / 0.25);
-    --theme-drawer-card: rgb(27 39 79 / 0.56);
-    --theme-drawer-card-hover: rgb(39 57 112 / 0.7);
-    --theme-drawer-card-selected: rgb(255 190 35 / 0.13);
-    --theme-drawer-icon: rgb(52 123 255 / 0.2);
+    --theme-drawer-border: #e2301d;
+    --theme-drawer-card: rgb(177 57 13 / 0.8);
+    --theme-drawer-card-hover: rgb(211 75 16 / 0.88);
+    --theme-drawer-card-selected: rgb(255 179 36 / 0.22);
+    --theme-drawer-icon: rgb(226 48 29 / 0.24);
     font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
     letter-spacing: 0.015em;
   }
 
   .theme-pocket-clay {
     --theme-canvas:
-      radial-gradient(circle at 78% 14%, rgb(255 209 125 / 0.34), transparent 27%),
-      linear-gradient(160deg, #637e72, #354c47 72%);
-    --theme-shell: #354c47;
-    --theme-header: linear-gradient(to bottom, rgb(39 59 53 / 0.9), rgb(39 59 53 / 0.4) 68%, transparent);
-    --theme-overlay: linear-gradient(to bottom, rgb(21 37 33 / 0.7), rgb(21 37 33 / 0.3) 30%, transparent 52%);
-    --theme-drawer: rgb(246 237 214 / 0.97);
-    --theme-backdrop: rgb(21 35 31 / 0.56);
-    --theme-card: rgb(255 247 226 / 0.56);
-    --theme-card-selected: rgb(225 117 75 / 0.18);
-    --theme-chip: rgb(28 52 45 / 0.48);
-    --theme-accent: #df754b;
-    --theme-image-filter: saturate(1.06) contrast(1.03);
+      radial-gradient(circle at 78% 14%, rgb(255 218 122 / 0.44), transparent 27%),
+      linear-gradient(160deg, #7b9b80, #46675d 72%);
+    --theme-shell: #46675d;
+    --theme-header: linear-gradient(to bottom, rgb(59 92 79 / 0.9), rgb(59 92 79 / 0.4) 68%, transparent);
+    --theme-overlay: linear-gradient(to bottom, rgb(39 69 58 / 0.7), rgb(39 69 58 / 0.3) 30%, transparent 52%);
+    --theme-drawer: rgb(255 239 199 / 0.97);
+    --theme-backdrop: rgb(36 62 53 / 0.56);
+    --theme-card: rgb(255 229 171 / 0.7);
+    --theme-card-selected: rgb(236 119 77 / 0.26);
+    --theme-chip: rgb(70 106 88 / 0.7);
+    --theme-accent: #ed7650;
+    --theme-image-filter: saturate(1.16) contrast(1.03);
     --theme-image-blend: normal;
-    --theme-glass: rgb(248 239 216 / 0.7);
-    --theme-glass-border: rgb(90 67 46 / 0.2);
+    --theme-glass: rgb(255 232 180 / 0.78);
+    --theme-glass-border: rgb(142 93 57 / 0.28);
     --theme-glass-filter: blur(14px) brightness(1.02) saturate(1.05);
-    --theme-panel-text: #2e423b;
-    --theme-panel-muted: rgb(46 66 59 / 0.72);
-    --theme-panel-badge: rgb(223 117 75 / 0.13);
-    --theme-panel-card: rgb(255 250 233 / 0.52);
-    --theme-panel-divider: rgb(90 67 46 / 0.14);
+    --theme-panel-text: #384e44;
+    --theme-panel-muted: rgb(56 78 68 / 0.72);
+    --theme-panel-badge: rgb(237 118 80 / 0.22);
+    --theme-panel-card: rgb(255 240 201 / 0.72);
+    --theme-panel-divider: rgb(142 93 57 / 0.2);
     --theme-panel-radius: 1.2rem;
     --theme-card-radius: 0.85rem;
     --theme-badge-radius: 999px;
-    --theme-drawer-text: #2e423b;
-    --theme-drawer-muted: rgb(46 66 59 / 0.7);
-    --theme-drawer-border: rgb(90 67 46 / 0.16);
-    --theme-drawer-card: rgb(255 250 233 / 0.58);
-    --theme-drawer-card-hover: rgb(255 253 244 / 0.9);
-    --theme-drawer-card-selected: rgb(223 117 75 / 0.13);
-    --theme-drawer-icon: rgb(76 111 98 / 0.13);
+    --theme-drawer-text: #384e44;
+    --theme-drawer-muted: rgb(56 78 68 / 0.7);
+    --theme-drawer-border: rgb(142 93 57 / 0.2);
+    --theme-drawer-card: rgb(255 240 201 / 0.72);
+    --theme-drawer-card-hover: rgb(255 248 222 / 0.94);
+    --theme-drawer-card-selected: rgb(237 118 80 / 0.2);
+    --theme-drawer-icon: rgb(86 128 105 / 0.18);
     font-family: "Noto Sans", sans-serif;
   }
 
   .theme-nordic-paper {
-    --theme-canvas: linear-gradient(160deg, #587b91, #203a52 70%);
-    --theme-shell: #203a52;
-    --theme-header: linear-gradient(to bottom, rgb(24 53 75 / 0.9), rgb(24 53 75 / 0.38) 68%, transparent);
-    --theme-overlay: linear-gradient(to bottom, rgb(16 41 61 / 0.76), rgb(16 41 61 / 0.3) 32%, transparent 53%);
-    --theme-drawer: rgb(242 244 235 / 0.97);
-    --theme-backdrop: rgb(11 29 44 / 0.62);
-    --theme-card: rgb(245 248 239 / 0.58);
-    --theme-card-selected: rgb(225 106 87 / 0.17);
-    --theme-chip: rgb(19 51 72 / 0.48);
-    --theme-accent: #df6a57;
-    --theme-image-filter: saturate(0.94) contrast(1.06);
+    --theme-canvas:
+      linear-gradient(145deg, transparent 0 48%, rgb(255 250 230 / 0.15) 48% 51%, transparent 51%),
+      linear-gradient(160deg, #9ebbc2, #668b99 70%);
+    --theme-shell: #668b99;
+    --theme-header: linear-gradient(to bottom, rgb(94 137 148 / 0.9), rgb(94 137 148 / 0.38) 68%, transparent);
+    --theme-overlay: linear-gradient(to bottom, rgb(72 111 126 / 0.76), rgb(72 111 126 / 0.3) 32%, transparent 53%);
+    --theme-drawer: rgb(255 250 233 / 0.97);
+    --theme-backdrop: rgb(60 94 107 / 0.62);
+    --theme-card: rgb(250 236 201 / 0.72);
+    --theme-card-selected: rgb(226 143 119 / 0.28);
+    --theme-chip: rgb(103 143 151 / 0.66);
+    --theme-accent: #d97a68;
+    --theme-image-filter: saturate(0.82) contrast(1.02);
     --theme-image-blend: normal;
-    --theme-glass: rgb(241 245 239 / 0.72);
-    --theme-glass-border: rgb(32 58 82 / 0.2);
+    --theme-glass: rgb(255 246 220 / 0.78);
+    --theme-glass-border: rgb(91 122 129 / 0.28);
     --theme-glass-filter: blur(14px) brightness(1.04) saturate(0.92);
-    --theme-panel-text: #203a52;
-    --theme-panel-muted: rgb(32 58 82 / 0.72);
-    --theme-panel-badge: rgb(77 123 142 / 0.13);
-    --theme-panel-card: rgb(255 255 250 / 0.5);
-    --theme-panel-divider: rgb(32 58 82 / 0.14);
-    --theme-panel-radius: 0.9rem;
-    --theme-card-radius: 0.5rem;
-    --theme-badge-radius: 0.35rem;
-    --theme-drawer-text: #203a52;
-    --theme-drawer-muted: rgb(32 58 82 / 0.7);
-    --theme-drawer-border: rgb(32 58 82 / 0.16);
-    --theme-drawer-card: rgb(255 255 250 / 0.58);
-    --theme-drawer-card-hover: rgb(255 255 255 / 0.92);
-    --theme-drawer-card-selected: rgb(223 106 87 / 0.13);
-    --theme-drawer-icon: rgb(77 123 142 / 0.13);
+    --theme-panel-text: #405e67;
+    --theme-panel-muted: rgb(64 94 103 / 0.72);
+    --theme-panel-badge: rgb(174 204 193 / 0.52);
+    --theme-panel-card: rgb(255 250 232 / 0.72);
+    --theme-panel-divider: rgb(91 122 129 / 0.2);
+    --theme-panel-radius: 0.2rem 1rem 0.2rem 1rem;
+    --theme-card-radius: 0.15rem 0.7rem 0.15rem 0.7rem;
+    --theme-badge-radius: 0.1rem 0.45rem 0.1rem 0.45rem;
+    --theme-drawer-text: #405e67;
+    --theme-drawer-muted: rgb(64 94 103 / 0.7);
+    --theme-drawer-border: rgb(91 122 129 / 0.22);
+    --theme-drawer-card: rgb(255 250 232 / 0.72);
+    --theme-drawer-card-hover: rgb(255 253 241 / 0.94);
+    --theme-drawer-card-selected: rgb(226 143 119 / 0.22);
+    --theme-drawer-icon: rgb(103 143 151 / 0.18);
     font-family: "Noto Sans", sans-serif;
   }
 
   .weather-header {
     background: var(--theme-header);
+  }
+
+  .theme-nothing-os .weather-header {
+    font-family: "Space Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   }
 
   .weather-overlay {
@@ -519,19 +525,19 @@
 
   .theme-arcade-fighter .forecast-glass {
     background-image:
-      linear-gradient(135deg, rgb(75 151 255 / 0.08), transparent 38%),
+      linear-gradient(135deg, rgb(255 173 34 / 0.14), transparent 38%),
       repeating-linear-gradient(
         135deg,
         transparent 0,
         transparent 12px,
-        rgb(255 255 255 / 0.025) 12px,
-        rgb(255 255 255 / 0.025) 13px
+        rgb(255 227 182 / 0.06) 12px,
+        rgb(255 227 182 / 0.06) 13px
       );
     box-shadow:
-      0 0 0 1px rgb(5 8 24 / 0.72),
-      0 10px 28px rgb(2 4 18 / 0.45),
-      inset 3px 0 0 rgb(49 117 255 / 0.62),
-      inset -3px 0 0 rgb(255 68 43 / 0.58);
+      0 0 0 1px #e2301d,
+      0 10px 28px rgb(53 10 4 / 0.45),
+      inset 3px 0 0 #ffba25,
+      inset -3px 0 0 #e2301d;
   }
 
   .theme-arcade-fighter .weather-hero-text {
@@ -542,18 +548,38 @@
 
   .theme-arcade-fighter :is(.drawer-card-selected, .theme-option-selected) {
     box-shadow:
-      inset 3px 0 0 #347bff,
-      inset -3px 0 0 #ff442b;
+      inset 3px 0 0 #ffba25,
+      inset -3px 0 0 #e2301d;
   }
 
   .theme-pocket-clay .forecast-glass {
+    background-image:
+      radial-gradient(circle at 18% 16%, rgb(255 255 255 / 0.26) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 78% 72%, rgb(131 80 47 / 0.1) 0 1px, transparent 1.5px);
+    background-size: 17px 17px, 23px 23px;
     box-shadow:
-      0 12px 26px rgb(29 47 40 / 0.16),
-      inset 0 1px 0 rgb(255 255 255 / 0.5);
+      0 12px 26px rgb(29 47 40 / 0.2),
+      inset 0 2px 0 rgb(255 255 255 / 0.54),
+      inset 0 -3px 0 rgb(135 83 48 / 0.08);
+    animation: clay-bob 5s ease-in-out infinite;
   }
 
   .theme-nordic-paper .forecast-glass {
-    box-shadow: 0 12px 26px rgb(9 33 51 / 0.16);
+    box-shadow:
+      8px 9px 0 rgb(73 109 116 / 0.12),
+      0 12px 26px rgb(56 86 93 / 0.14);
+  }
+
+  @keyframes clay-bob {
+    50% {
+      transform: translateY(-2px) rotate(0.15deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .theme-pocket-clay .forecast-glass {
+      animation: none;
+    }
   }
 
   .app-safe-header {
