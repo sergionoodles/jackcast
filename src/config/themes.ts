@@ -12,7 +12,6 @@ export interface AppTheme {
   description: string;
   className: string;
   backgroundSet: string;
-  fallbackBackground: string;
   themeColor: string;
   isBeta?: boolean;
 }
@@ -27,7 +26,6 @@ export const THEMES: readonly AppTheme[] = [
     description: "Dreamy watercolor adventures",
     className: "theme-jack-russell",
     backgroundSet: "jack-russell",
-    fallbackBackground: "/backgrounds/jack-russell/clear-afternoon-1.jpeg",
     themeColor: "#161b1d",
   },
   {
@@ -36,7 +34,6 @@ export const THEMES: readonly AppTheme[] = [
     description: "Ink, vermilion, and quiet skies",
     className: "theme-samurai-zen",
     backgroundSet: "samurai-zen",
-    fallbackBackground: "/backgrounds/samurai-zen/clear-afternoon-1.jpeg",
     themeColor: "#171512",
   },
   {
@@ -45,7 +42,6 @@ export const THEMES: readonly AppTheme[] = [
     description: "Monochrome dots with a red signal",
     className: "theme-nothing-os",
     backgroundSet: "nothing-os",
-    fallbackBackground: "/backgrounds/nothing-os/clear-evening-4.jpeg",
     themeColor: "#080808",
   },
   {
@@ -54,7 +50,6 @@ export const THEMES: readonly AppTheme[] = [
     description: "Every forecast is the next round",
     className: "theme-arcade-fighter",
     backgroundSet: "arcade-fighter",
-    fallbackBackground: "/backgrounds/arcade-fighter/clear-morning-1.jpeg",
     themeColor: "#090b17",
     isBeta: true,
   },
@@ -64,7 +59,6 @@ export const THEMES: readonly AppTheme[] = [
     description: "Tiny handcrafted weather worlds",
     className: "theme-pocket-clay",
     backgroundSet: "pocket-clay",
-    fallbackBackground: "/backgrounds/pocket-clay/clear-morning-1.jpeg",
     themeColor: "#354c47",
     isBeta: true,
   },
@@ -74,7 +68,6 @@ export const THEMES: readonly AppTheme[] = [
     description: "Layered landscapes in quiet color",
     className: "theme-nordic-paper",
     backgroundSet: "nordic-paper",
-    fallbackBackground: "/backgrounds/nordic-paper/clear-evening-1.jpeg",
     themeColor: "#203a52",
     isBeta: true,
   },

@@ -51,7 +51,7 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({
           <div
             className="weather-bg-image absolute inset-0 z-0 opacity-100 bg-cover bg-center transition-all duration-1000"
             style={{
-              backgroundImage: `url(${imageUrl}), url(${theme.fallbackBackground})`,
+              backgroundImage: imageUrl ? `url(${imageUrl})` : undefined,
             }}
           />
         )}

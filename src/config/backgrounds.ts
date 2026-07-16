@@ -1,6 +1,5 @@
 import { getWeatherCategory as getWeatherCategoryFromCode } from "../services/weather";
 import type { Location } from "../types";
-import { availableVariantsBySet } from "./background-assets";
 import { getTheme, type ThemeId } from "./themes";
 
 export type TimeOfDay = "morning" | "afternoon" | "evening" | "night";
@@ -9,13 +8,47 @@ type BackgroundLocation = Pick<
   Location,
   "name" | "latitude" | "longitude"
 >;
-function getAvailableVariants(
-  backgroundSet: string,
-  category: WeatherCategory,
-  timeOfDay: TimeOfDay,
-): number[] {
-  const backgroundKey = `${category}-${timeOfDay}`;
-  return availableVariantsBySet[backgroundSet]?.[backgroundKey] ?? [];
+
+const backgroundAssets = import.meta.glob(
+  "../assets/backgrounds/**/*.{jpeg,jpg,png,webp}",
+  {
+    eager: true,
+    import: "default",
+  },
+) as Record<string, string>;
+
+type BackgroundAsset = {
+  set: string;
+  category: WeatherCategory;
+  timeOfDay: TimeOfDay;
+  variant: number;
+  url: string;
+};
+
+const backgroundAssetsBySet = Object.entries(backgroundAssets).reduce<
+  Record<string, BackgroundAsset[]>
+>((assetsBySet, [path, url]) => {
+  const match = path.match(
+    /\/backgrounds\/([^/]+)\/(clear|cloudy|rain|snow|storm)-(morning|afternoon|evening|night)-(\d+)\.(?:jpeg|jpg|png|webp)$/,
+  );
+  if (!match) {
+    return assetsBySet;
+  }
+
+  const [, set, category, timeOfDay, variant] = match;
+  const asset = {
+    set,
+    category: category as WeatherCategory,
+    timeOfDay: timeOfDay as TimeOfDay,
+    variant: Number(variant),
+    url,
+  };
+  (assetsBySet[set] ??= []).push(asset);
+  return assetsBySet;
+}, {});
+
+for (const assets of Object.values(backgroundAssetsBySet)) {
+  assets.sort((first, second) => first.variant - second.variant);
 }
 
 function getDayOfYear(): number {
@@ -41,22 +74,22 @@ function getLocationHash(location?: BackgroundLocation): number {
   return hash;
 }
 
-function getDayBasedVariant(
+function getDayBasedAsset(
   category: WeatherCategory,
   timeOfDay: TimeOfDay,
-  availableVariants: number[],
+  availableAssets: BackgroundAsset[],
   location?: BackgroundLocation,
-): number {
-  if (availableVariants.length === 0) {
-    return 0;
+): BackgroundAsset | undefined {
+  if (availableAssets.length === 0) {
+    return undefined;
   }
   const dayOfYear = getDayOfYear();
   const locationHash = getLocationHash(location);
-  const variantCount = availableVariants.length;
+  const variantCount = availableAssets.length;
   const hash =
     (category.length * 31 + timeOfDay.length * 17 + dayOfYear + locationHash) %
     variantCount;
-  return availableVariants[hash];
+  return availableAssets[hash];
 }
 
 export function getBackgroundImageUrl(
@@ -64,23 +97,23 @@ export function getBackgroundImageUrl(
   category: WeatherCategory,
   timeOfDay: TimeOfDay,
   location?: BackgroundLocation,
-): string {
+): string | undefined {
   const theme = getTheme(themeId);
-  const availableVariants = getAvailableVariants(
-    theme.backgroundSet,
-    category,
-    timeOfDay,
+  const assets = backgroundAssetsBySet[theme.backgroundSet] ?? [];
+  const matchingAssets = assets.filter(
+    (asset) => asset.category === category && asset.timeOfDay === timeOfDay,
   );
-  if (availableVariants.length === 0) {
-    return theme.fallbackBackground;
-  }
-  const variant = getDayBasedVariant(
+  const selectedAsset = getDayBasedAsset(
     category,
     timeOfDay,
-    availableVariants,
+    matchingAssets.length > 0 ? matchingAssets : assets,
     location,
   );
-  return `/backgrounds/${theme.backgroundSet}/${category}-${timeOfDay}-${variant}.jpeg`;
+  return selectedAsset?.url;
+}
+
+export function getThemePreviewImageUrl(themeId: ThemeId): string | undefined {
+  return backgroundAssetsBySet[getTheme(themeId).backgroundSet]?.[0]?.url;
 }
 
 export const getWeatherCategory = (code: number): WeatherCategory => {

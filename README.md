@@ -38,10 +38,10 @@ Whether it's a golden sunrise over rolling hills, a cozy snowfall under moonligh
 The art pipeline in `scripts/cover-generator/` fills every configured theme in one pass:
 
 1. **Combines 5 weather categories** (`clear`, `cloudy`, `rain`, `snow`, `storm`) with 4 times of day.
-2. **Generates 4 variations** per category/time combination for each theme, saving to `public/backgrounds/<theme>/`.
+2. **Generates 4 variations** per category/time combination for each theme, saving to `src/assets/backgrounds/<theme>/`.
 3. **Uses theme-specific prompt blocks** in `config.json` for subject, visual language, composition, and weather scenes.
 4. **Requires abstract illustration** in every prompt and explicitly excludes photography, realistic subjects, 3D, devices, logos, and text.
-5. **Fills only missing slots** and updates `src/config/background-assets.ts` so newly generated covers are selectable by the app.
+5. **Fills only missing slots** in `src/assets/backgrounds/`; Vite automatically discovers all generated covers during the next build.
 
 Run the generator with:
 

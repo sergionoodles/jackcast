@@ -19,6 +19,7 @@ import {
   Palette,
 } from "lucide-react";
 import { AVAILABLE_THEMES, type ThemeId } from "../config/themes";
+import { getThemePreviewImageUrl } from "../config/backgrounds";
 import { searchLocations } from "../services/weather";
 import { Location, WeatherData } from "../types";
 
@@ -282,6 +283,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                 >
                   {AVAILABLE_THEMES.map((theme) => {
                     const isSelected = selectedTheme === theme.id;
+                    const previewImageUrl = getThemePreviewImageUrl(theme.id);
 
                     return (
                       <label
@@ -302,11 +304,13 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                           className="theme-preview relative aspect-[3/4] w-full overflow-hidden"
                           aria-hidden="true"
                         >
-                          <img
-                            src={theme.fallbackBackground}
-                            alt=""
-                            className="h-full w-full object-cover"
-                          />
+                          {previewImageUrl && (
+                            <img
+                              src={previewImageUrl}
+                              alt=""
+                              className="h-full w-full object-cover"
+                            />
+                          )}
                         </span>
                         <span className="min-w-0 w-full">
                           <span className="drawer-text block text-sm font-semibold leading-tight">
