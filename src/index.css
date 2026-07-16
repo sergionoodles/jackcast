@@ -601,12 +601,6 @@
     text-transform: uppercase;
   }
 
-  .theme-arcade-fighter .theme-option-selected {
-    box-shadow:
-      inset 3px 0 0 #ffba25,
-      inset -3px 0 0 #e2301d;
-  }
-
   .theme-nordic-paper .forecast-glass {
     box-shadow:
       8px 9px 0 rgb(73 109 116 / 0.12),

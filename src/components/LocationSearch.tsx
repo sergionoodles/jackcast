@@ -288,7 +288,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                     return (
                       <label
                         key={theme.id}
-                        className={`theme-option relative flex w-full cursor-pointer flex-col gap-2 border p-2 text-left transition-all ${
+                        className={`theme-option relative flex w-full cursor-pointer flex-col gap-1.5 border pt-1 px-1 pb-1.5 text-left transition-all ${
                           isSelected ? "theme-option-selected" : ""
                         }`}
                       >
@@ -312,7 +312,7 @@ const LocationSearch: React.FC<LocationSearchProps> = ({
                             />
                           )}
                         </span>
-                        <span className="min-w-0 w-full">
+                        <span className="min-w-0 w-full px-1">
                           <span className="drawer-text block text-sm font-semibold leading-tight">
                             {theme.name}
                           </span>
