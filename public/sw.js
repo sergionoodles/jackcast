@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v6";
+const CACHE_VERSION = "v7";
 const SHELL_CACHE = `jackcast-shell-${CACHE_VERSION}`;
 const STATIC_CACHE = `jackcast-static-${CACHE_VERSION}`;
 const API_CACHE = `jackcast-api-${CACHE_VERSION}`;
@@ -9,9 +9,10 @@ const APP_SHELL_URLS = [
   "/manifest.json",
   "/apple-touch-icon.png",
   "/favicon.png",
-  "/logo-512.png",
-  "/logo.png",
   "/logo_192.png",
+  "/logo_192-maskable.png",
+  "/logo-512.png",
+  "/logo-512-maskable.png",
   "/screenshots/mobile_1.png",
   "/screenshots/mobile_2.png",
 ];

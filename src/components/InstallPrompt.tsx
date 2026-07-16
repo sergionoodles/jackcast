@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Download, X } from "lucide-react";
+import { X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 export default function InstallPrompt() {
@@ -56,9 +56,14 @@ export default function InstallPrompt() {
           className="fixed top-0 left-0 right-0 z-[100] bg-gray-800/90 backdrop-blur-md text-white p-3 flex items-center justify-between shadow-lg"
         >
           <div className="flex items-center space-x-3">
-            <div className="bg-blue-500/20 p-1.5 rounded-full">
-              <Download className="w-5 h-5 text-blue-400" />
-            </div>
+            <img
+              src="/logo_192.png"
+              alt=""
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-xl shadow-md"
+              decoding="async"
+            />
             <div className="flex flex-col">
               <span className="text-sm font-semibold">Install App</span>
               <span className="text-xs text-gray-300">

@@ -41,6 +41,8 @@
       content="JackCast is a fast, installable weather app with current conditions, hourly forecast, weekly outlook, and air quality."
     />
     <meta property="og:image" content="https://jackcast.codingnoodles.com/logo.png" />
+    <meta property="og:image:width" content="1024" />
+    <meta property="og:image:height" content="1024" />
     <meta property="og:image:alt" content="JackCast app icon" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="JackCast" />
@@ -49,8 +51,9 @@
       content="JackCast is a fast, installable weather app with current conditions, hourly forecast, weekly outlook, and air quality."
     />
     <meta name="twitter:image" content="https://jackcast.codingnoodles.com/logo.png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/logo_192.png" type="image/png" sizes="192x192" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -59,6 +62,7 @@
         "description": "JackCast is a fast, installable weather PWA with current conditions, hourly forecast, weekly outlook, and air quality.",
         "applicationCategory": "WeatherApplication",
         "operatingSystem": "Any",
+        "image": "https://jackcast.codingnoodles.com/logo.png",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -66,6 +70,18 @@
         }
       }
     </script>
+    <style>
+      /* Instant splash while the app shell loads (PWA + first visit) */
+      html,
+      body {
+        margin: 0;
+        background: #000;
+      }
+      #root:empty {
+        min-height: 100dvh;
+        background: #000 url("/logo_192.png") center / 128px no-repeat;
+      }
+    </style>
   </head>
 
   <body>
